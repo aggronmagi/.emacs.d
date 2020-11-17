@@ -1,0 +1,8 @@
+.cache
+auto-save-list
+elpa
+transient
+.lsp-session-v1
+.savehist
+history
+config.el

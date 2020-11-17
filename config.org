@@ -1,0 +1,560 @@
+#+STARTUP: overview
+
+* 基础配置
+** 包管理
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 包管理
+(require 'package)
+(setq package-enable-at-startup nil)
+;; 添加melpa源(更多package)
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/"))
+
+(package-initialize)
+
+;; 安装use package
+(unless (package-installed-p 'use-package)
+ (package-refresh-contents)
+  (package-install 'use-package))
+#+end_src
+** mac 修复调整
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; mac 修复环境变量
+(use-package exec-path-from-shell
+  :ensure t)
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
+;; copy paste 
+(cond ((string-equal system-type "darwin")
+       (progn
+         ;; modify option and command key
+         ;;(setq mac-comman-modifier 'control)
+         ;;(setq mac-option-modifier 'meta)
+
+         ;; batter copy and paste support for mac os x
+         (defun copy-from-osx ()
+           (shell-command-to-string "pbpaste"))
+         (defun paste-to-osx (text &optional push)
+           (let ((process-connection-type nil))
+             (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+               (process-send-string proc text)
+               (process-send-eof proc))))
+         (setq interprogram-cut-function 'paste-to-osx)
+         (setq interprogram-paste-function 'copy-from-osx))))
+#+end_src
+** 编码和语言环境
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 编码和语言环境
+(prefer-coding-system 'utf-8)
+
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_ALL" "en_US.UTF-8")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+#+end_src
+** 状态栏配置
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 状态栏相关
+;; 在状态栏显示时间
+(display-time-mode 1)
+;; 状态栏显示 列序号
+(column-number-mode 1)
+;; 显示当前文件进度 百分比
+(display-battery-mode 1)
+#+end_src
+** 基础设置
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 基础设置 
+;; 使用y/n 代替yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; 不使用tab
+(setq indent-tabs-mode t)
+
+;;;; 隐藏菜单栏
+;;(menu-bar-mode -1)
+
+;; 高亮当前行
+(global-hl-line-mode t)
+
+;; 隐藏工具栏
+(tool-bar-mode -1)
+
+;; 隐藏滚动条
+(toggle-scroll-bar -1)
+
+;; 全局文件恢复 从 #..#文件恢复
+(global-auto-revert-mode t)
+
+;; 启动后开启全屏
+; (toggle-frame-fullscreen)
+
+;; 隐藏开始界面
+(setq inhibit-splash-screen t)
+
+;; scratch buffer 消息清空
+(setq initial-scratch-message nil)
+
+;; 单个空格结束句子
+(setq sentence-end-double-space nil)
+
+;; 关闭备份文件 ~
+(setq make-backup-files nil)
+
+;; 关闭自动保存
+(setq auto-save-default nil)
+
+;; 去除文件锁
+(setq create-lockfiles nil)
+
+;; 一个tab=4个空格.默认8个
+(setq tab-width 4)
+
+;; 保存历史记录模式
+(savehist-mode 1)
+(setq savehist-file "~/.emacs.d/.savehist")
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+	  '(kill-ring
+	    search-ring
+	    regexp-search-ring))
+
+#+end_src
+** 性能相关
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 性能相关
+(if (not (display-graphic-p))
+    (progn
+      ;; 增大垃圾回收的阈值，提高整体性能（内存换效率）
+      (setq gc-cons-threshold (* 8192 8192))
+      ;; 增大同LSP服务器交互时的读取文件的大小
+      (setq read-process-output-max (* 1024 1024 128)) ;; 128MB
+      ))
+#+end_src
+
+* 显示
+** 自动匹配括号
+#+begin_src emacs-lisp
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; 括号匹配相关
+      (setq show-paren-mode nil)
+      ;; 括号自动补全
+      (use-package autopair
+        :ensure t
+        :init 
+	(defun @-enable-autopair ()
+	  (autopair-mode t))
+        :hook 
+	(progn 
+	  (prog-mode-hook . @-enable-autopair)
+	  (emacs-lisp-mode-hook . @-enable-autopair)
+	))
+       ;;:config
+       ;; (autopair-global-mode))
+ 
+  ;; 高亮括号匹配 
+      (use-package highlight-parentheses
+	:ensure t)
+  ;; 全局启用括号高亮
+  (define-globalized-minor-mode global-highlight-parentheses-mode
+    highlight-parentheses-mode
+    (lambda ()
+      (highlight-parentheses-mode t)))
+  (global-highlight-parentheses-mode t)
+  ;; NOTE 括号跳转  C-M-n,C-M-p 
+
+
+      ;; ;; 彩虹色 用于web css等
+      ;; (use-package rainbow-mode
+      ;;   :ensure t
+      ;;   :init
+      ;;   (defun @-enable-rainbow ()
+      ;;     (rainbow-mode t))
+      ;;   :hook ((prog-mode-hook . @-enable-reainbow)))
+      ;; 彩色高亮匹配括号 - 编程模式自动启动
+      (use-package rainbow-delimiters
+	:ensure t
+	:init
+	(defun @-enable-rainbow-delimiters ()
+	  (rainbow-delimiters-mode t))
+	:hook 
+	(progn 
+	  (prog-mode-hook . @-enable-rainbow-delimiters)
+	  (emacs-lisp-mode-hook . @-enable-rainbow-delimiters))
+	)
+    ;;(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+#+end_src
+
+** 皮肤,Theme
+#+begin_src emacs-lisp
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; 皮肤,Theme
+  ;; 安全的加载theme
+  (setq custom-safe-themes t)
+  ;; 使用 doom theme 
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-one t)
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; for treemacs users
+    ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+    ;; (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+#+end_src
+
+** 状态栏
+#+begin_src emacs-lisp
+;; 状态栏
+(use-package doom-modeline
+  :ensure t
+  :init
+  (set-face-background 'mode-line nil)
+  :hook (after-init . doom-modeline-mode))
+#+end_src
+** 行号
+#+begin_src emacs-lisp
+
+;; 行号显示
+(global-linum-mode)
+
+(use-package linum
+  :ensure t
+  :config
+  (global-linum-mode t)
+  (setq linum-format "%4d  ")
+  (set-face-background 'linum nil))
+#+end_src
+
+** icons 
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure t)
+#+end_src
+* 工具
+** undo tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode)
+  (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-diff t))
+#+end_src
+
+** which-key 按键提示
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode)
+  (which-key-setup-side-window-bottom))
+#+end_src
+
+** 打开的历史文件
+#+begin_src emacs-lisp
+(use-package recentf
+  :ensure t
+  :config
+  (setq recentf-max-saved-items 200
+    recentf-max-menu-items 15)
+  :bind ("<f3>" . helm-recentf)
+  :hook ((after-init-hook . recentf-mode)))
+#+end_src
+** vterm
+#+begin_src emacs-lisp
+(use-package vterm
+  :ensure t)
+#+end_src
+** git
+#+begin_src emacs-lisp
+;; git 支持
+(use-package magit
+  :ensure t)
+;; 缓冲区中查看.修改,暂存文件
+(use-package git-gutter+
+  :ensure t
+  :config
+  (global-git-gutter+-mode))
+#+end_src
+** 智能tab补全
+#+begin_src emacs-lisp
+;; 智能tab补全. 有个新的 smart-tab-mode 
+(use-package smart-tab
+  :hook ((prog-mode-hook . smart-tab-mode)))
+#+end_src
+** 智能跳转行首和行尾
+#+begin_src emacs-lisp
+(use-package mwim
+  :ensure t
+  :bind
+  ("C-a" . mwim-beginning)
+  ("C-e" . mwim-end))
+#+end_src
+* 文件格式
+** json 
+#+begin_src
+(use-package json-mode
+  :ensure t
+  :hook ((json-mode . lsp)))
+#+end_src
+** yaml
+#+begin_src
+(use-package yaml-mode
+  :ensure t
+  :hook ((yaml-mode . lsp)))
+#+end_src
+
+** toml 
+#+begin_src
+(use-package toml-mode
+  :ensure t
+  :hook ((toml-mode . lsp)))
+#+end_src
+
+** docker file 
+#+begin_src
+(use-package dockerfile-mode
+  :ensure t
+  :hook ((dockerfile-mode . lsp)))
+#+end_src
+
+** protobuf 
+#+begin_src
+(use-package protobuf-mode
+  :ensure t
+  :hook ((protobuf-mode . lsp)))
+#+end_src
+
+** thrift
+#+begin_src emacs-lisp
+(use-package thrift
+  :ensure t)
+#+end_src
+* 编程支持
+** flyspell 拼写检查
+#+begin_src emacs-lisp
+;; flyspell 拼写检查
+(use-package flyspell
+  :ensure t
+  :config
+  (flyspell-mode +1))
+;; (add-hook 'before-save-hook (lambda () (flyspell-buffer)))
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+#+end_src
+** flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t)
+#+end_src
+** lsp 语言服务器
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-deferred)
+  :hook (go-mode . lsp-deferred))
+#+end_src
+** lsp-ui 
+#+begin_src emacs-lisp
+;; Optional - provides fancier overlays.
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+#+end_src
+** company自动补全
+#+begin_src emacs-lisp
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode)
+  ;; Optionally enable completion-as-you-type behavior.
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1))
+
+#+end_src
+** Yasnippet
+#+begin_src emacs-lisp
+;; Optional - provides snippet support.
+(use-package yasnippet
+  :ensure t
+  :commands yas-minor-mode
+  :hook (go-mode . yas-minor-mode))
+#+end_src
+** project支持
+#+begin_src emacs-lisp
+;; 项目支持
+(use-package projectile
+  :ensure t)
+#+end_src
+** treemacs
+#+begin_src emacs-lisp
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-directory-name-transformer    #'identity
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-extension-regex          treemacs-last-period-regex-value
+          treemacs-file-follow-delay             0.2
+          treemacs-file-name-transformer         #'identity
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-move-forward-on-expand        nil
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-position                      'left
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-asc
+          treemacs-space-between-root-nodes      t
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-user-mode-line-format         nil
+          treemacs-user-header-line-format       nil
+          treemacs-width                         35
+          treemacs-workspace-switch-cleanup      nil)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+;;(use-package treemacs-evil
+;;  :after treemacs evil
+;;  :ensure t)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+
+(use-package treemacs-persp ;;treemacs-persective if you use perspective.el vs. persp-mode
+  :after treemacs persp-mode ;;or perspective vs. persp-mode
+  :ensure t
+  :config (treemacs-set-scope-type 'Perspectives))
+(use-package lsp-treemacs
+  :ensure t
+  :config
+  (lsp-treemacs-sync-mode 1) 
+  )
+
+#+end_src
+* 编程语言
+** golang 语言
+#+begin_src emacs-lisp
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+;; go语言支持
+(use-package go-mode
+  :mode "\\.go\\'"
+  :init
+  (setq gofmt-command "goimports")
+  :config
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  :hook ((go-mode . lsp)))
+
+;; 使用gocode 提供代码类型显示(在minibuffer) 
+(use-package go-eldoc
+  :ensure t
+  :hook ((gp-mode-hook . go-eldoc-setup)))
+
+;; 使用guru 进行代码导航
+(use-package go-guru
+  :ensure t
+  :hook (go-mode . go-guru-hl-identifier-mode))
+
+;; go代码调试
+(use-package go-dlv
+  :ensure t)
+#+end_src
+* org mode 
+** org-capture
+** org-publish
+** org 自动补全
+#+begin_src emacs-lisp
+(use-package ido-completing-read+
+  :ensure t)
+(defun @-insert-src-block (src-code-type)
+    "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+    (interactive
+     (let ((src-code-types
+	    '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
+	      "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+	      "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+	      "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+	      "scheme" "sqlite" "html" "go")))
+       (list (ido-completing-read+ "Source code type: " src-code-types))))
+    (progn
+      (newline-and-indent)
+      (insert (format "\n#+begin_src %s\n" src-code-type))
+      (newline-and-indent)
+      (insert "#+end_src\n")
+      (previous-line 2)
+      (org-edit-src-code)))
+#+end_src
