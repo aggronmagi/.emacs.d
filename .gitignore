@@ -6,3 +6,6 @@ transient
 .savehist
 history
 config.el
+bookmarks
+externs
+projectile-bookmarks.eld

@@ -1,7 +1,21 @@
+#+STARTUP: overview
+
 * emacs config 
 ** 配置
 [[./config.org][配置文件]]
 
 ** 参考
+
+*** 配置
+
 [[https://huadeyu.tech/tools/emacs-setup-notes.html][极简Emacs开发环境配置]]
+
+
 [[https://github.com/zamansky/using-emacs][一个老外的配置]]
+
+*** org mode 
+
+[[https://www.zmonster.me/2018/02/28/org-mode-capture.html][系列文档 - 强大的 Org mode]]
+
+[[https://www.cnblogs.com/Open_Source/archive/2011/07/17/2108747.html][Org-mode 简明手册]]
+

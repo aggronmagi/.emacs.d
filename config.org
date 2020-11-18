@@ -80,7 +80,7 @@
 ;;(menu-bar-mode -1)
 
 ;; 高亮当前行
-(global-hl-line-mode t)
+;; (global-hl-line-mode t)
 
 ;; 隐藏工具栏
 (tool-bar-mode -1)
@@ -92,7 +92,7 @@
 (global-auto-revert-mode t)
 
 ;; 启动后开启全屏
-; (toggle-frame-fullscreen)
+(toggle-frame-fullscreen)
 
 ;; 隐藏开始界面
 (setq inhibit-splash-screen t)
@@ -245,6 +245,54 @@
   :ensure t)
 #+end_src
 * 工具
+** counsel
+#+begin_src emacs-lisp
+(use-package counsel
+  :ensure t)
+#+end_src
+** ivy 
+#+begin_src emacs-lisp
+(use-package ivy
+  :ensure t
+  :config 
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  ;; enable this if you want `swiper' to use it
+  ;; (setq search-default-mode #'char-fold-to-regexp)
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  ;; (global-set-key (kbd "<f6>") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  ;;(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  ;;(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  ;;(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+  ;;(global-set-key (kbd "<f1> l") 'counsel-find-library)
+  ;;(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  ;;(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  ;;(global-set-key (kbd "C-c g") 'counsel-git)
+  ;;(global-set-key (kbd "C-c j") 'counsel-git-grep)
+  ;;(global-set-key (kbd "C-c k") 'counsel-ag)
+  ;;(global-set-key (kbd "C-x l") 'counsel-locate)
+  ;;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+#+end_src
+** ivy-posframe
+#+begin_src emacs-lisp
+  ;; ivy-posframe
+  ;; (use-package ivy-posframe
+  ;;   :ensure t
+  ;;   :config 
+  ;;   ;; display at `ivy-posframe-style'
+  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+  ;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  ;;   (ivy-posframe-mode 1))
+#+end_src
 ** undo tree
 #+begin_src emacs-lisp
 (use-package undo-tree
@@ -279,6 +327,9 @@
 (use-package vterm
   :ensure t)
 #+end_src
+** vtm 管理多个vtertm
+(use-package vtm
+  :ensure t)
 ** git
 #+begin_src emacs-lisp
 ;; git 支持
@@ -303,6 +354,18 @@
   :bind
   ("C-a" . mwim-beginning)
   ("C-e" . mwim-end))
+#+end_src
+** 快速选择窗口
+#+begin_src emacs-lisp
+(use-package ace-window
+  :ensure t 
+
+  :bind
+  ("M-o" . ace-window))
+;(use-package winum
+;;  :ensure t
+;;  :config 
+;;  (winum-mode))
 #+end_src
 * 文件格式
 ** json 
@@ -393,6 +456,10 @@
   :ensure t
   :commands yas-minor-mode
   :hook (go-mode . yas-minor-mode))
+
+;; 预定义的
+(use-package yasnippet-snippets
+  :ensure t)
 #+end_src
 ** project支持
 #+begin_src emacs-lisp
@@ -438,7 +505,7 @@
           treemacs-recenter-after-tag-follow     nil
           treemacs-recenter-after-project-jump   'always
           treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
+          treemacs-show-cursor                   t
           treemacs-show-hidden-files             t
           treemacs-silent-filewatch              nil
           treemacs-silent-refresh                nil
@@ -449,7 +516,7 @@
           treemacs-user-mode-line-format         nil
           treemacs-user-header-line-format       nil
           treemacs-width                         35
-          treemacs-workspace-switch-cleanup      nil)
+          treemacs-workspace-switch-cleanup      t)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
@@ -494,7 +561,7 @@
   :after treemacs persp-mode ;;or perspective vs. persp-mode
   :ensure t
   :config (treemacs-set-scope-type 'Perspectives))
-(use-package lsp-treemacs
+  (use-package lsp-treemacs
   :ensure t
   :config
   (lsp-treemacs-sync-mode 1) 
@@ -534,7 +601,64 @@
   :ensure t)
 #+end_src
 * org mode 
+** org 基础配置
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org 基础配置 
+;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+;(add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\C-cc" 'org-capture)
+(setq org-default-notes-file "~/org/default.org")
+#+end_src
+#+begin_src emacs-lisp
+;; (add-to-list 'load-path "~/.emacs.d/externs/org-protocol-capture-html")
+;; (require 'org-protocol-capture-html)
+#+end_src
+** org web tool
+#+begin_src emacs-lisp
+;(use-package pandoc
+;  :ensure t)
+
+;; brew install pandoc pandoc-citeproc librsvg python homebrew/cask/basictex
+
+(use-package org-web-tools
+  :ensure t)
+#+end_src
+** org 外部交互
+#+begin_src emacs-lisp
+;; org 协议. 和外部交互
+(require 'org-protocol)
+;; 启动服务器. 外部调用访问(浏览器等)
+(server-start)
+#+end_src
 ** org-capture
+#+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; emacs org capture config 
+;; '("t" "Task" entry (file+headline "" "Tasks") "* TODO %?\n  %u\n  %a")
+;; 清空
+(setq org-capture-templates nil)
+;; 网上抓取的日志
+(add-to-list 'org-capture-templates '("n" "Web site" entry
+  (file "")
+  "* %a :website:\n\n%U %?\n\n%:initial"))
+
+;; 工作相关记录
+(add-to-list 'org-capture-templates '("w" "work"))
+(add-to-list 'org-capture-templates '("wt" "Work Task" entry
+	       (file+olp "~/org/work.org" "工作记录" "Task")
+	       "*** TODO %?\n%U\n"))
+(add-to-list 'org-capture-templates '("wb" "Work Bug Record" entry
+               (file+olp "~/org/work.org" "工作记录" "BUG")
+               "*** TODO BUG %?\n%U\n"))
+(add-to-list 'org-capture-templates '("wr" "Record Something" entry
+               (file+datetree "~/org/work.org")
+	       "* %U - %^{heading}\n  %?"))
+
+#+end_src
 ** org-publish
 ** org 自动补全
 #+begin_src emacs-lisp
@@ -558,3 +682,11 @@
       (previous-line 2)
       (org-edit-src-code)))
 #+end_src
+
+* todo
+** TODO [A] vterm 配置. 查看官网
+** TODO [C] lua语言支持 - lsp - 
+** TODO [C] 多列编辑
+   实现:
+     1. 抓取已经mark的region. 重复按多次. 就选取多次. 直接列编辑
+     2. 抓取已经mark的region, 按键之后. 光标位于region的行尾. 进入列编辑
