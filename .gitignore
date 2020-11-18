@@ -9,3 +9,5 @@ config.el
 bookmarks
 externs
 projectile-bookmarks.eld
+recentf
+tramp

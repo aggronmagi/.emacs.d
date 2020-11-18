@@ -73,8 +73,8 @@
 ;; 使用y/n 代替yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; 不使用tab
-(setq indent-tabs-mode t)
+;; tab
+;; (setq indent-tabs-mode t)
 
 ;;;; 隐藏菜单栏
 ;;(menu-bar-mode -1)
@@ -406,6 +406,23 @@
 #+begin_src emacs-lisp
 (use-package thrift
   :ensure t)
+#+end_src
+** plantuml
+#+begin_src emacs-lisp
+  (use-package plantuml-mode
+    :ensure t
+    :config 
+    (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
+    ;; jar 配置
+    (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
+    (setq plantuml-default-exec-mode 'jar)
+    ;;;; 使用server 
+    ;; (setq plantuml-default-exec-mode 'server)
+    ;; (setq plantuml-server-url "https://www.plantuml.com/plantuml")
+    ;; 执行文件
+    ;;(setq plantuml-executable-path "")
+    ;;(setq plantuml-default-exec-mode 'executable)
+    )
 #+end_src
 * 编程支持
 ** flyspell 拼写检查
