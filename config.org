@@ -31,22 +31,22 @@
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "GOPATH"))
 ;; copy paste 
-(cond ((string-equal system-type "darwin")
-       (progn
-         ;; modify option and command key
-         ;;(setq mac-comman-modifier 'control)
-         ;;(setq mac-option-modifier 'meta)
-
-         ;; batter copy and paste support for mac os x
-         (defun copy-from-osx ()
-           (shell-command-to-string "pbpaste"))
-         (defun paste-to-osx (text &optional push)
-           (let ((process-connection-type nil))
-             (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-               (process-send-string proc text)
-               (process-send-eof proc))))
-         (setq interprogram-cut-function 'paste-to-osx)
-         (setq interprogram-paste-function 'copy-from-osx))))
+;; (cond ((string-equal system-type "darwin")
+;;        (progn
+;;          ;; modify option and command key
+;;          ;;(setq mac-comman-modifier 'control)
+;;          ;;(setq mac-option-modifier 'meta)
+;; 
+;;          ;; batter copy and paste support for mac os x
+;;          (defun copy-from-osx ()
+;;            (shell-command-to-string "pbpaste"))
+;;          (defun paste-to-osx (text &optional push)
+;;            (let ((process-connection-type nil))
+;;              (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+;;                (process-send-string proc text)
+;;                (process-send-eof proc))))
+;;          (setq interprogram-cut-function 'paste-to-osx)
+;;          (setq interprogram-paste-function 'copy-from-osx))))
 #+end_src
 ** 编码和语言环境
 #+begin_src emacs-lisp
@@ -347,8 +347,8 @@
 ** 智能tab补全
 #+begin_src emacs-lisp
 ;; 智能tab补全. 有个新的 smart-tab-mode 
-(use-package smart-tab
-  :hook ((prog-mode-hook . smart-tab-mode)))
+;;(use-package smart-tab
+;;  :hook ((prog-mode-hook . smart-tab-mode)))
 #+end_src
 ** 智能跳转行首和行尾
 #+begin_src emacs-lisp
@@ -470,6 +470,42 @@
 		  ("C-<f2>" . bm-toggle)
 		  ("<f1>" . bm-toggle))
 	   )
+#+end_src
+** multiple-cursors 多列编辑
+#+begin_src emacs-lisp
+	(use-package multiple-cursors
+		:ensure t
+		:bind
+		(:map global-map
+	   ;; M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
+	   ("M-I" . 'mc/edit-lines)
+	   ;; 下一行相似的 
+	   ("C->" . 'mc/mark-next-like-this)
+	   ;; 上一行相似的
+	   ("C-<" . 'mc/mark-previous-like-this)
+	   ;; 所有匹配的行
+	   ("C-c C-<" . 'mc/mark-all-like-this)
+	   ;; 插入数字
+	   ;;("M-N" . '@-ask- 'mc/insert-numbers)
+		)
+	  )
+	;; 按回车. 插入新行.使用C-g退出多行
+	(define-key mc/keymap (kbd "<return>") nil)
+	;; 鼠标点选某一行
+	(global-unset-key (kbd "M-<down-mouse-1>"))
+	(global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+
+	(defun ask-number ()
+	   (let ((val (string-to-number(read-from-minibuffer "Enter Start Number "))))
+		 (if (integerp val)
+		   val
+		 (ask-number))))
+
+	(defun @-ask-inter-num ()
+	  (interactive)
+	  (mc/insert-numbers (ask-number)))
+	;; 手动输入数字起始(默认是0)
+	(global-set-key (kbd "M-N") '@-ask-inter-num)
 #+end_src
 * 文件格式
 ** json 
@@ -744,7 +780,7 @@
 (global-set-key "\C-cc" 'org-capture)
 (setq org-default-notes-file "~/org/default.org")
 ;; org agenda 
-(setq org-agenda-files '("~/org/"))
+(setq org-agenda-files '("~/org/" "~/org/work/" "~/org/knowledge/"))
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
 (setq org-outline-path-complete-in-steps nil)
@@ -788,16 +824,16 @@
   ;; 设置 org-capture
   (setq org-capture-templates
 	'(
-	  ;; 工作相关记录
+	  ;; 工作相关记录 - 全部放入临时文件
 	  ("w" "work")
 	  ("wt" "Work Task" entry
-	   (file+olp "~/org/work.org" "工作记录" "临时任务")
+	   (file+olp "~/org/todo.org" "工作记录" "临时任务")
 	   "*** TODO %?\n%U\n")
 	  ("wb" "Work Bug Record" entry
-	   (file+olp "~/org/work.org" "工作记录" "BUG")
+	   (file+olp "~/org/todo.org" "工作记录" "BUG")
 	   "*** TODO BUG %?\n%U\n")
 	  ("wr" "Record" entry
-	   (file+datetree "~/org/work.org")
+	   (file+datetree "~/org/todo.org")
 	   "* %U - %^{heading}\n  %?")
 	  ;; 知识记录
 	  ("k" "Knowledge")
