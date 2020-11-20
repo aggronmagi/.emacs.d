@@ -1,4 +1,4 @@
-#+STARTUP: overview
+#+STARTUP: showall
 
 * emacs config 
 ** 配置
@@ -8,14 +8,47 @@
 
 *** 配置
 
-[[https://huadeyu.tech/tools/emacs-setup-notes.html][极简Emacs开发环境配置]]
+[[https://huadeyu.tech/tools/emacs-setup-notes.html][极简Emacs开发环境配置]] => [[https://huadeyu.tech/index.html][主页]]
 
+[[https://elpa.gnu.org/packages/][https://elpa.gnu.org/packages/]]
 
-[[https://github.com/zamansky/using-emacs][一个老外的配置]]
+[[https://melpa.org][https://melpa.org]]
+
+[[https://github.com/zamansky/using-emacs][一个老外的配置]] => [[https://cestlaz.github.io/stories/emacs/][视频地址]]
+
+*** emacs 
+
+[[https://raw.githubusercontent.com/aborn/emacs-cookbook/master/emacs-cookbook.pdf][Emacs实践笔记pdf下载地址]]
 
 *** org mode 
 
 [[https://www.zmonster.me/2018/02/28/org-mode-capture.html][系列文档 - 强大的 Org mode]]
 
 [[https://www.cnblogs.com/Open_Source/archive/2011/07/17/2108747.html][Org-mode 简明手册]]
+
+[[https://orgmode.org/worg/org-web.html][Web Pages Made with Org-Mode]]
+
+https://github.com/alphapapa/org-web-tools
+
+[[https://github.com/tkf/org-mode/tree/master/contrib/lisp][org-mode 非官方扩展]]
+
+[[https://orgmode.org/manual/index.html][org-mode 官方手册]]
+
+
+*** plantuml 官方中文pdf手册
+[[http://pdf.plantuml.net/PlantUML_Language_Reference_Guide_zh.pdf][下载地址]]
+
+[[https://plantuml.com/][官方地址]]
+
+*** yasnippet 配置
+
+[[http://www.fidding.me/article/18][emacs yasnippet自定义模版配置与使用]]
+
+
+
+** Lisp
+
+[[https://acl.readthedocs.io/en/latest/zhCN/index.html][ANSI Common Lisp 中文版]]
+
+[[https://www.w3cschool.cn/on_lisp/][On Lisp 中文版]]
 

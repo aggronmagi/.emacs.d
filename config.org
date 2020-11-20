@@ -1,4 +1,4 @@
-#+STARTUP: overview
+#+STARTUP: content
 
 * 基础配置
 ** 包管理
@@ -17,6 +17,9 @@
 (unless (package-installed-p 'use-package)
  (package-refresh-contents)
   (package-install 'use-package))
+
+;; 新增本地lisp文件目录
+ (add-to-list 'load-path "~/.emacs.d/lisp/")
 #+end_src
 ** mac 修复调整
 #+begin_src emacs-lisp
@@ -367,6 +370,47 @@
 ;;  :config 
 ;;  (winum-mode))
 #+end_src
+** 剪切板 kill ring 
+   类似于vscode的clipboard. 但是没有快速选择的方式
+#+begin_src emacs-lisp
+   ;; (global-set-key "\C-xy" '(lambda ()
+   ;;                                 (interactive)
+   ;;                                 (popup-menu 'yank-menu)))
+  (use-package browse-kill-ring
+    :ensure t
+    :bind
+    (:map global-map
+	  ("C-c k" . 'browse-kill-ring))
+    :config
+    ;; 高亮当前选择项
+    (setq browse-kill-ring-highlight-current-entry t)
+    )
+#+end_src
+** 有道翻译
+#+begin_src emacs-lisp
+  ;; 有道词典
+  (use-package youdao-dictionary
+    :ensure t
+    :bind
+    (:map global-map
+          ;; 会自动隐藏. 但是对于查看长文档翻译时候,不太方便
+	  ;; ("C-c y" . youdao-dictionary-search-at-point-tooltip)
+	  ;; 不会移动隐藏.但是有操作会隐藏
+	  ("C-c y" . youdao-dictionary-search-at-point+))
+    :config
+    ;; Enable Cache
+    (setq url-automatic-caching t)
+    ;; Integrate with popwin-el (https://github.com/m2ym/popwin-el)
+    ;; (push "*Youdao Dictionary*" popwin:special-display-config)
+
+    ;; Set file path for saving search history
+    (setq youdao-dictionary-search-history-file "~/.emacs.d/.youdao")
+
+    ;; Enable Chinese word segmentation support (支持中文分词)
+    (setq youdao-dictionary-use-chinese-word-segmentation t)
+    )
+
+#+end_src
 * 文件格式
 ** json 
 #+begin_src
@@ -457,13 +501,16 @@
 #+end_src
 ** company自动补全
 #+begin_src emacs-lisp
-(use-package company
-  :ensure t
-  :config
-  (global-company-mode)
-  ;; Optionally enable completion-as-you-type behavior.
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1))
+  (use-package company
+    :ensure t
+    :config
+    (global-company-mode)
+    ;; Optionally enable completion-as-you-type behavior.
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 1)
+    ;; 大小写问题修复
+    (setq company-dabbrev-downcase nil)
+    )
 
 #+end_src
 ** Yasnippet
@@ -522,7 +569,7 @@
           treemacs-recenter-after-tag-follow     nil
           treemacs-recenter-after-project-jump   'always
           treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   t
+          treemacs-show-cursor                   nil
           treemacs-show-hidden-files             t
           treemacs-silent-filewatch              nil
           treemacs-silent-refresh                nil
@@ -533,7 +580,7 @@
           treemacs-user-mode-line-format         nil
           treemacs-user-header-line-format       nil
           treemacs-width                         35
-          treemacs-workspace-switch-cleanup      t)
+          treemacs-workspace-switch-cleanup      nil)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
@@ -553,8 +600,8 @@
         ("M-0"       . treemacs-select-window)
         ("C-x t 1"   . treemacs-delete-other-windows)
         ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
+        ;;("C-x t B"   . treemacs-bookmark)
+        ;;("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
 ;;(use-package treemacs-evil
@@ -618,6 +665,13 @@
   :ensure t)
 #+end_src
 * org mode 
+** org-bullets
+  #+begin_src emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook #'org-bullets-mode))
+  #+end_src
 ** org 基础配置
 #+begin_src emacs-lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -629,6 +683,16 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-cc" 'org-capture)
 (setq org-default-notes-file "~/org/default.org")
+;; org agenda 
+(setq org-agenda-files '("~/org/"))
+(setq org-refile-use-outline-path 'file)
+(setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+;; 设置org-todo 依赖
+(setq org-enforce-todo-dependencies t)
+;; 使用org-depend 
+(require 'org-depend)
 #+end_src
 #+begin_src emacs-lisp
 ;; (add-to-list 'load-path "~/.emacs.d/externs/org-protocol-capture-html")
@@ -653,28 +717,35 @@
 #+end_src
 ** org-capture
 #+begin_src emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; emacs org capture config 
-;; '("t" "Task" entry (file+headline "" "Tasks") "* TODO %?\n  %u\n  %a")
-;; 清空
-(setq org-capture-templates nil)
-;; 网上抓取的日志
-(add-to-list 'org-capture-templates '("n" "Web site" entry
-  (file "")
-  "* %a :website:\n\n%U %?\n\n%:initial"))
-
-;; 工作相关记录
-(add-to-list 'org-capture-templates '("w" "work"))
-(add-to-list 'org-capture-templates '("wt" "Work Task" entry
-	       (file+olp "~/org/work.org" "工作记录" "Task")
-	       "*** TODO %?\n%U\n"))
-(add-to-list 'org-capture-templates '("wb" "Work Bug Record" entry
-               (file+olp "~/org/work.org" "工作记录" "BUG")
-               "*** TODO BUG %?\n%U\n"))
-(add-to-list 'org-capture-templates '("wr" "Record Something" entry
-               (file+datetree "~/org/work.org")
-	       "* %U - %^{heading}\n  %?"))
-
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; emacs org capture config 
+  ;; '("t" "Task" entry (file+headline "" "Tasks") "* TODO %?\n  %u\n  %a")
+  ;; 清空
+  ;; 网上抓取的日志
+  ;; (add-to-list 'org-capture-templates '("n" "Web site" entry
+  ;;  (file "")
+  ;;  "* %a :website:\n\n%U %?\n\n%:initial"))
+  ;; 设置 org-capture
+  (setq org-capture-templates
+	'(
+	  ;; 工作相关记录
+	  ("w" "work")
+	  ("wt" "Work Task" entry
+	   (file+olp "~/org/work.org" "工作记录" "临时任务")
+	   "*** TODO %?\n%U\n")
+	  ("wb" "Work Bug Record" entry
+	   (file+olp "~/org/work.org" "工作记录" "BUG")
+	   "*** TODO BUG %?\n%U\n")
+	  ("wr" "Record" entry
+	   (file+datetree "~/org/work.org")
+	   "* %U - %^{heading}\n  %?")
+	  ;; 知识记录
+	  ("k" "Knowledge")
+	  ("kw" "Collection Web Knowledge" entry
+	   (file+olp "~/org/knowledge/index.org" "web")
+	   "** %{headline} \n%U\n")
+	  )
+	)
 #+end_src
 ** org-publish
 ** org 自动补全
@@ -703,7 +774,4 @@
 * todo
 ** TODO [A] vterm 配置. 查看官网
 ** TODO [C] lua语言支持 - lsp - 
-** TODO [C] 多列编辑
-   实现:
-     1. 抓取已经mark的region. 重复按多次. 就选取多次. 直接列编辑
-     2. 抓取已经mark的region, 按键之后. 光标位于region的行尾. 进入列编辑
+
