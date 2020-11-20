@@ -467,7 +467,8 @@
 
 	   :bind (("<f2>" . bm-next)
 		  ("S-<f2>" . bm-previous)
-		  ("C-<f2>" . bm-toggle))
+		  ("C-<f2>" . bm-toggle)
+		  ("<f1>" . bm-toggle))
 	   )
 #+end_src
 * 文件格式
