@@ -5,6 +5,7 @@
       '(
 		browse-kill-ring
 		c-electric-semi&comma
+		c-electric-slash
 		dabbrev-completion
 		electric-newline-and-maybe-indent
 		end-of-buffer
@@ -23,9 +24,13 @@
 		@-ask-inter-num
 		beginning-of-buffer
 		copy-rectangle-as-kill
+		counsel-M-x
+		counsel-find-file
 		describe-key
 		handle-switch-frame
 		keyboard-escape-quit
 		kill-region
 		lsp-ui-doc--handle-mouse-movement
+		move-past-close-and-reindent
+		ns-copy-including-secondary
 		))

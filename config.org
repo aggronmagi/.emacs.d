@@ -23,30 +23,33 @@
 #+end_src
 ** mac 修复调整
 #+begin_src emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; mac 修复环境变量
-(use-package exec-path-from-shell
-  :ensure t)
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH"))
-;; copy paste 
-;; (cond ((string-equal system-type "darwin")
-;;        (progn
-;;          ;; modify option and command key
-;;          ;;(setq mac-comman-modifier 'control)
-;;          ;;(setq mac-option-modifier 'meta)
-;; 
-;;          ;; batter copy and paste support for mac os x
-;;          (defun copy-from-osx ()
-;;            (shell-command-to-string "pbpaste"))
-;;          (defun paste-to-osx (text &optional push)
-;;            (let ((process-connection-type nil))
-;;              (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-;;                (process-send-string proc text)
-;;                (process-send-eof proc))))
-;;          (setq interprogram-cut-function 'paste-to-osx)
-;;          (setq interprogram-paste-function 'copy-from-osx))))
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; mac 修复环境变量
+  (use-package exec-path-from-shell
+	:if (memq window-system '(mac ns))
+	:ensure t
+	:config
+	(exec-path-from-shell-initialize)
+	(exec-path-from-shell-copy-env "GOPATH"))
+
+  ;; 复制,粘贴使用下面配置,将导致multiple-cursor的复制,粘贴失效
+  ;; copy paste 
+  ;; (cond ((string-equal system-type "darwin")
+  ;;        (progn
+  ;;          ;; modify option and command key
+  ;;          ;;(setq mac-comman-modifier 'control)
+  ;;          ;;(setq mac-option-modifier 'meta)
+  ;; 
+  ;;          ;; batter copy and paste support for mac os x
+  ;;          (defun copy-from-osx ()
+  ;;            (shell-command-to-string "pbpaste"))
+  ;;          (defun paste-to-osx (text &optional push)
+  ;;            (let ((process-connection-type nil))
+  ;;              (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+  ;;                (process-send-string proc text)
+  ;;                (process-send-eof proc))))
+  ;;          (setq interprogram-cut-function 'paste-to-osx)
+  ;;          (setq interprogram-paste-function 'copy-from-osx))))
 #+end_src
 ** 编码和语言环境
 #+begin_src emacs-lisp
@@ -106,7 +109,7 @@
 ;; 单个空格结束句子
 (setq sentence-end-double-space nil)
 
-;; 关闭备份文件 ~
+;; 关闭备份文件
 (setq make-backup-files nil)
 
 ;; 关闭自动保存
@@ -146,54 +149,50 @@
 * 显示
 ** 自动匹配括号
 #+begin_src emacs-lisp
-      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-      ;; 括号匹配相关
-      (setq show-paren-mode nil)
-      ;; 括号自动补全
-      (use-package autopair
-        :ensure t
-        :init 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; 括号匹配相关
+  (setq show-paren-mode nil)
+  ;; 括号自动补全
+  (use-package autopair
+	:ensure t
+	:init 
 	(defun @-enable-autopair ()
 	  (autopair-mode t))
-        :hook 
+	:hook 
 	(progn 
-	  (prog-mode-hook . @-enable-autopair)
-	  (emacs-lisp-mode-hook . @-enable-autopair)
-	))
-       ;;:config
-       ;; (autopair-global-mode))
- 
-  ;; 高亮括号匹配 
-      (use-package highlight-parentheses
+	  (prog-mode . @-enable-autopair)
+	  (emacs-lisp-mode . @-enable-autopair)
+	  ))
+  
+   ;; 高亮括号匹配 
+  (use-package highlight-parentheses
 	:ensure t)
   ;; 全局启用括号高亮
   (define-globalized-minor-mode global-highlight-parentheses-mode
-    highlight-parentheses-mode
-    (lambda ()
-      (highlight-parentheses-mode t)))
+	highlight-parentheses-mode
+	(lambda ()
+	  (highlight-parentheses-mode t)))
   (global-highlight-parentheses-mode t)
-  ;; NOTE 括号跳转  C-M-n,C-M-p 
-
-
-      ;; ;; 彩虹色 用于web css等
-      ;; (use-package rainbow-mode
-      ;;   :ensure t
-      ;;   :init
-      ;;   (defun @-enable-rainbow ()
-      ;;     (rainbow-mode t))
-      ;;   :hook ((prog-mode-hook . @-enable-reainbow)))
-      ;; 彩色高亮匹配括号 - 编程模式自动启动
-      (use-package rainbow-delimiters
+  ;; NOTE 括号跳转  C-M-n,C-M-p  
+  ;; ;; 彩虹色 用于web css等
+  ;; (use-package rainbow-mode
+  ;;   :ensure t
+  ;;   :init
+  ;;   (defun @-enable-rainbow ()
+  ;;     (rainbow-mode t))
+  ;;   :hook ((prog-mode . @-enable-reainbow)))
+  ;; 彩色高亮匹配括号 - 编程模式自动启动
+  (use-package rainbow-delimiters
 	:ensure t
 	:init
 	(defun @-enable-rainbow-delimiters ()
 	  (rainbow-delimiters-mode t))
 	:hook 
 	(progn 
-	  (prog-mode-hook . @-enable-rainbow-delimiters)
-	  (emacs-lisp-mode-hook . @-enable-rainbow-delimiters))
+	  (prog-mode . @-enable-rainbow-delimiters)
+	  (emacs-lisp-mode . @-enable-rainbow-delimiters))
 	)
-    ;;(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+	;;(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
 #+end_src
 
 ** 皮肤,Theme
@@ -202,21 +201,42 @@
   ;; 皮肤,Theme
   ;; 安全的加载theme
   (setq custom-safe-themes t)
-  ;; 使用 doom theme 
-  (use-package doom-themes
-    :ensure t
-    :config
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-      doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (load-theme 'doom-one t)
-    ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
-    ;; for treemacs users
-    ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-    ;; (doom-themes-treemacs-config)
-    ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config))
+  ;; 白天 座位这屏幕反光. 不能用这个皮肤
+  ;; ;; 使用 doom theme 
+  ;; (use-package doom-themes
+  ;;   :ensure t
+  ;;   :config
+  ;;   ;; Global settings (defaults)
+  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  ;;     doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;;   (load-theme 'doom-one t)
+  ;;   ;; Enable flashing mode-line on errors
+  ;;   (doom-themes-visual-bell-config)
+  ;;   ;; for treemacs users
+  ;;   ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  ;;   ;; (doom-themes-treemacs-config)
+  ;;   ;; Corrects (and improves) org-mode's native fontification.
+  ;;   (doom-themes-org-config))
+
+  (use-package monokai-theme
+	:ensure t
+	:config
+	(load-theme 'monokai t))
+
+  ;; (use-package vscode-dark-plus-theme
+  ;;   :ensure t
+  ;;   :config
+  ;;   (load-theme 'vscode-dark-plus t))
+
+  ;; (use-package faff-theme
+  ;;   :ensure t
+  ;;   :config
+  ;;   (load-theme 'faff t))
+  ;; (use-package solarized-theme
+  ;;   :ensure t
+  ;;   :config
+  ;;   (load-theme 'solarized-dark t))
+
 #+end_src
 
 ** 状态栏
@@ -232,7 +252,7 @@
 #+begin_src emacs-lisp
 
 ;; 行号显示
-(global-linum-mode)
+;;(global-linum-mode)
 
 (use-package linum
   :ensure t
@@ -281,7 +301,7 @@
   ;;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 #+end_src
-** ivy-posframe
+** ivy-posframe mac 使用有bug.
 #+begin_src emacs-lisp
   ;; ivy-posframe
   ;; (use-package ivy-posframe
@@ -331,8 +351,14 @@
   :ensure t)
 #+end_src
 ** vtm 管理多个vtertm
-(use-package vtm
-  :ensure t)
+#+begin_src emacs-lisp
+  (use-package vtm
+	:ensure t
+	:config
+	(setq vtm-edit-mode nil)
+	)
+#+end_src
+
 ** git
 #+begin_src emacs-lisp
 ;; git 支持
@@ -346,9 +372,10 @@
 #+end_src
 ** 智能tab补全
 #+begin_src emacs-lisp
-;; 智能tab补全. 有个新的 smart-tab-mode 
-;;(use-package smart-tab
-;;  :hook ((prog-mode-hook . smart-tab-mode)))
+  ;; 智能tab补全. 有个新的 smart-tab-mode 
+  (use-package smart-tabs-mode
+	:ensure t
+	:hook ((prog-mode . smart-tabs-mode)))
 #+end_src
 ** 智能跳转行首和行尾
 #+begin_src emacs-lisp
@@ -407,7 +434,7 @@
     (setq youdao-dictionary-search-history-file "~/.emacs.d/.youdao")
 
     ;; Enable Chinese word segmentation support (支持中文分词)
-    (setq youdao-dictionary-use-chinese-word-segmentation t)
+    ;; (setq youdao-dictionary-use-chinese-word-segmentation t)
     )
 
 #+end_src
@@ -507,6 +534,53 @@
 	;; 手动输入数字起始(默认是0)
 	(global-set-key (kbd "M-N") '@-ask-inter-num)
 #+end_src
+** 高亮代码中的todo
+#+begin_src emacs-lisp
+  (use-package hl-todo
+	:ensure t
+	:hook
+	(prog-mode . hl-todo-mode)
+	(text-mode . hl-todo-mode)
+	:config
+	(setq hl-todo-keyword-faces
+		'(("TODO"   . "#FF0000")
+		  ("FIXME"  . "#FF0000")
+		  ("DEBUG"  . "#A020F0")
+		  ("GOTCHA" . "#FF4500")
+		  ("STUB"   . "#1E90FF")))
+	)
+#+end_src
+** git/todo 搜集代码中的todo
+#+begin_src emacs-lisp
+  (use-package dash
+    :ensure t)
+  (use-package pcre2el
+    :ensure t)
+  (use-package f
+    :ensure t)
+  (use-package async
+    :ensure t)
+  (use-package s
+    :ensure t)
+  (use-package magit-todos
+	:ensure t
+	:config
+	;; 这个是不包含的文件 
+	;; (setq magit-todos-exclude-globs '("*.org" "*.go" "*.c" "*.cpp"))
+	;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
+	(setq magit-todos-keyword-suffix "")
+	:hook
+	(magit-mode . magit-todos-mode)
+	)
+
+ ;; (setq magit-todos-nice nil)
+
+;;  (use-package doom-todo-ivy
+;;    :ensure t
+    ;;:hook (after-init . doom-todo-ivy))
+  ;; (require 'doom-todo-ivy)
+
+#+end_src
 * 文件格式
 ** json 
 #+begin_src
@@ -566,15 +640,17 @@
 #+end_src
 * 编程支持
 ** flyspell 拼写检查
+   禁用拼写检查. 看着好闹心.
 #+begin_src emacs-lisp
-;; flyspell 拼写检查
-(use-package flyspell
-  :ensure t
-  :config
-  (flyspell-mode +1))
-;; (add-hook 'before-save-hook (lambda () (flyspell-buffer)))
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  ;; flyspell 拼写检查
+  ;;(use-package flyspell
+  ;;  ;;:ensure t
+  ;;  :disabled
+  ;;  :config
+  ;;  (flyspell-mode +1))
+  ;; (add-hook 'before-save-hook (lambda () (flyspell-buffer)))
+  ;;(add-hook 'text-mode-hook 'flyspell-mode)
+  ;;(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 #+end_src
 ** flycheck
 #+begin_src emacs-lisp
@@ -594,6 +670,11 @@
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
+#+end_src
+** dap-mode (调试支持)
+#+begin_src emacs-lisp
+  (use-package dap-mode 
+	:ensure t)
 #+end_src
 ** company自动补全
 #+begin_src emacs-lisp
@@ -731,34 +812,50 @@
 * 编程语言
 ** golang 语言
 #+begin_src emacs-lisp
-;; Set up before-save hooks to format buffer and add/delete imports.
-;; Make sure you don't have other gofmt/goimports hooks enabled.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+	;; Set up before-save hooks to format buffer and add/delete imports.
+	;; Make sure you don't have other gofmt/goimports hooks enabled.
+	(defun lsp-go-install-save-hooks ()
+	  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+	  (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
-;; go语言支持
-(use-package go-mode
-  :mode "\\.go\\'"
-  :init
-  (setq gofmt-command "goimports")
-  :config
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-  :hook ((go-mode . lsp)))
+	;; go语言支持
+	(use-package go-mode
+	  :mode "\\.go\\'"
+	  :init
+	  (setq gofmt-command "goimports")
+	  :config
+	  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+	  :hook ((go-mode . lsp)))
 
-;; 使用gocode 提供代码类型显示(在minibuffer) 
-(use-package go-eldoc
-  :ensure t
-  :hook ((gp-mode-hook . go-eldoc-setup)))
+	;; 使用gocode 提供代码类型显示(在minibuffer) 
+	(use-package go-eldoc
+	  :ensure t
+	  :hook ((gp-mode-hook . go-eldoc-setup)))
 
-;; 使用guru 进行代码导航
-(use-package go-guru
-  :ensure t
-  :hook (go-mode . go-guru-hl-identifier-mode))
+	;; 使用guru 进行代码导航
+	(use-package go-guru
+	  :ensure t
+	  :hook (go-mode . go-guru-hl-identifier-mode))
 
-;; go代码调试
-(use-package go-dlv
-  :ensure t)
+	;; go代码调试
+	(use-package go-dlv
+	  :ensure t)
+
+	;; go 包测试
+	(use-package gotest
+	  :ensure t)
+
+	;; go 生成测试代码
+	(use-package go-gen-test
+	  :ensure t)
+
+	;; go lint
+	(use-package golint
+	  :ensure t)
+
+	;; go 调试 
+  (require 'dap-go)
+  (dap-go-setup)
 #+end_src
 * org mode 
 ** org-bullets
@@ -789,20 +886,14 @@
 (setq org-enforce-todo-dependencies t)
 ;; 使用org-depend 
 (require 'org-depend)
+;; 显示图片设置
+(setq org-image-actual-width (/ (display-pixel-width) 3))
+;; 
+(org-display-inline-images)
 #+end_src
 #+begin_src emacs-lisp
 ;; (add-to-list 'load-path "~/.emacs.d/externs/org-protocol-capture-html")
 ;; (require 'org-protocol-capture-html)
-#+end_src
-** org web tool
-#+begin_src emacs-lisp
-;(use-package pandoc
-;  :ensure t)
-
-;; brew install pandoc pandoc-citeproc librsvg python homebrew/cask/basictex
-
-(use-package org-web-tools
-  :ensure t)
 #+end_src
 ** org 外部交互
 #+begin_src emacs-lisp
@@ -810,6 +901,27 @@
 (require 'org-protocol)
 ;; 启动服务器. 外部调用访问(浏览器等)
 (server-start)
+#+end_src
+** org web tool
+#+begin_src emacs-lisp
+  ;; brew install pandoc pandoc-citeproc librsvg python homebrew/cask/basictex
+  (use-package org-web-tools
+	:ensure t)
+  ;; 使用 org-web-tools-read-url-as-org 转换剪切板中的连接为org.并在新缓冲区中打开.
+  ;; 使用 org-web-tools-convert-links-to-page-entries	将entry中的url转换为org.并添加到当前entry下面
+
+
+  ;; 使用org-board-archive 下载网站 
+  (use-package org-board
+	:ensure t)
+  ;; 例子
+  ;; ** TODO Linkers (20-part series)
+  ;; :PROPERTIES:
+  ;; :URL:          http://a3f.at/lists/linkers
+  ;; :WGET_OPTIONS: --recursive -l 1 --span-hosts
+  ;; :ID:       A339E336-5CD3-447D-A658-C9A7263BD32E
+  ;; :ARCHIVED_AT: [[file:/Users/chenzhiyuan/org/knowledge/data/A3/39E336-5CD3-447D-A658-C9A7263BD32E/2020-11-23T13:57:47+0800/][2020-11-23T13:57:47+0800]]
+  ;; :END:
 #+end_src
 ** org-capture
 #+begin_src emacs-lisp
@@ -867,6 +979,21 @@
       (org-edit-src-code)))
 #+end_src
 
+** org-projectile
+#+begin_src emacs-lisp
+  (use-package org-projectile
+	:bind (("C-c n p" . org-projectile-project-todo-completing-read))
+	:config
+	(progn
+	  (setq org-projectile-per-project-filepath
+			"~/org/ap.org")
+	  ;; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+	  ;;(push (org-projectile-project-todo-entry) org-capture-templates))
+	:ensure t)
+)
+  ;; (princ org-capture-templates)
+
+#+end_src
 * todo
 ** TODO [A] vterm 配置. 查看官网
 ** TODO [C] lua语言支持 - lsp - 

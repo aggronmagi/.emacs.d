@@ -14,7 +14,11 @@
 
 [[https://melpa.org][https://melpa.org]]
 
+
 [[https://github.com/zamansky/using-emacs][一个老外的配置]] => [[https://cestlaz.github.io/stories/emacs/][视频地址]]
+
+
+这个老外的视频 在bilibili上 有中英字幕. [[https://www.bilibili.com/video/BV1fE411x7jc?p=1]]
 
 *** emacs 
 
