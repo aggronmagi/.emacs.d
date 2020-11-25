@@ -359,7 +359,7 @@
   :config
   (setq recentf-max-saved-items 200
     recentf-max-menu-items 15)
-  :bind ("<f3>" . helm-recentf)
+  ;;:bind ("<f3>" . helm-recentf)
   :hook ((after-init-hook . recentf-mode)))
 #+end_src
 ** vterm
@@ -564,8 +564,9 @@
 		  ("FIXME"  . "#FF0000")
 		  ("DEBUG"  . "#A020F0")
 		  ("GOTCHA" . "#FF4500")
-		  ("STUB"   . "#1E90FF")))
-	)
+		  ("STUB"   . "#1E90FF")
+		  ("NOTE"   . "#36bf36"))
+	))
 #+end_src
 ** git/todo 搜集代码中的todo
 #+begin_src emacs-lisp
@@ -650,6 +651,7 @@
     :ensure t
     :config 
     (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
+	(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
     ;; jar 配置
     (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
     (setq plantuml-default-exec-mode 'jar)
@@ -736,9 +738,9 @@
   (use-package treemacs
 	:ensure t
 	:defer t
-	:init
-	(with-eval-after-load 'winum
-	  (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+	;;:init
+	;;(with-eval-after-load 'winum
+	;;  (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
 	:config
 	(progn
 	  (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
@@ -797,9 +799,9 @@
 		 (treemacs-git-mode 'simple))))
 	:bind
 	(:map global-map
-		  ("M-0"       . treemacs-select-window)
+		  ("M-0"       . treemacs) ;;treemacs-select-window)
 		  ("C-x t 1"   . treemacs-delete-other-windows)
-		  ("C-x t t"   . treemacs)
+		  ;;("C-x t t"   . treemacs)
 		  ;;("C-x t B"   . treemacs-bookmark)
 		  ;;("C-x t C-t" . treemacs-find-file)
 		  ("C-x t M-t" . treemacs-find-tag)))
@@ -1029,4 +1031,25 @@
 * todo
 ** TODO [A] vterm 配置. 查看官网
 ** TODO [C] lua语言支持 - lsp - 
-
+** TODO 将 M-0 M-9 M-8 命令(lsp-treemacs 或者 treemacs相关命令) 改成 toggle形式 
+* 常用命令记录
+** 's-p' 项目中查找文件 
+** 'M-0' 打开文件树视图(treemacs)
+** 'M-9' 打开当前文件符号视图(lsp-treemacs)=> 函数列表
+** 'M-8' 错误视图(lsp-treemacs) 
+** "C-c k" 剪切板列表
+** "M-o"  快速切换窗口(ace-window) 可以跨屏幕(2个frame.分别在2个屏幕 可以直接跨屏幕)
+** "C-c y" 有道翻译 
+** <f2> / S-<f2>" <f1> 仿照vs的书签 
+** 多列编辑 
+*** M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标 
+*** "C->" 下一个匹配处插入光标
+*** "C-<" 上一个匹配处插入光标
+*** "C-c C-<" 所有匹配处插入光标 
+*** "M-N"  在多个光标处 顺序的插入数字 手动输入数字起始(默认是0)
+** "C-x u" undo-tree 
+** "C-x g" magit 
+** "C-s" swiper
+** "M-x" counsel-M-x
+** "C-c a" org-agenda
+** "C-c c" org-capture
