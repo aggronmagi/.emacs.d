@@ -552,33 +552,28 @@
 #+end_src
 ** git/todo 搜集代码中的todo
 #+begin_src emacs-lisp
-  (use-package dash
-    :ensure t)
-  (use-package pcre2el
-    :ensure t)
-  (use-package f
-    :ensure t)
-  (use-package async
-    :ensure t)
-  (use-package s
-    :ensure t)
-  (use-package magit-todos
-	:ensure t
-	:config
-	;; 这个是不包含的文件 
-	;; (setq magit-todos-exclude-globs '("*.org" "*.go" "*.c" "*.cpp"))
-	;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
-	(setq magit-todos-keyword-suffix "")
-	:hook
-	(magit-mode . magit-todos-mode)
-	)
+    ;; (use-package dash
+    ;;   :ensure t)
+    ;; (use-package pcre2el
+    ;;   :ensure t)
+    ;; (use-package f
+    ;;   :ensure t)
+    ;; (use-package async
+    ;;   :ensure t)
+    ;; (use-package s
+    ;;   :ensure t)
+    (use-package magit-todos
+	  :ensure t
+	  :config
+	  ;; 这个是不包含的文件 
+	  (setq magit-todos-exclude-globs '("*.html"))
+	  ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
+	  (setq magit-todos-keyword-suffix "")
+	  :hook
+	  (magit-mode . magit-todos-mode)
+	  )
 
- ;; (setq magit-todos-nice nil)
-
-;;  (use-package doom-todo-ivy
-;;    :ensure t
-    ;;:hook (after-init . doom-todo-ivy))
-  ;; (require 'doom-todo-ivy)
+   ;; (setq magit-todos-nice nil)
 
 #+end_src
 * 文件格式
