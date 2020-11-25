@@ -119,7 +119,7 @@
 (setq create-lockfiles nil)
 
 ;; 一个tab=4个空格.默认8个
-(setq tab-width 4)
+(setq-default tab-width 4)
 
 ;; 保存历史记录模式
 (savehist-mode 1)
@@ -325,7 +325,24 @@
   (setq undo-tree-visualizer-timestamps t)
   (setq undo-tree-visualizer-diff t))
 #+end_src
-
+** jump-tree 跳转
+   包太老了. 没有办法用. 
+#+begin_src emacs-lisp
+  ;; (use-package jump-tree
+  ;;   :ensure t
+  ;;   :config
+  ;;   (global-jump-tree-mode)
+  ;;   (add-to-list 'jump-tree-pos-list-record-commands 'xref-find-definitions)
+  ;;   )
+  ;; (jump-tree-jump-next)
+#+end_src
+** 在项目中查找文件
+#+begin_src emacs-lisp
+  (use-package find-file-in-project
+	:ensure t
+	:bind
+	("s-p" . find-file-in-project))
+#+end_src
 ** which-key 按键提示
 #+begin_src emacs-lisp
 (use-package which-key
@@ -552,28 +569,39 @@
 #+end_src
 ** git/todo 搜集代码中的todo
 #+begin_src emacs-lisp
-    ;; (use-package dash
-    ;;   :ensure t)
-    ;; (use-package pcre2el
-    ;;   :ensure t)
-    ;; (use-package f
-    ;;   :ensure t)
-    ;; (use-package async
-    ;;   :ensure t)
-    ;; (use-package s
-    ;;   :ensure t)
-    (use-package magit-todos
-	  :ensure t
-	  :config
-	  ;; 这个是不包含的文件 
-	  (setq magit-todos-exclude-globs '("*.html"))
-	  ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
-	  (setq magit-todos-keyword-suffix "")
-	  :hook
-	  (magit-mode . magit-todos-mode)
-	  )
+   (use-package dash
+     :ensure t)
+   (use-package pcre2el
+     :ensure t)
+   (use-package f
+     :ensure t)
+   (use-package async
+     :ensure t)
+   (use-package s
+     :ensure t)
 
-   ;; (setq magit-todos-nice nil)
+   (use-package magit-todos
+	 :ensure t
+	 :init
+	 (require 'dash)
+	 (require 'pcre2el)
+	 (require 'f)
+	 (require 'async)
+	 (require 's)
+	 :commands (magit-todos-mode)
+	 :config
+	 ;; (setq magit-todos-recursive t)
+	 ;; (setq magit-todos-depth 100)
+	 ;; 这个是不包含的文件 
+	 ;; (setq magit-todos-exclude-globs '("*.html"))
+	 ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
+	 ;; (setq magit-todos-keyword-suffix "")
+	 :hook
+	 (magit-mode . magit-todos-mode)
+	 )
+    ;; 使用过程中. 发现. 如果使用treemacs 打开目录. 打开 magit. magit 正常. 但是magit-todos 没有显示. 需要打开一个项目文件才行.
+
+  ;; (setq magit-todos-nice nil)
 
 #+end_src
 * 文件格式
@@ -705,103 +733,112 @@
 #+end_src
 ** treemacs
 #+begin_src emacs-lisp
-(use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-directory-name-transformer    #'identity
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-extension-regex          treemacs-last-period-regex-value
-          treemacs-file-follow-delay             0.2
-          treemacs-file-name-transformer         #'identity
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-move-forward-on-expand        nil
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                      'left
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-asc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-user-mode-line-format         nil
-          treemacs-user-header-line-format       nil
-          treemacs-width                         35
-          treemacs-workspace-switch-cleanup      nil)
+  (use-package treemacs
+	:ensure t
+	:defer t
+	:init
+	(with-eval-after-load 'winum
+	  (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+	:config
+	(progn
+	  (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+			treemacs-deferred-git-apply-delay      0.5
+			treemacs-directory-name-transformer    #'identity
+			treemacs-display-in-side-window        t
+			treemacs-eldoc-display                 t
+			treemacs-file-event-delay              5000
+			treemacs-file-extension-regex          treemacs-last-period-regex-value
+			treemacs-file-follow-delay             0.2
+			treemacs-file-name-transformer         #'identity
+			treemacs-follow-after-init             t
+			treemacs-git-command-pipe              ""
+			treemacs-goto-tag-strategy             'refetch-index
+			treemacs-indentation                   2
+			treemacs-indentation-string            " "
+			treemacs-is-never-other-window         nil
+			treemacs-max-git-entries               5000
+			treemacs-missing-project-action        'ask
+			treemacs-move-forward-on-expand        nil
+			treemacs-no-png-images                 nil
+			treemacs-no-delete-other-windows       t
+			treemacs-project-follow-cleanup        nil
+			treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+			treemacs-position                      'left
+			treemacs-recenter-distance             0.1
+			treemacs-recenter-after-file-follow    nil
+			treemacs-recenter-after-tag-follow     nil
+			treemacs-recenter-after-project-jump   'always
+			treemacs-recenter-after-project-expand 'on-distance
+			treemacs-show-cursor                   nil
+			treemacs-show-hidden-files             t
+			treemacs-silent-filewatch              nil
+			treemacs-silent-refresh                nil
+			treemacs-sorting                       'alphabetic-asc
+			treemacs-space-between-root-nodes      t
+			treemacs-tag-follow-cleanup            t
+			treemacs-tag-follow-delay              1.5
+			treemacs-user-mode-line-format         nil
+			treemacs-user-header-line-format       nil
+			treemacs-width                         35
+			treemacs-workspace-switch-cleanup      nil)
 
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
+	  ;; The default width and height of the icons is 22 pixels. If you are
+	  ;; using a Hi-DPI display, uncomment this to double the icon size.
+	  ;;(treemacs-resize-icons 44)
 
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null treemacs-python-executable)))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ;;("C-x t B"   . treemacs-bookmark)
-        ;;("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+	  (treemacs-follow-mode t)
+	  (treemacs-filewatch-mode t)
+	  (treemacs-fringe-indicator-mode t)
+	  (pcase (cons (not (null (executable-find "git")))
+				   (not (null treemacs-python-executable)))
+		(`(t . t)
+		 (treemacs-git-mode 'deferred))
+		(`(t . _)
+		 (treemacs-git-mode 'simple))))
+	:bind
+	(:map global-map
+		  ("M-0"       . treemacs-select-window)
+		  ("C-x t 1"   . treemacs-delete-other-windows)
+		  ("C-x t t"   . treemacs)
+		  ;;("C-x t B"   . treemacs-bookmark)
+		  ;;("C-x t C-t" . treemacs-find-file)
+		  ("C-x t M-t" . treemacs-find-tag)))
 
-;;(use-package treemacs-evil
-;;  :after treemacs evil
-;;  :ensure t)
+  ;;(use-package treemacs-evil
+  ;;  :after treemacs evil
+  ;;  :ensure t)
 
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
+  (use-package treemacs-projectile
+	:after treemacs projectile
+	:ensure t)
 
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :ensure t
-  :config (treemacs-icons-dired-mode))
+  (use-package treemacs-icons-dired
+	:after treemacs dired
+	:ensure t
+	:config (treemacs-icons-dired-mode))
 
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
+  (use-package treemacs-magit
+	:after treemacs magit
+	:ensure t)
 
-(use-package treemacs-persp ;;treemacs-persective if you use perspective.el vs. persp-mode
-  :after treemacs persp-mode ;;or perspective vs. persp-mode
-  :ensure t
-  :config (treemacs-set-scope-type 'Perspectives))
+  (use-package treemacs-persp ;;treemacs-persective if you use perspective.el vs. persp-mode
+	:after treemacs persp-mode ;;or perspective vs. persp-mode
+	:ensure t
+	:config (treemacs-set-scope-type 'Perspectives))
+
   (use-package lsp-treemacs
-  :ensure t
-  :config
-  (lsp-treemacs-sync-mode 1) 
-  )
+	:ensure t
+	:config
+	(lsp-treemacs-sync-mode 1)
+	;; 将窗口放在右边.
+	(setq lsp-treemacs-symbols-position-params  `((side . right)
+												  (slot . 1)
+												  (window-width . 100)))
+	:bind
+	;; 添加快捷键 
+	("M-9" . lsp-treemacs-symbols)
+	("M-8" . lsp-treemacs-errors-list)
+	)
 
 #+end_src
 * 编程语言

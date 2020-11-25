@@ -3,6 +3,10 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+		autopair-insert-opening
+		autopair-insert-or-skip-quote
+		autopair-newline
+		autopair-skip-close-maybe
 		browse-kill-ring
 		c-electric-semi&comma
 		c-electric-slash
@@ -12,6 +16,7 @@
 		ignore
 		indent-for-tab-command
 		kill-ring-save
+		lsp-signature-previous
 		mouse-set-region
 		mwim-beginning
 		mwim-end
