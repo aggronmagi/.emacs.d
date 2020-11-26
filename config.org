@@ -570,37 +570,37 @@
 #+end_src
 ** git/todo 搜集代码中的todo
 #+begin_src emacs-lisp
-   (use-package dash
-     :ensure t)
-   (use-package pcre2el
-     :ensure t)
-   (use-package f
-     :ensure t)
-   (use-package async
-     :ensure t)
-   (use-package s
-     :ensure t)
+   ;; (use-package dash
+   ;;   :ensure t)
+   ;; (use-package pcre2el
+   ;;   :ensure t)
+   ;; (use-package f
+   ;;   :ensure t)
+   ;; (use-package async
+   ;;   :ensure t)
+   ;; (use-package s
+   ;;   :ensure t)
 
-   (use-package magit-todos
-	 :ensure t
-	 :init
-	 (require 'dash)
-	 (require 'pcre2el)
-	 (require 'f)
-	 (require 'async)
-	 (require 's)
-	 :commands (magit-todos-mode)
-	 :config
-	 ;; (setq magit-todos-recursive t)
-	 ;; (setq magit-todos-depth 100)
-	 ;; 这个是不包含的文件 
-	 ;; (setq magit-todos-exclude-globs '("*.html"))
-	 ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
-	 ;; (setq magit-todos-keyword-suffix "")
-	 :hook
-	 (magit-mode . magit-todos-mode)
-	 )
-    ;; 使用过程中. 发现. 如果使用treemacs 打开目录. 打开 magit. magit 正常. 但是magit-todos 没有显示. 需要打开一个项目文件才行.
+   ;; (use-package magit-todos
+   ;;   :ensure t
+   ;;   :init
+   ;;   (require 'dash)
+   ;;   (require 'pcre2el)
+   ;;   (require 'f)
+   ;;   (require 'async)
+   ;;   (require 's)
+   ;;   :commands (magit-todos-mode)
+   ;;   :config
+   ;;   ;; (setq magit-todos-recursive t)
+   ;;   ;; (setq magit-todos-depth 100)
+   ;;   ;; 这个是不包含的文件 
+   ;;   ;; (setq magit-todos-exclude-globs '("*.html"))
+   ;;   ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
+   ;;   ;; (setq magit-todos-keyword-suffix "")
+   ;;   :hook
+   ;;   (magit-mode . magit-todos-mode)
+   ;;   )
+	;; 使用过程中. 发现. 如果使用treemacs 打开目录. 打开 magit. magit 正常. 但是magit-todos 没有显示. 需要打开一个项目文件才行.
 
   ;; (setq magit-todos-nice nil)
 
