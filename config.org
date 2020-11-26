@@ -738,8 +738,8 @@
   (use-package treemacs
 	:ensure t
 	:defer t
-	;;:init
-	;;(with-eval-after-load 'winum
+	;; :init
+	;; (with-eval-after-load 'winum
 	;;  (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
 	:config
 	(progn
@@ -799,9 +799,9 @@
 		 (treemacs-git-mode 'simple))))
 	:bind
 	(:map global-map
-		  ("M-0"       . treemacs) ;;treemacs-select-window)
+		  ("M-0"       . treemacs-select-window)
 		  ("C-x t 1"   . treemacs-delete-other-windows)
-		  ;;("C-x t t"   . treemacs)
+		  ("C-x t t"   . treemacs)
 		  ;;("C-x t B"   . treemacs-bookmark)
 		  ;;("C-x t C-t" . treemacs-find-file)
 		  ("C-x t M-t" . treemacs-find-tag)))
@@ -1031,7 +1031,6 @@
 * todo
 ** TODO [A] vterm 配置. 查看官网
 ** TODO [C] lua语言支持 - lsp - 
-** TODO 将 M-0 M-9 M-8 命令(lsp-treemacs 或者 treemacs相关命令) 改成 toggle形式 
 * 常用命令记录
 ** 's-p' 项目中查找文件 
 ** 'M-0' 打开文件树视图(treemacs)
