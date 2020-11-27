@@ -28,6 +28,7 @@
       '(
 		@-ask-inter-num
 		beginning-of-buffer
+		c-indent-line-or-region
 		copy-rectangle-as-kill
 		counsel-M-x
 		counsel-find-file
@@ -36,6 +37,9 @@
 		keyboard-escape-quit
 		kill-region
 		lsp-ui-doc--handle-mouse-movement
+		mouse-buffer-menu
 		move-past-close-and-reindent
 		ns-copy-including-secondary
+		treemacs-select-window
+		undo-tree-visualize
 		))
