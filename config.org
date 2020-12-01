@@ -97,8 +97,8 @@
 ;; 全局文件恢复 从 #..#文件恢复
 (global-auto-revert-mode t)
 
-;; 启动后开启全屏
-(toggle-frame-fullscreen)
+;; ;; 启动后开启全屏
+;; (toggle-frame-fullscreen)
 
 ;; 隐藏开始界面
 (setq inhibit-splash-screen t)
@@ -270,36 +270,37 @@
 * 工具
 ** minibuffer
 #+begin_src emacs-lisp
-  ;; 执行 s-p 卡死 (find-file-in-project)
-  ;; (use-package mini-frame
-  ;;   :ensure t
-  ;;   :config
-  ;;   (mini-frame-mode))
+	;; 执行 s-p 卡死 (find-file-in-project)
+	;; (use-package mini-frame
+	;;   :ensure t
+	;;   :config
+	;;   (mini-frame-mode))
 
-  ;; git clone https://github.com/honmaple/emacs-maple-minibuffer ~/.emacs.d/lisp/maple-minibuffer
+	;; git clone https://github.com/honmaple/emacs-maple-minibuffer ~/.emacs.d/lisp/maple-minibuffer
 
-  (require 'maple-minibuffer)
-  (progn (setq maple-minibuffer:position-type 'window-top-center
-			   maple-minibuffer:border-color "gray50"
-			   maple-minibuffer:height nil
-			   maple-minibuffer:width 0.7
-			   maple-minibuffer:cache t)
+  ;;   (require 'maple-minibuffer)
+  ;; ;;window-top-center
+  ;;   (progn (setq maple-minibuffer:position-type 'frame-top-center 
+  ;; 			   maple-minibuffer:border-color "gray50"
+  ;; 			   maple-minibuffer:height nil
+  ;; 			   maple-minibuffer:width 0.7
+  ;; 			   maple-minibuffer:cache t)
 
-		 (setq maple-minibuffer:action '(read-from-minibuffer read-string)
-			   maple-minibuffer:ignore-action '(evil-ex eval-expression))
+  ;; 		 (setq maple-minibuffer:action '(read-from-minibuffer read-string)
+  ;; 			   maple-minibuffer:ignore-action '(evil-ex eval-expression))
 
-		 (add-to-list 'maple-minibuffer:ignore-action 'org-schedule))
-	;;(add-to-list 'maple-minibuffer:ignore-regexp "^helm-")
+  ;; 		 (add-to-list 'maple-minibuffer:ignore-action 'org-schedule)
+  ;; 	;;(add-to-list 'maple-minibuffer:ignore-regexp "^helm-")
 
-	;; more custom parameters for frame
-	;; (defun maple-minibuffer:parameters ()
-	;;   "Maple minibuffer parameters."
-	;;   `((height . ,(or maple-minibuffer:height 10))
-	;;     (width . ,(or maple-minibuffer:width (window-pixel-width)))
-	;;     (left-fringe . 5)
-	;;     (right-fringe . 5))))
+  ;; 	;; more custom parameters for frame
+  ;; 	(defun maple-minibuffer:parameters ()
+  ;; 	  "Maple minibuffer parameters."
+  ;; 	  `((height . ,(or maple-minibuffer:height 10))
+  ;; 		(width . ,(or maple-minibuffer:width (window-pixel-width)))
+  ;; 		(left-fringe . 5)
+  ;; 		(right-fringe . 5))))
 
-  (maple-minibuffer-mode)
+  ;;   (maple-minibuffer-mode)
 
 
 
@@ -641,6 +642,19 @@
 
   ;; (setq magit-todos-nice nil)
 
+#+end_src
+** rg 支持
+#+begin_src emacs-lisp
+	(use-package rg
+	  :ensure t
+	  ;; :bind
+	  ;; (:map global-map 
+	  ;; ("C-c s" rg-menu))
+  
+	  :config
+	  (rg-enable-default-bindings)
+	  )
+;; (rg-enable-menu)
 #+end_src
 * 文件格式
 ** json 

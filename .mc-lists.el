@@ -34,12 +34,15 @@
 		counsel-find-file
 		describe-key
 		handle-switch-frame
+		ivy-switch-buffer
 		keyboard-escape-quit
 		kill-region
 		lsp-ui-doc--handle-mouse-movement
 		mouse-buffer-menu
 		move-past-close-and-reindent
 		ns-copy-including-secondary
+		text-scale-adjust
 		treemacs-select-window
 		undo-tree-visualize
+		youdao-dictionary-search-at-point+
 		))
