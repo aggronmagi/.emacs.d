@@ -33,13 +33,13 @@
 	(exec-path-from-shell-copy-env "GOPATH"))
 
   ;; 复制,粘贴使用下面配置,将导致multiple-cursor的复制,粘贴失效
-  ;; copy paste 
+  ;; copy paste
   ;; (cond ((string-equal system-type "darwin")
   ;;        (progn
   ;;          ;; modify option and command key
   ;;          ;;(setq mac-comman-modifier 'control)
   ;;          ;;(setq mac-option-modifier 'meta)
-  ;; 
+  ;;
   ;;          ;; batter copy and paste support for mac os x
   ;;          (defun copy-from-osx ()
   ;;            (shell-command-to-string "pbpaste"))
@@ -75,7 +75,7 @@
 ** 基础设置
 #+begin_src emacs-lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 基础设置 
+;; 基础设置
 ;; 使用y/n 代替yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -155,16 +155,16 @@
   ;; 括号自动补全
   (use-package autopair
 	:ensure t
-	:init 
+	:init
 	(defun @-enable-autopair ()
 	  (autopair-mode t))
-	:hook 
-	(progn 
+	:hook
+	(progn
 	  (prog-mode . @-enable-autopair)
 	  (emacs-lisp-mode . @-enable-autopair)
 	  ))
-  
-   ;; 高亮括号匹配 
+
+   ;; 高亮括号匹配
   (use-package highlight-parentheses
 	:ensure t)
   ;; 全局启用括号高亮
@@ -173,7 +173,7 @@
 	(lambda ()
 	  (highlight-parentheses-mode t)))
   (global-highlight-parentheses-mode t)
-  ;; NOTE 括号跳转  C-M-n,C-M-p  
+  ;; NOTE 括号跳转  C-M-n,C-M-p
   ;; ;; 彩虹色 用于web css等
   ;; (use-package rainbow-mode
   ;;   :ensure t
@@ -187,8 +187,8 @@
 	:init
 	(defun @-enable-rainbow-delimiters ()
 	  (rainbow-delimiters-mode t))
-	:hook 
-	(progn 
+	:hook
+	(progn
 	  (prog-mode . @-enable-rainbow-delimiters)
 	  (emacs-lisp-mode . @-enable-rainbow-delimiters))
 	)
@@ -202,7 +202,7 @@
   ;; 安全的加载theme
   (setq custom-safe-themes t)
   ;; 白天 座位这屏幕反光. 不能用这个皮肤
-  ;; ;; 使用 doom theme 
+  ;; ;; 使用 doom theme
   ;; (use-package doom-themes
   ;;   :ensure t
   ;;   :config
@@ -262,25 +262,46 @@
   (set-face-background 'linum nil))
 #+end_src
 
-** icons 
+** icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
   :ensure t)
 #+end_src
 * 工具
+** auto-save
+#+begin_src emacs-lisp
+  (require 'auto-save)
+  (auto-save-enable)
+  ; quietly sav
+  (setq auto-save-silent t)
+  ; automatically delete spaces at the end of the line when saving
+  (setq auto-save-delete-trailing-whitespace t)
+
+#+end_src
+** back-button
+#+begin_src emacs-lisp
+  (require 'back-button)
+  (back-button-mode 1)
+  (global-set-key (kbd "M-[") 'back-button-global-backward)
+  (global-set-key (kbd "M-]") 'back-button-global-forward)
+#+end_src
+** highlight-thing
+#+begin_src emacs-lisp
+(require 'highlight-thing)
+(global-highlight-thing-mode)
+#+end_src
 ** minibuffer
 #+begin_src emacs-lisp
-	;; 执行 s-p 卡死 (find-file-in-project)
-	;; (use-package mini-frame
-	;;   :ensure t
-	;;   :config
-	;;   (mini-frame-mode))
+	(use-package mini-frame
+	  :ensure t
+	  :config
+	  (mini-frame-mode))
 
 	;; git clone https://github.com/honmaple/emacs-maple-minibuffer ~/.emacs.d/lisp/maple-minibuffer
 
   ;;   (require 'maple-minibuffer)
   ;; ;;window-top-center
-  ;;   (progn (setq maple-minibuffer:position-type 'frame-top-center 
+  ;;   (progn (setq maple-minibuffer:position-type 'frame-top-center
   ;; 			   maple-minibuffer:border-color "gray50"
   ;; 			   maple-minibuffer:height nil
   ;; 			   maple-minibuffer:width 0.7
@@ -311,11 +332,11 @@
 (use-package counsel
   :ensure t)
 #+end_src
-** ivy 
+** ivy
 #+begin_src emacs-lisp
 (use-package ivy
   :ensure t
-  :config 
+  :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
@@ -344,7 +365,7 @@
   ;; ivy-posframe
   ;; (use-package ivy-posframe
   ;;   :ensure t
-  ;;   :config 
+  ;;   :config
   ;;   ;; display at `ivy-posframe-style'
   ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
   ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
@@ -364,7 +385,7 @@
   (setq undo-tree-visualizer-diff t))
 #+end_src
 ** jump-tree 跳转
-   包太老了. 没有办法用. 
+   包太老了. 没有办法用.
 #+begin_src emacs-lisp
   ;; (use-package jump-tree
   ;;   :ensure t
@@ -416,18 +437,41 @@
 
 ** git
 #+begin_src emacs-lisp
-;; git 支持
-(use-package magit
-  :ensure t)
-;; 缓冲区中查看.修改,暂存文件
-(use-package git-gutter+
-  :ensure t
-  :config
-  (global-git-gutter+-mode))
+  ;; git 支持
+  (use-package magit
+	:ensure t
+	:bind
+	(:map global-map
+	  ("C-c g b" . 'magit-blame-addition)))
+  ;; 缓冲区中查看.修改,暂存文件
+  (use-package git-gutter+
+	:ensure t
+	:config
+	(global-git-gutter+-mode))
 #+end_src
+
+*** magit blame 快捷键
+#+begin_center
+     (define-key map (kbd "C-m") 'magit-show-commit)
+     (define-key map (kbd   "p") 'magit-blame-previous-chunk)
+     (define-key map (kbd   "P") 'magit-blame-previous-chunk-same-commit)
+     (define-key map (kbd   "n") 'magit-blame-next-chunk)
+     (define-key map (kbd   "N") 'magit-blame-next-chunk-same-commit)
+     (define-key map (kbd   "b") 'magit-blame-addition)
+     (define-key map (kbd   "r") 'magit-blame-removal)
+     (define-key map (kbd   "f") 'magit-blame-reverse)
+     (define-key map (kbd   "B") 'magit-blame)
+     (define-key map (kbd   "c") 'magit-blame-cycle-style)
+     (define-key map (kbd   "q") 'magit-blame-quit)
+     (define-key map (kbd "M-w") 'magit-blame-copy-hash)
+     (define-key map (kbd "SPC") 'magit-diff-show-or-scroll-up)
+     (define-key map (kbd "S-SPC") 'magit-diff-show-or-scroll-down)
+     (define-key map (kbd "DEL") 'magit-diff-show-or-scroll-down)
+#+end_center
+
 ** 智能tab补全
 #+begin_src emacs-lisp
-  ;; 智能tab补全. 有个新的 smart-tab-mode 
+  ;; 智能tab补全. 有个新的 smart-tab-mode
   (use-package smart-tabs-mode
 	:ensure t
 	:hook ((prog-mode . smart-tabs-mode)))
@@ -443,16 +487,16 @@
 ** 快速选择窗口
 #+begin_src emacs-lisp
 (use-package ace-window
-  :ensure t 
+  :ensure t
 
   :bind
   ("M-o" . ace-window))
 ;(use-package winum
 ;;  :ensure t
-;;  :config 
+;;  :config
 ;;  (winum-mode))
 #+end_src
-** 剪切板 kill ring 
+** 剪切板 kill ring
    类似于vscode的clipboard. 但是没有快速选择的方式
 #+begin_src emacs-lisp
    ;; (global-set-key "\C-xy" '(lambda ()
@@ -462,7 +506,8 @@
     :ensure t
     :bind
     (:map global-map
-	  ("C-c k" . 'browse-kill-ring))
+	  ("C-c k" . 'browse-kill-ring)
+	  ("C-c C-k" . 'browse-kill-ring))
     :config
     ;; 高亮当前选择项
     (setq browse-kill-ring-highlight-current-entry t)
@@ -492,6 +537,19 @@
     ;; (setq youdao-dictionary-use-chinese-word-segmentation t)
     )
 
+#+end_src
+** 插入翻译文字
+#+begin_src emacs-lisp
+  (require 'insert-translated-name)
+  (global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
+  (global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
+  (global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
+  (global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
+#+end_src
+** 写英文帮助
+#+begin_src emacs-lisp
+  (require 'company-english-helper)
+  (global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
 #+end_src
 ** 书签
 #+begin_src emacs-lisp
@@ -561,7 +619,7 @@
 		(:map global-map
 	   ;; M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
 	   ("M-I" . 'mc/edit-lines)
-	   ;; 下一行相似的 
+	   ;; 下一行相似的
 	   ("C->" . 'mc/mark-next-like-this)
 	   ;; 上一行相似的
 	   ("C-<" . 'mc/mark-previous-like-this)
@@ -631,7 +689,7 @@
    ;;   :config
    ;;   ;; (setq magit-todos-recursive t)
    ;;   ;; (setq magit-todos-depth 100)
-   ;;   ;; 这个是不包含的文件 
+   ;;   ;; 这个是不包含的文件
    ;;   ;; (setq magit-todos-exclude-globs '("*.html"))
    ;;   ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
    ;;   ;; (setq magit-todos-keyword-suffix "")
@@ -648,16 +706,16 @@
 	(use-package rg
 	  :ensure t
 	  ;; :bind
-	  ;; (:map global-map 
+	  ;; (:map global-map
 	  ;; ("C-c s" rg-menu))
-  
+
 	  :config
 	  (rg-enable-default-bindings)
 	  )
 ;; (rg-enable-menu)
 #+end_src
 * 文件格式
-** json 
+** json
 #+begin_src
 (use-package json-mode
   :ensure t
@@ -670,21 +728,21 @@
   :hook ((yaml-mode . lsp)))
 #+end_src
 
-** toml 
+** toml
 #+begin_src
 (use-package toml-mode
   :ensure t
   :hook ((toml-mode . lsp)))
 #+end_src
 
-** docker file 
+** docker file
 #+begin_src
 (use-package dockerfile-mode
   :ensure t
   :hook ((dockerfile-mode . lsp)))
 #+end_src
 
-** protobuf 
+** protobuf
 #+begin_src
 (use-package protobuf-mode
   :ensure t
@@ -700,13 +758,13 @@
 #+begin_src emacs-lisp
   (use-package plantuml-mode
     :ensure t
-    :config 
+    :config
     (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
 	(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
     ;; jar 配置
     (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
     (setq plantuml-default-exec-mode 'jar)
-    ;;;; 使用server 
+    ;;;; 使用server
     ;; (setq plantuml-default-exec-mode 'server)
     ;; (setq plantuml-server-url "https://www.plantuml.com/plantuml")
     ;; 执行文件
@@ -735,21 +793,46 @@
 #+end_src
 ** lsp 语言服务器
 #+begin_src emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :commands (lsp lsp-deferred)
-  :hook (go-mode . lsp-deferred))
+  ;; (use-package lsp-mode
+  ;;   :ensure t
+  ;;   :commands (lsp lsp-deferred)
+  ;;   :hook (go-mode . lsp-deferred))
 #+end_src
-** lsp-ui 
+** lsp-ui
 #+begin_src emacs-lisp
-;; Optional - provides fancier overlays.
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
+  ;; Optional - provides fancier overlays.
+  ;; (use-package lsp-ui
+  ;;   :ensure t
+  ;;   :commands lsp-ui-mode)
+#+end_src
+** nox 替代 lsp-mode
+#+begin_src emacs-lisp
+  (require 'nox)
+
+  (dolist (hook (list
+				 'js-mode-hook
+				 'rust-mode-hook
+				 'python-mode-hook
+				 'ruby-mode-hook
+				 'java-mode-hook
+				 'sh-mode-hook
+				 'php-mode-hook
+				 'c-mode-common-hook
+				 'c-mode-hook
+				 'csharp-mode-hook
+				 'c++-mode-hook
+				 'haskell-mode-hook
+				 'go-mode-hook
+				 ))
+	(add-hook hook '(lambda () (nox-ensure))))
+
+	(global-set-key (kbd "M-9") 'imenu)
+    (global-set-key (kbd "M-8") 'nox-show-doc)
+
 #+end_src
 ** dap-mode (调试支持)
 #+begin_src emacs-lisp
-  (use-package dap-mode 
+  (use-package dap-mode
 	:ensure t)
 #+end_src
 ** company自动补全
@@ -879,19 +962,19 @@
 	:ensure t
 	:config (treemacs-set-scope-type 'Perspectives))
 
-  (use-package lsp-treemacs
-	:ensure t
-	:config
-	(lsp-treemacs-sync-mode 1)
-	;; 将窗口放在右边.
-	(setq lsp-treemacs-symbols-position-params  `((side . right)
-												  (slot . 1)
-												  (window-width . 100)))
-	:bind
-	;; 添加快捷键 
-	("M-9" . lsp-treemacs-symbols)
-	("M-8" . lsp-treemacs-errors-list)
-	)
+  ;; (use-package lsp-treemacs
+  ;;   :ensure t
+  ;;   :config
+  ;;   (lsp-treemacs-sync-mode 1)
+  ;;   ;; 将窗口放在右边.
+  ;;   (setq lsp-treemacs-symbols-position-params  `((side . right)
+  ;; 												(slot . 1)
+  ;; 												(window-width . 100)))
+  ;;   :bind
+  ;;   ;; 添加快捷键
+  ;;   ("M-9" . lsp-treemacs-symbols)
+  ;;   ("M-8" . lsp-treemacs-errors-list)
+  ;;   )
 
 #+end_src
 * 编程语言
@@ -902,6 +985,8 @@
 	(defun lsp-go-install-save-hooks ()
 	  (add-hook 'before-save-hook #'lsp-format-buffer t t)
 	  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+	(defun nox-go-install-save-hooks ()
+	  (add-hook 'before-save-hook #'nox-format t t))
 
 	;; go语言支持
 	(use-package go-mode
@@ -909,10 +994,11 @@
 	  :init
 	  (setq gofmt-command "goimports")
 	  :config
-	  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-	  :hook ((go-mode . lsp)))
+		(add-hook 'go-mode-hook #'nox-go-install-save-hooks))
+	  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+	  ;:hook ((go-mode . lsp)))
 
-	;; 使用gocode 提供代码类型显示(在minibuffer) 
+	;; 使用gocode 提供代码类型显示(在minibuffer)
 	(use-package go-eldoc
 	  :ensure t
 	  :hook ((gp-mode-hook . go-eldoc-setup)))
@@ -938,11 +1024,11 @@
 	(use-package golint
 	  :ensure t)
 
-	;; go 调试 
+	;; go 调试
   (require 'dap-go)
   (dap-go-setup)
 #+end_src
-* org mode 
+* org mode
 ** org-bullets
   #+begin_src emacs-lisp
   (use-package org-bullets
@@ -953,7 +1039,7 @@
 ** org 基础配置
 #+begin_src emacs-lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; org 基础配置 
+;; org 基础配置
 ;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 ;(add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
 (global-set-key "\C-cl" 'org-store-link)
@@ -961,7 +1047,7 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-cc" 'org-capture)
 (setq org-default-notes-file "~/org/default.org")
-;; org agenda 
+;; org agenda
 (setq org-agenda-files '("~/org/" "~/org/work/" "~/org/knowledge/"))
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
@@ -969,11 +1055,11 @@
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 ;; 设置org-todo 依赖
 (setq org-enforce-todo-dependencies t)
-;; 使用org-depend 
+;; 使用org-depend
 (require 'org-depend)
 ;; 显示图片设置
 (setq org-image-actual-width (/ (display-pixel-width) 3))
-;; 
+;;
 (org-display-inline-images)
 #+end_src
 #+begin_src emacs-lisp
@@ -996,7 +1082,7 @@
   ;; 使用 org-web-tools-convert-links-to-page-entries	将entry中的url转换为org.并添加到当前entry下面
 
 
-  ;; 使用org-board-archive 下载网站 
+  ;; 使用 org-board-archive 下载网站
   (use-package org-board
 	:ensure t)
   ;; 例子
@@ -1011,7 +1097,7 @@
 ** org-capture
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; emacs org capture config 
+  ;; emacs org capture config
   ;; '("t" "Task" entry (file+headline "" "Tasks") "* TODO %?\n  %u\n  %a")
   ;; 清空
   ;; 网上抓取的日志
@@ -1081,25 +1167,26 @@
 #+end_src
 * todo
 ** TODO [A] vterm 配置. 查看官网
-** TODO [C] lua语言支持 - lsp - 
+** TODO [C] lua语言支持 - lsp -
 * 常用命令记录
-** 's-p' 项目中查找文件 
+** 's-p' 项目中查找文件
 ** 'M-0' 打开文件树视图(treemacs)
 ** 'M-9' 打开当前文件符号视图(lsp-treemacs)=> 函数列表
-** 'M-8' 错误视图(lsp-treemacs) 
+** 'M-8' 错误视图(lsp-treemacs)
 ** "C-c k" 剪切板列表
 ** "M-o"  快速切换窗口(ace-window) 可以跨屏幕(2个frame.分别在2个屏幕 可以直接跨屏幕)
-** "C-c y" 有道翻译 
-** <f2> / S-<f2>" <f1> 仿照vs的书签 
-** 多列编辑 
-*** M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标 
+** "C-c y" 有道翻译
+** <f2> / S-<f2>" <f1> 仿照vs的书签
+** 多列编辑
+*** M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
 *** "C->" 下一个匹配处插入光标
 *** "C-<" 上一个匹配处插入光标
-*** "C-c C-<" 所有匹配处插入光标 
+*** "C-c C-<" 所有匹配处插入光标
 *** "M-N"  在多个光标处 顺序的插入数字 手动输入数字起始(默认是0)
-** "C-x u" undo-tree 
-** "C-x g" magit 
+** "C-x u" undo-tree
+** "C-x g" magit
 ** "C-s" swiper
 ** "M-x" counsel-M-x
 ** "C-c a" org-agenda
 ** "C-c c" org-capture
+** "M-s h ." 高亮某个单词 M-s h u 取消某个高亮
