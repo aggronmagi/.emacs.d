@@ -287,8 +287,24 @@
 #+end_src
 ** highlight-thing
 #+begin_src emacs-lisp
-(require 'highlight-thing)
-(global-highlight-thing-mode)
+  ;; (require 'highlight-thing)
+  ;; (global-highlight-thing-mode)
+   ;; (dolist (hook (list
+   ;;    			 'js-mode-hook
+   ;;    			 'rust-mode-hook
+   ;;    			 'python-mode-hook
+   ;;    			 'ruby-mode-hook
+   ;;    			 'java-mode-hook
+   ;;    			 'sh-mode-hook
+   ;;    			 'php-mode-hook
+   ;;    			 'c-mode-common-hook
+   ;;    			 'c-mode-hook
+   ;;    			 'csharp-mode-hook
+   ;;    			 'c++-mode-hook
+   ;;    			 'haskell-mode-hook
+   ;;    			 'go-mode-hook
+   ;;    			 ))
+   ;;    (add-hook hook '(lambda () (highlight-thing-mode))))
 #+end_src
 ** minibuffer
 #+begin_src emacs-lisp
