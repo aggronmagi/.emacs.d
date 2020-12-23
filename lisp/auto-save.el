@@ -164,6 +164,108 @@ avoid delete current indent space when you programming."
                      (mapconcat 'identity autosave-buffer-list ", ")))))
         ))))
 
+(defun auto-save-some-buffers (arg pred)
+  "Save some modified file-visiting buffers.  Asks user about each one.
+You can answer `y' or SPC to save, `n' or DEL not to save, `C-r'
+to look at the buffer in question with `view-buffer' before
+deciding, `d' to view the differences using
+`diff-buffer-with-file', `!' to save the buffer and all remaining
+buffers without any further querying, `.' to save only the
+current buffer and skip the remaining ones and `q' or RET to exit
+the function without saving any more buffers.  `C-h' displays a
+help message describing these options.
+
+This command first saves any buffers where `buffer-save-without-query' is
+non-nil, without asking.
+
+Optional argument ARG (interactively, prefix argument) non-nil means save
+all with no questions.
+Optional second argument PRED determines which buffers are considered:
+If PRED is nil, all the file-visiting buffers are considered.
+If PRED is t, then certain non-file buffers will also be considered.
+If PRED is a zero-argument function, it indicates for each buffer whether
+to consider it or not when called with that buffer current.
+PRED defaults to the value of `save-some-buffers-default-predicate'.
+
+See `save-some-buffers-action-alist' if you want to
+change the additional actions you can take on files."
+  (interactive "P")
+  (unless pred
+    (setq pred save-some-buffers-default-predicate))
+  (let* ((switched-buffer nil)
+         (save-some-buffers--switch-window-callback
+          (lambda (buffer)
+            (setq switched-buffer buffer)))
+         queried autosaved-buffers
+	 files-done abbrevs-done)
+    (unwind-protect
+        (save-window-excursion
+          (dolist (buffer (buffer-list))
+	    ;; First save any buffers that we're supposed to save
+	    ;; unconditionally.  That way the following code won't ask
+	    ;; about them.
+	    (with-current-buffer buffer
+	      (when (and buffer-save-without-query (buffer-modified-p))
+	        (push (buffer-name) autosaved-buffers)
+	        (save-buffer))))
+          ;; Ask about those buffers that merit it,
+          ;; and record the number thus saved.
+          (setq files-done
+	        (map-y-or-n-p
+                 (lambda (buffer)
+	           ;; Note that killing some buffers may kill others via
+	           ;; hooks (e.g. Rmail and its viewing buffer).
+	           (and (buffer-live-p buffer)
+		        (buffer-modified-p buffer)
+                        (not (buffer-base-buffer buffer))
+                        (or
+                         (buffer-file-name buffer)
+                         (with-current-buffer buffer
+                           (or (eq buffer-offer-save 'always)
+                               (and pred buffer-offer-save
+                                    (> (buffer-size) 0)))))
+                        (or (not (functionp pred))
+                            (with-current-buffer buffer (funcall pred)))
+                        (if arg
+                            t
+                          (setq queried t)
+                          (if (buffer-file-name buffer)
+                              (format "Save file %s? "
+                                      (buffer-file-name buffer))
+                            (format "Save buffer %s? "
+                                    (buffer-name buffer))))))
+                 (lambda (buffer)
+                   (with-current-buffer buffer
+                     (save-buffer)))
+                 (buffer-list)
+	         '("buffer" "buffers" "save")
+	         save-some-buffers-action-alist))
+          ;; Maybe to save abbrevs, and record whether
+          ;; we either saved them or asked to.
+          (and save-abbrevs abbrevs-changed
+	       (progn
+	         (if (or arg
+		         (eq save-abbrevs 'silently)
+		         (y-or-n-p (format "Save abbrevs in %s? "
+                                           abbrev-file-name)))
+		     (write-abbrev-file nil))
+	         ;; Don't keep bothering user if he says no.
+	         (setq abbrevs-changed nil)
+	         (setq abbrevs-done t)))
+          (or queried (> files-done 0) abbrevs-done
+	      (cond
+	       ((null autosaved-buffers)
+                (when (called-interactively-p 'any)
+                  (files--message "(No files need saving)")))
+	       ((= (length autosaved-buffers) 1)
+	        (files--message "(Saved %s)" (car autosaved-buffers)))
+	       (t
+	        (files--message
+                 "(Saved %d files: %s)" (length autosaved-buffers)
+                 (mapconcat 'identity autosaved-buffers ", "))))))
+      (when switched-buffer
+        (pop-to-buffer-same-window switched-buffer)))))
+
 (defun auto-save-delete-trailing-whitespace-except-current-line ()
   (interactive)
   (when auto-save-delete-trailing-whitespace
@@ -180,6 +282,10 @@ avoid delete current indent space when you programming."
             (delete-trailing-whitespace)))))))
 
 (defvar auto-save-timer nil)
+
+(defun auto-save-buffers-ex ()
+  "auto save all buffers with save-some-buffers"
+  (save-some-buffers t))
 
 (defun auto-save-set-timer ()
   "Set the auto-save timer.

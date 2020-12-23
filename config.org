@@ -306,6 +306,69 @@
    ;;    			 ))
    ;;    (add-hook hook '(lambda () (highlight-thing-mode))))
 #+end_src
+** awesome-pair
+#+begin_src emacs-lisp
+  ;; (require 'awesome-pair)
+  ;; (dolist (hook (list
+  ;; 			   'c-mode-common-hook
+  ;; 			   'c-mode-hook
+  ;; 			   'c++-mode-hook
+  ;; 			   'java-mode-hook
+  ;; 			   'haskell-mode-hook
+  ;; 			   'emacs-lisp-mode-hook
+  ;; 			   'lisp-interaction-mode-hook
+  ;; 			   'lisp-mode-hook
+  ;; 			   'maxima-mode-hook
+  ;; 			   'ielm-mode-hook
+  ;; 			   'sh-mode-hook
+  ;; 			   'makefile-gmake-mode-hook
+  ;; 			   'php-mode-hook
+  ;; 			   'python-mode-hook
+  ;; 			   'js-mode-hook
+  ;; 			   'go-mode-hook
+  ;; 			   'qml-mode-hook
+  ;; 			   'jade-mode-hook
+  ;; 			   'css-mode-hook
+  ;; 			   'ruby-mode-hook
+  ;; 			   'coffee-mode-hook
+  ;; 			   'rust-mode-hook
+  ;; 			   'qmake-mode-hook
+  ;; 			   'lua-mode-hook
+  ;; 			   'swift-mode-hook
+  ;; 			   'minibuffer-inactive-mode-hook
+  ;; 			   ))
+  ;;   (add-hook hook '(lambda () (awesome-pair-mode 1))))
+
+
+
+  ;; (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
+  ;; (define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
+  ;; (define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
+  ;; (define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
+  ;; (define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
+  ;; (define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
+  ;; (define-key awesome-pair-mode-map (kbd "=") 'awesome-pair-equal)
+
+  ;; (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
+  ;; (define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
+
+  ;; (define-key awesome-pair-mode-map (kbd "SPC") 'awesome-pair-space)
+
+  ;; (define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete)
+  ;; (define-key awesome-pair-mode-map (kbd "C-d") 'awesome-pair-forward-delete)
+  ;; (define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
+
+  ;; (define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote)
+  ;; (define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
+  ;; (define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
+  ;; (define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
+  ;; (define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
+
+  ;; (define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-right)
+  ;; (define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-left)
+  ;; (define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
+#+end_src
+
 ** minibuffer
 #+begin_src emacs-lisp
 	(use-package mini-frame
@@ -732,37 +795,43 @@
 #+end_src
 * 文件格式
 ** json
-#+begin_src
+#+begin_src emacs-lisp
 (use-package json-mode
-  :ensure t
-  :hook ((json-mode . lsp)))
+  :ensure t)
+  ;;:hook ((json-mode . lsp)))
 #+end_src
 ** yaml
-#+begin_src
+#+begin_src emacs-lisp
 (use-package yaml-mode
-  :ensure t
-  :hook ((yaml-mode . lsp)))
+  :ensure t)
+  ;; :hook ((yaml-mode . lsp)))
 #+end_src
 
 ** toml
-#+begin_src
+#+begin_src emacs-lisp
 (use-package toml-mode
-  :ensure t
-  :hook ((toml-mode . lsp)))
+  :ensure t)
+  ;; :hook ((toml-mode . lsp)))
 #+end_src
 
 ** docker file
-#+begin_src
+#+begin_src emacs-lisp
 (use-package dockerfile-mode
-  :ensure t
-  :hook ((dockerfile-mode . lsp)))
+  :ensure t)
+  ;; :hook ((dockerfile-mode . lsp)))
 #+end_src
 
 ** protobuf
-#+begin_src
+#+begin_src emacs-lisp
 (use-package protobuf-mode
-  :ensure t
-  :hook ((protobuf-mode . lsp)))
+  :ensure t)
+  ;; :hook ((protobuf-mode . lsp)))
+  (defconst my-protobuf-style
+    '((c-basic-offset . 2)
+      (indent-tabs-mode . nil)))
+
+  (add-hook 'protobuf-mode-hook
+    (lambda () (c-add-style "my-style" my-protobuf-style t)))
 #+end_src
 
 ** thrift
@@ -809,41 +878,41 @@
 #+end_src
 ** lsp 语言服务器
 #+begin_src emacs-lisp
-  ;; (use-package lsp-mode
-  ;;   :ensure t
-  ;;   :commands (lsp lsp-deferred)
-  ;;   :hook (go-mode . lsp-deferred))
+  (use-package lsp-mode
+	:ensure t
+	:commands (lsp lsp-deferred)
+	:hook (go-mode . lsp-deferred))
 #+end_src
 ** lsp-ui
 #+begin_src emacs-lisp
   ;; Optional - provides fancier overlays.
-  ;; (use-package lsp-ui
-  ;;   :ensure t
-  ;;   :commands lsp-ui-mode)
+  (use-package lsp-ui
+	:ensure t
+	:commands lsp-ui-mode)
 #+end_src
 ** nox 替代 lsp-mode
 #+begin_src emacs-lisp
-  (require 'nox)
+  ;; (require 'nox)
 
-  (dolist (hook (list
-				 'js-mode-hook
-				 'rust-mode-hook
-				 'python-mode-hook
-				 'ruby-mode-hook
-				 'java-mode-hook
-				 'sh-mode-hook
-				 'php-mode-hook
-				 'c-mode-common-hook
-				 'c-mode-hook
-				 'csharp-mode-hook
-				 'c++-mode-hook
-				 'haskell-mode-hook
-				 'go-mode-hook
-				 ))
-	(add-hook hook '(lambda () (nox-ensure))))
+  ;; (dolist (hook (list
+  ;; 			   'js-mode-hook
+  ;; 			   'rust-mode-hook
+  ;; 			   'python-mode-hook
+  ;; 			   'ruby-mode-hook
+  ;; 			   'java-mode-hook
+  ;; 			   'sh-mode-hook
+  ;; 			   'php-mode-hook
+  ;; 			   ;'c-mode-common-hook
+  ;; 			   'c-mode-hook
+  ;; 			   'csharp-mode-hook
+  ;; 			   'c++-mode-hook
+  ;; 			   'haskell-mode-hook
+  ;; 			   'go-mode-hook
+  ;; 			   ))
+  ;;   (add-hook hook '(lambda () (nox-ensure))))
 
-	(global-set-key (kbd "M-9") 'imenu)
-    (global-set-key (kbd "M-8") 'nox-show-doc)
+  ;;   (global-set-key (kbd "M-9") 'imenu)
+  ;;   (global-set-key (kbd "M-8") 'nox-show-doc)
 
 #+end_src
 ** dap-mode (调试支持)
@@ -871,7 +940,9 @@
 (use-package yasnippet
   :ensure t
   :commands yas-minor-mode
-  :hook (go-mode . yas-minor-mode))
+  :hook 
+  (go-mode . yas-minor-mode)
+  (lua-mode . yas-minor-mode))
 
 ;; 预定义的
 (use-package yasnippet-snippets
@@ -978,19 +1049,20 @@
 	:ensure t
 	:config (treemacs-set-scope-type 'Perspectives))
 
-  ;; (use-package lsp-treemacs
-  ;;   :ensure t
-  ;;   :config
-  ;;   (lsp-treemacs-sync-mode 1)
-  ;;   ;; 将窗口放在右边.
-  ;;   (setq lsp-treemacs-symbols-position-params  `((side . right)
-  ;; 												(slot . 1)
-  ;; 												(window-width . 100)))
-  ;;   :bind
-  ;;   ;; 添加快捷键
-  ;;   ("M-9" . lsp-treemacs-symbols)
-  ;;   ("M-8" . lsp-treemacs-errors-list)
-  ;;   )
+  (use-package lsp-treemacs
+	:ensure t
+	:config
+	(lsp-treemacs-sync-mode 1)
+	;; 将窗口放在右边.
+	(setq lsp-treemacs-symbols-position-params  `((side . right)
+												  (slot . 1)
+												  (window-width . 100)))
+	:bind
+	;; 添加快捷键
+	;; ("M-9" . lsp-treemacs-symbols)
+	("M-9" . 'imenu)
+	("M-8" . lsp-treemacs-errors-list)
+	)
 
 #+end_src
 * 编程语言
@@ -1010,9 +1082,9 @@
 	  :init
 	  (setq gofmt-command "goimports")
 	  :config
-		(add-hook 'go-mode-hook #'nox-go-install-save-hooks))
-	  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-	  ;:hook ((go-mode . lsp)))
+		;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks))
+	    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+	  :hook ((go-mode . lsp)))
 
 	;; 使用gocode 提供代码类型显示(在minibuffer)
 	(use-package go-eldoc
@@ -1043,6 +1115,18 @@
 	;; go 调试
   (require 'dap-go)
   (dap-go-setup)
+#+end_src
+** lua 语言
+#+begin_src emacs-lisp
+  (use-package lua-mode
+	:ensure t
+	:config
+	(setq lsp-clients-lua-language-server-bin "~/.emacs.d/.cache/lsp/lua-language-server/bin/macOS/lua-language-server")
+	(setq lsp-lua-diagnostics-globals t)
+	:hook ((lua-mode . lsp))
+	)
+
+  ;; (message lsp-clients-lua-language-server-install-dir)
 #+end_src
 * org mode
 ** org-bullets

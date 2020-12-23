@@ -210,6 +210,10 @@ as 0, i.e. don't block at all."
   "If non-nil, shut down server after killing last managed buffer."
   :type 'boolean)
 
+(defcustom nox-y-do-not-error t
+  "do not show error msg when open not support buffers"
+  :type 'boolean)
+
 (defcustom nox-send-changes-idle-time 0.5
   "Don't tell server of changes before Emacs's been idle for this many seconds."
   :type 'number)
@@ -788,7 +792,7 @@ be guessed."
                         :autoport ":autoport:" (split-string-and-unquote s)
                         :test #'equal))))
               guess
-              (nox--error "Couldn't guess for `%s'!" managed-mode))))
+              (nox--tip-error "Couldn't guess for `%s'!" managed-mode))))
     (list managed-mode project class contact)))
 
 ;;;###autoload
@@ -1061,6 +1065,12 @@ CONNECT-ARGS are passed as additional arguments to
 
 ;;; Helpers (move these to API?)
 ;;;
+(defun nox--tip-error (format &rest args)
+  "Tip error or msg by config"
+  (if nox-y-do-not-error
+	  (nox--message format args)
+	(nox--error format args)))
+
 (defun nox--error (format &rest args)
   "Error out with FORMAT with ARGS."
   (error "[nox] %s" (apply #'format format args)))
