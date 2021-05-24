@@ -21,6 +21,14 @@
 ;; 新增本地lisp文件目录
  (add-to-list 'load-path "~/.emacs.d/lisp/")
 #+end_src
+** 命令记录
+#+begin_src emacs-lisp
+  (use-package keyfreq
+	:ensure t
+	:config
+	(keyfreq-mode 1)
+	(keyfreq-autosave-mode 1))
+#+end_src
 ** mac 修复调整
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -276,7 +284,8 @@
   (setq auto-save-silent t)
   ; automatically delete spaces at the end of the line when saving
   (setq auto-save-delete-trailing-whitespace t)
-
+  ; The idle seconds to auto save file.
+  (setq auto-save-idle 300)
 #+end_src
 ** back-button
 #+begin_src emacs-lisp
@@ -625,6 +634,20 @@
   (global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
   (global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
 #+end_src
+** company自动补全
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t
+    :config
+    (global-company-mode)
+    ;; Optionally enable completion-as-you-type behavior.
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 1)
+    ;; 大小写问题修复
+    (setq company-dabbrev-downcase nil)
+    )
+
+#+end_src
 ** 写英文帮助
 #+begin_src emacs-lisp
   (require 'company-english-helper)
@@ -793,6 +816,22 @@
 	  )
 ;; (rg-enable-menu)
 #+end_src
+** 折叠
+#+begin_src emacs-lisp
+	;; (hs-minor-mode t)
+  ;; (define-globalized-minor-mode global-hs-minor-mode hs-minor-mode
+  ;;   (lambda () (hs-minor-mode)))
+  ;; (global-hs-minor-mode 1)
+  ;; (defun czy-hs-hooks ())
+  ;; (add-hook 'hs-minor-mode-hook #'czy-hs-hooks)
+  ;;(hs-minor-mode)
+  (global-set-key "\C-cha"	      'hs-hide-block)
+  (global-set-key "\C-chb"	      'hs-show-block)
+  (global-set-key "\C-chh"          'hs-hide-all)
+  (global-set-key "\C-chs"          'hs-show-all)
+  (global-set-key "\C-cht"	      'hs-toggle-hiding)
+#+end_src
+
 * 文件格式
 ** json
 #+begin_src emacs-lisp
@@ -920,27 +959,14 @@
   (use-package dap-mode
 	:ensure t)
 #+end_src
-** company自动补全
-#+begin_src emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (global-company-mode)
-    ;; Optionally enable completion-as-you-type behavior.
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 1)
-    ;; 大小写问题修复
-    (setq company-dabbrev-downcase nil)
-    )
 
-#+end_src
 ** Yasnippet
 #+begin_src emacs-lisp
 ;; Optional - provides snippet support.
 (use-package yasnippet
   :ensure t
   :commands yas-minor-mode
-  :hook 
+  :hook
   (go-mode . yas-minor-mode)
   (lua-mode . yas-minor-mode))
 
@@ -1076,6 +1102,7 @@
 	(defun nox-go-install-save-hooks ()
 	  (add-hook 'before-save-hook #'nox-format t t))
 
+
 	;; go语言支持
 	(use-package go-mode
 	  :mode "\\.go\\'"
@@ -1083,18 +1110,23 @@
 	  (setq gofmt-command "goimports")
 	  :config
 		;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks))
-	    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+		(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 	  :hook ((go-mode . lsp)))
+
+	;; 折叠代码
+	(add-hook 'go-mode-hook 'hs-minor-mode)
+	;; 禁用自动保存
+	(add-hook 'go-mode-hook 'auto-save-disable)
 
 	;; 使用gocode 提供代码类型显示(在minibuffer)
 	(use-package go-eldoc
 	  :ensure t
 	  :hook ((gp-mode-hook . go-eldoc-setup)))
 
-	;; 使用guru 进行代码导航
-	(use-package go-guru
-	  :ensure t
-	  :hook (go-mode . go-guru-hl-identifier-mode))
+	;; ;; 使用guru 进行代码导航
+	;; (use-package go-guru
+	;;   :ensure t
+	;;   :hook (go-mode . go-guru-hl-identifier-mode))
 
 	;; go代码调试
 	(use-package go-dlv
@@ -1121,8 +1153,13 @@
   (use-package lua-mode
 	:ensure t
 	:config
+	;; (setq lsp-clients-luarocks-bin-dir "/usr/local/bin/")
+	;; (setq lsp-clients-lua-lsp-server-install-dir "/usr/local/bin/lua-lsp")
 	(setq lsp-clients-lua-language-server-bin "~/.emacs.d/.cache/lsp/lua-language-server/bin/macOS/lua-language-server")
-	(setq lsp-lua-diagnostics-globals t)
+	;; (setq lsp-lua-diagnostics-globals t)
+	(setq lsp-lua-diagnostics-disable (vector "unused-local" "lowercase-global" "trailing-space" "empty-block"))
+	(setq lsp-lua-diagnostics-globals (vector "global" "flags"))
+	;; (setq lsp-lua-diagnostics-disable nil)
 	:hook ((lua-mode . lsp))
 	)
 
@@ -1171,7 +1208,10 @@
 ;; org 协议. 和外部交互
 (require 'org-protocol)
 ;; 启动服务器. 外部调用访问(浏览器等)
-(server-start)
+(require 'server)
+(or (server-running-p)
+    (server-start))
+;(server-start)
 #+end_src
 ** org web tool
 #+begin_src emacs-lisp
@@ -1226,7 +1266,7 @@
 	  )
 	)
 #+end_src
-** org-publish
+** org-publis1h
 ** org 自动补全
 #+begin_src emacs-lisp
 (use-package ido-completing-read+
