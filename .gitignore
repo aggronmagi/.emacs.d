@@ -19,3 +19,7 @@ bm-repository
 .org-id-locations
 tutorial/
 ***.elc
+bak/
+.extension/
+
+
