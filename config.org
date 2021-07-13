@@ -552,6 +552,8 @@
   (use-package vterm-toggle
 	:ensure t
 	:bind (("C-`" . vterm-toggle))
+	:config
+	(setq vterm-toggle-scope 'dedicated)
 	)
 
   ;; (use-package aweshell
@@ -1159,9 +1161,14 @@
 		  ;;("C-x t B"   . treemacs-bookmark)
 		  ;;("C-x t C-t" . treemacs-find-file)
 		  ("C-x t M-t" . treemacs-find-tag)
+		  ;; ("j" . treemacs-next-line)
+		  ;; ("k" . treemacs-previous-line)
+		  )
+	(:map treemacs-mode-map
 		  ("j" . treemacs-next-line)
 		  ("k" . treemacs-previous-line)
-		  ))
+		  )
+	)
 
   ;;(use-package treemacs-evil
   ;;  :after treemacs evil
