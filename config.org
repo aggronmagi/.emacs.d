@@ -1029,7 +1029,11 @@
   (use-package lsp-mode
 	:ensure t
 	:commands (lsp lsp-deferred)
-	:hook (go-mode . lsp-deferred))
+	:hook (go-mode . lsp-deferred)
+	:bind (:map lsp-mode-map
+				("M-." . lsp-find-definition)
+				("M-n" . lsp-find-references))
+	)
 #+end_src
 ** lsp-ui
 #+begin_src emacs-lisp
