@@ -553,7 +553,7 @@
 	:ensure t
 	:bind (("C-`" . vterm-toggle))
 	:config
-	(setq vterm-toggle-scope 'dedicated)
+	(setq vterm-toggle-scope 'project)
 	)
 
   ;; (use-package aweshell
