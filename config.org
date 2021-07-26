@@ -9,55 +9,55 @@
 (setq package-enable-at-startup nil)
 ;; 添加melpa源(更多package)
 (add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/"))
+			 '("melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
 
 ;; 安装use package
 (unless (package-installed-p 'use-package)
- (package-refresh-contents)
+  (package-refresh-contents)
   (package-install 'use-package))
 
 ;; 新增本地lisp文件目录
- (add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 #+end_src
 ** 命令记录
 #+begin_src emacs-lisp
-  (use-package keyfreq
-	:ensure t
-	:config
-	(keyfreq-mode 1)
-	(keyfreq-autosave-mode 1))
+(use-package keyfreq
+  :ensure t
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
 #+end_src
 ** mac 修复调整
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; mac 修复环境变量
-  (use-package exec-path-from-shell
-	:if (memq window-system '(mac ns))
-	:ensure t
-	:config
-	(exec-path-from-shell-initialize)
-	(exec-path-from-shell-copy-env "GOPATH"))
+;; mac 修复环境变量
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
 
-  ;; 复制,粘贴使用下面配置,将导致multiple-cursor的复制,粘贴失效
-  ;; copy paste
-  ;; (cond ((string-equal system-type "darwin")
-  ;;        (progn
-  ;;          ;; modify option and command key
-  ;;          ;;(setq mac-comman-modifier 'control)
-  ;;          ;;(setq mac-option-modifier 'meta)
-  ;;
-  ;;          ;; batter copy and paste support for mac os x
-  ;;          (defun copy-from-osx ()
-  ;;            (shell-command-to-string "pbpaste"))
-  ;;          (defun paste-to-osx (text &optional push)
-  ;;            (let ((process-connection-type nil))
-  ;;              (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-  ;;                (process-send-string proc text)
-  ;;                (process-send-eof proc))))
-  ;;          (setq interprogram-cut-function 'paste-to-osx)
-  ;;          (setq interprogram-paste-function 'copy-from-osx))))
+;; 复制,粘贴使用下面配置,将导致multiple-cursor的复制,粘贴失效
+;; copy paste
+;; (cond ((string-equal system-type "darwin")
+;;        (progn
+;;          ;; modify option and command key
+;;          ;;(setq mac-comman-modifier 'control)
+;;          ;;(setq mac-option-modifier 'meta)
+;;
+;;          ;; batter copy and paste support for mac os x
+;;          (defun copy-from-osx ()
+;;            (shell-command-to-string "pbpaste"))
+;;          (defun paste-to-osx (text &optional push)
+;;            (let ((process-connection-type nil))
+;;              (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+;;                (process-send-string proc text)
+;;                (process-send-eof proc))))
+;;          (setq interprogram-cut-function 'paste-to-osx)
+;;          (setq interprogram-paste-function 'copy-from-osx))))
 #+end_src
 ** 编码和语言环境
 #+begin_src emacs-lisp
@@ -72,90 +72,90 @@
 ** 状态栏配置
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; 状态栏相关
-  ;; 在状态栏显示时间
-  (use-package time
-	:ensure nil
-	:custom ((display-time-format "[%e号 %H:%M 周%u]")
-			 (display-time-use-mail-icon t))
-	:config
-	;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
-	(display-time-mode 1)
-	)
-  ;; 状态栏显示 列序号
-  (column-number-mode 1)
-  ;; 显示当前文件进度 百分比
-  (display-battery-mode 1)
+;; 状态栏相关
+;; 在状态栏显示时间
+(use-package time
+  :ensure nil
+  :custom ((display-time-format "[%e号 %H:%M 周%u]")
+		   (display-time-use-mail-icon t))
+  :config
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
+  (display-time-mode 1)
+  )
+;; 状态栏显示 列序号
+(column-number-mode 1)
+;; 显示当前文件进度 百分比
+(display-battery-mode 1)
 #+end_src
 ** 基础设置
 #+begin_src emacs-lisp
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; 基础设置
-  ;; 使用y/n 代替yes/no
-  (fset 'yes-or-no-p 'y-or-n-p)
+;; 基础设置
+;; 使用y/n 代替yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
 
-  ;; tab
-  ;; (setq indent-tabs-mode t)
+;; tab
+;; (setq indent-tabs-mode t)
 
 	;;;; 隐藏菜单栏
-  ;;(menu-bar-mode -1)
+;;(menu-bar-mode -1)
 
-  ;; 高亮当前行
-  ;; (global-hl-line-mode t)
+;; 高亮当前行
+;; (global-hl-line-mode t)
 
-  ;; 隐藏工具栏
-  (tool-bar-mode -1)
+;; 隐藏工具栏
+(tool-bar-mode -1)
 
-  ;; 隐藏滚动条
-  (toggle-scroll-bar -1)
+;; 隐藏滚动条
+(toggle-scroll-bar -1)
 
-  ;; 全局文件恢复 从 #..#文件恢复
-  (global-auto-revert-mode t)
+;; 全局文件恢复 从 #..#文件恢复
+(global-auto-revert-mode t)
 
-  ;; ;; 启动后开启全屏
-  ;; (toggle-frame-fullscreen)
+;; ;; 启动后开启全屏
+;; (toggle-frame-fullscreen)
 
-  ;; 隐藏开始界面
-  (setq inhibit-splash-screen t)
+;; 隐藏开始界面
+(setq inhibit-splash-screen t)
 
-  ;; scratch buffer 消息清空
-  (setq initial-scratch-message nil)
+;; scratch buffer 消息清空
+(setq initial-scratch-message nil)
 
-  ;; 单个空格结束句子
-  (setq sentence-end-double-space nil)
+;; 单个空格结束句子
+(setq sentence-end-double-space nil)
 
-  ;; 关闭备份文件
-  (setq make-backup-files nil)
+;; 关闭备份文件
+(setq make-backup-files nil)
 
-  ;; 关闭自动保存
-  (setq auto-save-default nil)
+;; 关闭自动保存
+(setq auto-save-default nil)
 
-  ;; 去除文件锁
-  (setq create-lockfiles nil)
+;; 去除文件锁
+(setq create-lockfiles nil)
 
-  ;; 一个tab=4个空格.默认8个
-  (setq-default tab-width 4)
+;; 一个tab=4个空格.默认8个
+(setq-default tab-width 4)
 
-  ;; 保存历史记录模式
-  (savehist-mode 1)
-  (setq savehist-file "~/.emacs.d/.savehist")
-  (setq history-length t)
-  (setq history-delete-duplicates t)
-  (setq savehist-save-minibuffer-history 1)
-  (setq savehist-additional-variables
-		'(kill-ring
-		  search-ring
-		  regexp-search-ring))
+;; 保存历史记录模式
+(savehist-mode 1)
+(setq savehist-file "~/.emacs.d/.savehist")
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+	  '(kill-ring
+		search-ring
+		regexp-search-ring))
 
-  ;; Shows a list of buffers
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+;; Shows a list of buffers
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 
-  ;; full path in title bar
-  (setq-default frame-title-format "%b (%f)")
+;; full path in title bar
+(setq-default frame-title-format "%b (%f)")
 
-  ;; don't pop up font menu
-  (global-set-key (kbd "s-t") '(lambda () (interactive)))
+;; don't pop up font menu
+(global-set-key (kbd "s-t") '(lambda () (interactive)))
 #+end_src
 ** 性能相关
 #+begin_src emacs-lisp
@@ -174,92 +174,92 @@
 ** 自动匹配括号
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; 括号匹配相关
-  (setq show-paren-mode nil)
-  ;; ;; 括号自动补全
-  ;; (use-package autopair
-  ;;   :ensure t
-  ;;   :init
-  ;;   (defun @-enable-autopair ()
-  ;; 	(autopair-mode t))
-  ;;   :hook
-  ;;   (progn
-  ;; 	(prog-mode . @-enable-autopair)
-  ;; 	(emacs-lisp-mode . @-enable-autopair)
-  ;; 	))
+;; 括号匹配相关
+(setq show-paren-mode nil)
+;; ;; 括号自动补全
+;; (use-package autopair
+;;   :ensure t
+;;   :init
+;;   (defun @-enable-autopair ()
+;; 	(autopair-mode t))
+;;   :hook
+;;   (progn
+;; 	(prog-mode . @-enable-autopair)
+;; 	(emacs-lisp-mode . @-enable-autopair)
+;; 	))
 
-   ;; 高亮括号匹配
-  (use-package highlight-parentheses
-	:ensure t)
-  ;; 全局启用括号高亮
-  (define-globalized-minor-mode global-highlight-parentheses-mode
-	highlight-parentheses-mode
-	(lambda ()
-	  (highlight-parentheses-mode t)))
-  (global-highlight-parentheses-mode t)
-  ;; NOTE 括号跳转  C-M-n,C-M-p
-  ;; ;; 彩虹色 用于web css等
-  ;; (use-package rainbow-mode
-  ;;   :ensure t
-  ;;   :init
-  ;;   (defun @-enable-rainbow ()
-  ;;     (rainbow-mode t))
-  ;;   :hook ((prog-mode . @-enable-reainbow)))
-  ;; 彩色高亮匹配括号 - 编程模式自动启动
-  (use-package rainbow-delimiters
-	:ensure t
-	:init
-	(defun @-enable-rainbow-delimiters ()
-	  (rainbow-delimiters-mode t))
-	:hook
-	(progn
-	  (prog-mode . @-enable-rainbow-delimiters)
-	  (emacs-lisp-mode . @-enable-rainbow-delimiters))
-	)
-	;;(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+;; 高亮括号匹配
+(use-package highlight-parentheses
+  :ensure t)
+;; 全局启用括号高亮
+(define-globalized-minor-mode global-highlight-parentheses-mode
+  highlight-parentheses-mode
+  (lambda ()
+	(highlight-parentheses-mode t)))
+(global-highlight-parentheses-mode t)
+;; NOTE 括号跳转  C-M-n,C-M-p
+;; ;; 彩虹色 用于web css等
+;; (use-package rainbow-mode
+;;   :ensure t
+;;   :init
+;;   (defun @-enable-rainbow ()
+;;     (rainbow-mode t))
+;;   :hook ((prog-mode . @-enable-reainbow)))
+;; 彩色高亮匹配括号 - 编程模式自动启动
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (defun @-enable-rainbow-delimiters ()
+	(rainbow-delimiters-mode t))
+  :hook
+  (progn
+	(prog-mode . @-enable-rainbow-delimiters)
+	(emacs-lisp-mode . @-enable-rainbow-delimiters))
+  )
+;;(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
 #+end_src
 
 ** 皮肤,Theme
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; 皮肤,Theme
-  ;; 安全的加载theme
-  (setq custom-safe-themes t)
-  ;; 白天 座位这屏幕反光. 不能用这个皮肤
-  ;; ;; 使用 doom theme
-  ;; (use-package doom-themes
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; Global settings (defaults)
-  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;;     doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;;   (load-theme 'doom-one t)
-  ;;   ;; Enable flashing mode-line on errors
-  ;;   (doom-themes-visual-bell-config)
-  ;;   ;; for treemacs users
-  ;;   ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-  ;;   ;; (doom-themes-treemacs-config)
-  ;;   ;; Corrects (and improves) org-mode's native fontification.
-  ;;   (doom-themes-org-config))
+;; 皮肤,Theme
+;; 安全的加载theme
+(setq custom-safe-themes t)
+;; 白天 座位这屏幕反光. 不能用这个皮肤
+;; ;; 使用 doom theme
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   ;; Global settings (defaults)
+;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+;;     doom-themes-enable-italic t) ; if nil, italics is universally disabled
+;;   (load-theme 'doom-one t)
+;;   ;; Enable flashing mode-line on errors
+;;   (doom-themes-visual-bell-config)
+;;   ;; for treemacs users
+;;   ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+;;   ;; (doom-themes-treemacs-config)
+;;   ;; Corrects (and improves) org-mode's native fontification.
+;;   (doom-themes-org-config))
 
-  (use-package monokai-theme
-	:ensure t
-	:config
-	(load-theme 'monokai t))
+(use-package monokai-theme
+  :ensure t
+  :config
+  (load-theme 'monokai t))
 
-  ;; (use-package vscode-dark-plus-theme
-  ;;   :ensure t
-  ;;   :config
-  ;;   (load-theme 'vscode-dark-plus t))
+;; (use-package vscode-dark-plus-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'vscode-dark-plus t))
 
-  ;; (use-package faff-theme
-  ;;   :ensure t
-  ;;   :config
-  ;;   (load-theme 'faff t))
-  ;; (use-package solarized-theme
-  ;;   :ensure t
-  ;;   :config
-  ;;   (load-theme 'solarized-dark t))
+;; (use-package faff-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'faff t))
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'solarized-dark t))
 
 #+end_src
 
@@ -275,18 +275,18 @@
 ** 行号
 #+begin_src emacs-lisp
 
-	;; 行号显示
-	;;(global-linum-mode)
-  ;; (global-display-line-numbers-mode 1)
-  (use-package display-line-numbers
-	:ensure nil
-	:hook ((prog-mode text-mode conf-mode) . display-line-numbers-mode))
-	;; (use-package linum
-	;;   :ensure t
-	;;   :config
-	;;   (global-linum-mode t)
-	;;   (setq linum-format "%4d  ")
-	;;   (set-face-background 'linum nil))
+;; 行号显示
+;;(global-linum-mode)
+;; (global-display-line-numbers-mode 1)
+(use-package display-line-numbers
+  :ensure nil
+  :hook ((prog-mode text-mode conf-mode) . display-line-numbers-mode))
+;; (use-package linum
+;;   :ensure t
+;;   :config
+;;   (global-linum-mode t)
+;;   (setq linum-format "%4d  ")
+;;   (set-face-background 'linum nil))
 #+end_src
 
 ** icons
@@ -296,208 +296,274 @@
 #+end_src
 
 ** frame-font
-   #+begin_src emacs-lisp
-	 ;;
-	 (use-package frame
-	   :ensure nil
-	   :config
-	   ;; No cursor blinking, it's distracting
-	   (blink-cursor-mode 0)
+#+begin_src emacs-lisp
+;;
+(use-package frame
+  :ensure nil
+  :config
+  ;; No cursor blinking, it's distracting
+  (blink-cursor-mode 0)
 
-	   (when (display-graphic-p)
-		 (add-to-list 'default-frame-alist '(font . "Hack-15"))
-		 (add-to-list 'default-frame-alist '(fullscreen . maximized)))
+  (when (display-graphic-p)
+	(add-to-list 'default-frame-alist '(font . "Hack-15"))
+	(add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
-	   (setq-default cursor-type 't))
+  (setq-default cursor-type 't))
 
-   #+end_src
+#+end_src
+
+** 编辑
+#+begin_src emacs-lisp
+(use-package delsel
+  :ensure nil
+  :hook (after-init . delete-selection-mode))
+#+end_src
+
+** 复制文件名
+#+begin_src emacs-list
+(defun my-put-file-name-on-clipboard ()
+  "Put the current file name on the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
+#+end_src
+** 分词
+#+begin_src emacs-lisp
+(use-package subword
+  :hook (after-init . global-subword-mode))
+#+end_src
 * 工具
 ** auto-save
 #+begin_src emacs-lisp
-  (require 'auto-save)
-  (auto-save-enable)
-  ; quietly sav
-  (setq auto-save-silent t)
-  ; automatically delete spaces at the end of the line when saving
-  (setq auto-save-delete-trailing-whitespace t)
-  ; The idle seconds to auto save file.
-  (setq auto-save-idle 300)
+(require 'auto-save)
+(auto-save-enable)
+;; quietly sav
+(setq auto-save-silent t)
+;; ;; automatically delete spaces at the end of the line when saving
+;; (setq auto-save-delete-trailing-whitespace t)
+;; The idle seconds to auto save file.
+(setq auto-save-idle 10)
 #+end_src
 ** back-button
 #+begin_src emacs-lisp
-  (require 'back-button)
-  (back-button-mode 1)
-  (global-set-key (kbd "M-[") 'back-button-global-backward)
-  (global-set-key (kbd "M-]") 'back-button-global-forward)
+;; back-button 跳转
+(require 'back-button)
+(back-button-mode 1)
+(global-set-key (kbd "s-[") 'back-button-local-backward)
+(global-set-key (kbd "s-]") 'back-button-local-forward)
+(global-set-key (kbd "s-{") 'back-button-global-backward)
+(global-set-key (kbd "s-}") 'back-button-global-forward)
 #+end_src
 ** highlight-thing
 #+begin_src emacs-lisp
-  ;; (require 'highlight-thing)
-  ;; (global-highlight-thing-mode)
-   ;; (dolist (hook (list
-   ;;    			 'js-mode-hook
-   ;;    			 'rust-mode-hook
-   ;;    			 'python-mode-hook
-   ;;    			 'ruby-mode-hook
-   ;;    			 'java-mode-hook
-   ;;    			 'sh-mode-hook
-   ;;    			 'php-mode-hook
-   ;;    			 'c-mode-common-hook
-   ;;    			 'c-mode-hook
-   ;;    			 'csharp-mode-hook
-   ;;    			 'c++-mode-hook
-   ;;    			 'haskell-mode-hook
-   ;;    			 'go-mode-hook
-   ;;    			 ))
-   ;;    (add-hook hook '(lambda () (highlight-thing-mode))))
+;; (require 'highlight-thing)
+;; (global-highlight-thing-mode)
+;; (dolist (hook (list
+;;    			 'js-mode-hook
+;;    			 'rust-mode-hook
+;;    			 'python-mode-hook
+;;    			 'ruby-mode-hook
+;;    			 'java-mode-hook
+;;    			 'sh-mode-hook
+;;    			 'php-mode-hook
+;;    			 'c-mode-common-hook
+;;    			 'c-mode-hook
+;;    			 'csharp-mode-hook
+;;    			 'c++-mode-hook
+;;    			 'haskell-mode-hook
+;;    			 'go-mode-hook
+;;    			 ))
+;;    (add-hook hook '(lambda () (highlight-thing-mode))))
 #+end_src
 ** awesome-pair
 #+begin_src emacs-lisp
-  ;; (require 'awesome-pair)
-  ;; (dolist (hook (list
-  ;; 			   'c-mode-common-hook
-  ;; 			   'c-mode-hook
-  ;; 			   'c++-mode-hook
-  ;; 			   'java-mode-hook
-  ;; 			   'haskell-mode-hook
-  ;; 			   'emacs-lisp-mode-hook
-  ;; 			   'lisp-interaction-mode-hook
-  ;; 			   'lisp-mode-hook
-  ;; 			   'maxima-mode-hook
-  ;; 			   'ielm-mode-hook
-  ;; 			   'sh-mode-hook
-  ;; 			   'makefile-gmake-mode-hook
-  ;; 			   'php-mode-hook
-  ;; 			   'python-mode-hook
-  ;; 			   'js-mode-hook
-  ;; 			   'go-mode-hook
-  ;; 			   'qml-mode-hook
-  ;; 			   'jade-mode-hook
-  ;; 			   'css-mode-hook
-  ;; 			   'ruby-mode-hook
-  ;; 			   'coffee-mode-hook
-  ;; 			   'rust-mode-hook
-  ;; 			   'qmake-mode-hook
-  ;; 			   'lua-mode-hook
-  ;; 			   'swift-mode-hook
-  ;; 			   'minibuffer-inactive-mode-hook
-  ;; 			   ))
-  ;;   (add-hook hook '(lambda () (awesome-pair-mode 1))))
+(require 'awesome-pair)
+(dolist (hook (list
+			   'c-mode-common-hook
+			   'c-mode-hook
+			   'c++-mode-hook
+			   'java-mode-hook
+			   'haskell-mode-hook
+			   'emacs-lisp-mode-hook
+			   'lisp-interaction-mode-hook
+			   'lisp-mode-hook
+			   'maxima-mode-hook
+			   'ielm-mode-hook
+			   'sh-mode-hook
+			   'makefile-gmake-mode-hook
+			   'php-mode-hook
+			   'python-mode-hook
+			   'js-mode-hook
+			   'go-mode-hook
+			   'qml-mode-hook
+			   'jade-mode-hook
+			   'css-mode-hook
+			   'ruby-mode-hook
+			   'coffee-mode-hook
+			   'rust-mode-hook
+			   'qmake-mode-hook
+			   'lua-mode-hook
+			   'swift-mode-hook
+			   'minibuffer-inactive-mode-hook
+			   ))
+  (add-hook hook '(lambda () (awesome-pair-mode 1))))
 
 
 
-  ;; (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
-  ;; (define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
-  ;; (define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
-  ;; (define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
-  ;; (define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
-  ;; (define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
-  ;; (define-key awesome-pair-mode-map (kbd "=") 'awesome-pair-equal)
+(define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
+(define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
+(define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
+(define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
+(define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
+(define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
+(define-key awesome-pair-mode-map (kbd "=") 'awesome-pair-equal)
 
-  ;; (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
-  ;; (define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
+;; (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
+(define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
 
-  ;; (define-key awesome-pair-mode-map (kbd "SPC") 'awesome-pair-space)
+(define-key awesome-pair-mode-map (kbd "SPC") 'awesome-pair-space)
 
-  ;; (define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete)
-  ;; (define-key awesome-pair-mode-map (kbd "C-d") 'awesome-pair-forward-delete)
-  ;; (define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
+(define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete)
+(define-key awesome-pair-mode-map (kbd "C-d") 'awesome-pair-forward-delete)
+(define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
 
-  ;; (define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote)
-  ;; (define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
-  ;; (define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
-  ;; (define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
-  ;; (define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
+(define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote)
+(define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
+(define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
+(define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
+(define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
 
-  ;; (define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-right)
-  ;; (define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-left)
-  ;; (define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
+(define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-right)
+(define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-left)
+(define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
 #+end_src
 
 ** minibuffer
 #+begin_src emacs-lisp
-	(use-package mini-frame
-	  :ensure t
-	  :config
-	  (mini-frame-mode))
+(use-package mini-frame
+  :ensure t
+  :config
+  (mini-frame-mode))
 
-	;; git clone https://github.com/honmaple/emacs-maple-minibuffer ~/.emacs.d/lisp/maple-minibuffer
+;; git clone https://github.com/honmaple/emacs-maple-minibuffer ~/.emacs.d/lisp/maple-minibuffer
 
-  ;;   (require 'maple-minibuffer)
-  ;; ;;window-top-center
-  ;;   (progn (setq maple-minibuffer:position-type 'frame-top-center
-  ;; 			   maple-minibuffer:border-color "gray50"
-  ;; 			   maple-minibuffer:height nil
-  ;; 			   maple-minibuffer:width 0.7
-  ;; 			   maple-minibuffer:cache t)
+;;   (require 'maple-minibuffer)
+;; ;;window-top-center
+;;   (progn (setq maple-minibuffer:position-type 'frame-top-center
+;; 			   maple-minibuffer:border-color "gray50"
+;; 			   maple-minibuffer:height nil
+;; 			   maple-minibuffer:width 0.7
+;; 			   maple-minibuffer:cache t)
 
-  ;; 		 (setq maple-minibuffer:action '(read-from-minibuffer read-string)
-  ;; 			   maple-minibuffer:ignore-action '(evil-ex eval-expression))
+;; 		 (setq maple-minibuffer:action '(read-from-minibuffer read-string)
+;; 			   maple-minibuffer:ignore-action '(evil-ex eval-expression))
 
-  ;; 		 (add-to-list 'maple-minibuffer:ignore-action 'org-schedule)
-  ;; 	;;(add-to-list 'maple-minibuffer:ignore-regexp "^helm-")
+;; 		 (add-to-list 'maple-minibuffer:ignore-action 'org-schedule)
+;; 	;;(add-to-list 'maple-minibuffer:ignore-regexp "^helm-")
 
-  ;; 	;; more custom parameters for frame
-  ;; 	(defun maple-minibuffer:parameters ()
-  ;; 	  "Maple minibuffer parameters."
-  ;; 	  `((height . ,(or maple-minibuffer:height 10))
-  ;; 		(width . ,(or maple-minibuffer:width (window-pixel-width)))
-  ;; 		(left-fringe . 5)
-  ;; 		(right-fringe . 5))))
+;; 	;; more custom parameters for frame
+;; 	(defun maple-minibuffer:parameters ()
+;; 	  "Maple minibuffer parameters."
+;; 	  `((height . ,(or maple-minibuffer:height 10))
+;; 		(width . ,(or maple-minibuffer:width (window-pixel-width)))
+;; 		(left-fringe . 5)
+;; 		(right-fringe . 5))))
 
-  ;;   (maple-minibuffer-mode)
+;;   (maple-minibuffer-mode)
 
 
 
+
+#+end_src
+** ivy
+#+begin_src emacs-lisp
+;; (use-package ivy
+;;   :ensure t
+;;   :config
+;;   (ivy-mode 1)
+;;   (setq ivy-use-virtual-buffers t)
+;;   (setq enable-recursive-minibuffers t)
+;;   ;; enable this if you want `swiper' to use it
+;;   ;; (setq search-default-mode #'char-fold-to-regexp)
+;;   (global-set-key "\C-s" 'swiper)
+;;   (global-set-key (kbd "C-c C-r") 'ivy-resume)
+;;   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
+;;   ;;(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;;   ;;(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+;;   ;;(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+;;   ;;(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+;;   ;;(global-set-key (kbd "<f1> l") 'counsel-find-library)
+;;   ;;(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+;;   ;;(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;;   ;;(global-set-key (kbd "C-c g") 'counsel-git)
+;;   ;;(global-set-key (kbd "C-c j") 'counsel-git-grep)
+;;   ;;(global-set-key (kbd "C-c k") 'counsel-ag)
+;;   ;;(global-set-key (kbd "C-x l") 'counsel-locate)
+;;   ;;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+;;   ;;(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+;;   )
 
 #+end_src
 ** counsel
 #+begin_src emacs-lisp
-(use-package counsel
-  :ensure t)
-#+end_src
-** ivy
-#+begin_src emacs-lisp
-(use-package ivy
-  :ensure t
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  ;; enable this if you want `swiper' to use it
-  ;; (setq search-default-mode #'char-fold-to-regexp)
-  (global-set-key "\C-s" 'swiper)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  ;; (global-set-key (kbd "<f6>") 'ivy-resume)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  ;;(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  ;;(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  ;;(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
-  ;;(global-set-key (kbd "<f1> l") 'counsel-find-library)
-  ;;(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  ;;(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  ;;(global-set-key (kbd "C-c g") 'counsel-git)
-  ;;(global-set-key (kbd "C-c j") 'counsel-git-grep)
-  ;;(global-set-key (kbd "C-c k") 'counsel-ag)
-  ;;(global-set-key (kbd "C-x l") 'counsel-locate)
-  ;;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+  (use-package smex
+	:ensure t
+	:init
+	(setq smex-save-file "~/.emacs.d/.smex-items")
+	:config
+	(smex-initialize)
+	)
+  ;; counsel ivy swiper
+  (use-package counsel
+	:ensure t
+	:init
+	(ivy-mode 1)
+	(setq ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy)
+								  (t . ivy--regex-plus)))
+	:custom ((ivy-use-virtual-buffers t)
+			 (ivy-count-format "(%d/%d) ")
+			 (ivy-initial-inputs-alist nil)
+			 (ivy-height 15)
+			 (ivy-extra-directories '("./"))
+			 (counsel-switch-buffer-preview-virtual-buffers nil))
+	:bind (("M-y" . counsel-yank-pop)
+		   ("C-c C-r" . ivy-resume)
+		   ("<f6>" . ivy-resume)
+		   ("M-x" . counsel-M-x)
+		   ("C-x f" . counsel-switch-buffer)
+		   ("C-x C-f" . counsel-find-file)
+		   ;;("C-s" . swiper-isearch)
+		   ;;("C-r" . swiper-isearch-backward)
+		   ))
+
+  (use-package ivy-avy
+	:custom ((avy-all-windows nil)
+			 (avy-keys (number-sequence ?a ?z)))
+	:bind (("C-x SPC" . avy-goto-char)
+		   ("C-c C-l" . avy-goto-line)
+		   ("C-C SPC" . avy-goto-word-1)))
+
 #+end_src
 ** ivy-posframe mac 使用有bug.
 #+begin_src emacs-lisp
-  ;; ivy-posframe
-  ;; (use-package ivy-posframe
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; display at `ivy-posframe-style'
-  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-  ;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-  ;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  ;;   (ivy-posframe-mode 1))
+;; ivy-posframe
+;; (use-package ivy-posframe
+;;   :ensure t
+;;   :config
+;;   ;; display at `ivy-posframe-style'
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+;;   (ivy-posframe-mode 1))
 #+end_src
 ** undo tree
 #+begin_src emacs-lisp
@@ -509,22 +575,22 @@
   (setq undo-tree-visualizer-diff t))
 #+end_src
 ** jump-tree 跳转
-   包太老了. 没有办法用.
+包太老了. 没有办法用.
 #+begin_src emacs-lisp
-  ;; (use-package jump-tree
-  ;;   :ensure t
-  ;;   :config
-  ;;   (global-jump-tree-mode)
-  ;;   (add-to-list 'jump-tree-pos-list-record-commands 'xref-find-definitions)
-  ;;   )
-  ;; (jump-tree-jump-next)
+;; (use-package jump-tree
+;;   :ensure t
+;;   :config
+;;   (global-jump-tree-mode)
+;;   (add-to-list 'jump-tree-pos-list-record-commands 'xref-find-definitions)
+;;   )
+;; (jump-tree-jump-next)
 #+end_src
 ** 在项目中查找文件
 #+begin_src emacs-lisp
-  (use-package find-file-in-project
-	:ensure t
-	:bind
-	("s-p" . find-file-in-project))
+(use-package find-file-in-project
+  :ensure t
+  :bind
+  ("s-p" . find-file-in-project))
 #+end_src
 ** which-key 按键提示
 #+begin_src emacs-lisp
@@ -541,103 +607,103 @@
   :ensure t
   :config
   (setq recentf-max-saved-items 200
-    recentf-max-menu-items 15)
+		recentf-max-menu-items 15)
   ;;:bind ("<f3>" . helm-recentf)
   :hook ((after-init-hook . recentf-mode)))
 #+end_src
 ** vterm
 #+begin_src emacs-lisp
-  (use-package vterm
-	:ensure t)
-  (use-package vterm-toggle
-	:ensure t
-	:bind (("C-`" . vterm-toggle))
-	:config
-	(setq vterm-toggle-scope 'project)
-	)
+(use-package vterm
+  :ensure t)
+(use-package vterm-toggle
+  :ensure t
+  :bind (("C-`" . vterm-toggle))
+  :config
+  (setq vterm-toggle-scope 'project)
+  )
 
-  ;; (use-package aweshell
-  ;;   :ensure t
-  ;;   :bind (("<f8>" . aweshell-dedicated-toggle)
-  ;; 		 ("<f9>" . aweshell-toggle))
-  ;;   :config
-  ;;   (when (display-graphic-p)
-  ;; 	(setq aweshell-use-exec-path-from-shell nil))
-  ;;   (setq aweshell-auto-suggestion-p nil)
-  ;;   (setq epe-git-dirty-char "✗")
-  ;;   (setq-local company-backends '(company-capf)
-  ;; 			  pcomplete-cycle-completions nil)
-  ;;   (setq eshell-prompt-function
-  ;; 		(lambda ()
-  ;; 		  (setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
-  ;; 		  (concat "\033[32m➜\033[0m \033[36m"
-  ;; 				  (abbreviate-file-name (eshell/pwd))
-  ;; 				  "\033[0m "
-  ;; 				  (when (epe-git-p)
-  ;; 					(concat "\e[34mgit:(\e[0m\e[31m"
-  ;; 							(epe-git-branch)
-  ;; 							"\e[0m\e[34m)\e[0m"))
-  ;; 				  (if (= (user-uid) 0) "\e[31m#\e[0m " "\e[34m$\e[0m ")
-  ;; 				  (when (epe-git-p)
-  ;; 					(concat "\e[37m"
-  ;; 							(epe-git-dirty)
-  ;; 							(epe-git-untracked)
-  ;; 							(let ((unpushed (epe-git-unpushed-number)))
-  ;; 							  (unless (= unpushed 0)
-  ;; 								(concat ":" (number-to-string unpushed))))
-  ;; 							"\e[0m"))
-  ;; 				  "\n"))))
+;; (use-package aweshell
+;;   :ensure t
+;;   :bind (("<f8>" . aweshell-dedicated-toggle)
+;; 		 ("<f9>" . aweshell-toggle))
+;;   :config
+;;   (when (display-graphic-p)
+;; 	(setq aweshell-use-exec-path-from-shell nil))
+;;   (setq aweshell-auto-suggestion-p nil)
+;;   (setq epe-git-dirty-char "✗")
+;;   (setq-local company-backends '(company-capf)
+;; 			  pcomplete-cycle-completions nil)
+;;   (setq eshell-prompt-function
+;; 		(lambda ()
+;; 		  (setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
+;; 		  (concat "\033[32m➜\033[0m \033[36m"
+;; 				  (abbreviate-file-name (eshell/pwd))
+;; 				  "\033[0m "
+;; 				  (when (epe-git-p)
+;; 					(concat "\e[34mgit:(\e[0m\e[31m"
+;; 							(epe-git-branch)
+;; 							"\e[0m\e[34m)\e[0m"))
+;; 				  (if (= (user-uid) 0) "\e[31m#\e[0m " "\e[34m$\e[0m ")
+;; 				  (when (epe-git-p)
+;; 					(concat "\e[37m"
+;; 							(epe-git-dirty)
+;; 							(epe-git-untracked)
+;; 							(let ((unpushed (epe-git-unpushed-number)))
+;; 							  (unless (= unpushed 0)
+;; 								(concat ":" (number-to-string unpushed))))
+;; 							"\e[0m"))
+;; 				  "\n"))))
 
 #+end_src
 ** vtm 管理多个vtertm
 #+begin_src emacs-lisp
-  (use-package vtm
-	:ensure t
-	:config
-	(setq vtm-edit-mode nil)
-	)
+(use-package vtm
+  :ensure t
+  :config
+  (setq vtm-edit-mode nil)
+  )
 #+end_src
 
 ** git
 #+begin_src emacs-lisp
-  ;; git 支持
-  (use-package magit
-	:ensure t
-	:bind
-	(:map global-map
-	  ("C-c g b" . 'magit-blame-addition)))
-  ;; 缓冲区中查看.修改,暂存文件
-  (use-package git-gutter+
-	:ensure t
-	:config
-	(global-git-gutter+-mode))
+;; git 支持
+(use-package magit
+  :ensure t
+  :bind
+  (:map global-map
+		("C-c g b" . 'magit-blame-addition)))
+;; 缓冲区中查看.修改,暂存文件
+(use-package git-gutter+
+  :ensure t
+  :config
+  (global-git-gutter+-mode))
 #+end_src
 
 *** magit blame 快捷键
 #+begin_center
-     (define-key map (kbd "C-m") 'magit-show-commit)
-     (define-key map (kbd   "p") 'magit-blame-previous-chunk)
-     (define-key map (kbd   "P") 'magit-blame-previous-chunk-same-commit)
-     (define-key map (kbd   "n") 'magit-blame-next-chunk)
-     (define-key map (kbd   "N") 'magit-blame-next-chunk-same-commit)
-     (define-key map (kbd   "b") 'magit-blame-addition)
-     (define-key map (kbd   "r") 'magit-blame-removal)
-     (define-key map (kbd   "f") 'magit-blame-reverse)
-     (define-key map (kbd   "B") 'magit-blame)
-     (define-key map (kbd   "c") 'magit-blame-cycle-style)
-     (define-key map (kbd   "q") 'magit-blame-quit)
-     (define-key map (kbd "M-w") 'magit-blame-copy-hash)
-     (define-key map (kbd "SPC") 'magit-diff-show-or-scroll-up)
-     (define-key map (kbd "S-SPC") 'magit-diff-show-or-scroll-down)
-     (define-key map (kbd "DEL") 'magit-diff-show-or-scroll-down)
+(define-key map (kbd "C-m") 'magit-show-commit)
+(define-key map (kbd   "p") 'magit-blame-previous-chunk)
+(define-key map (kbd   "P") 'magit-blame-previous-chunk-same-commit)
+(define-key map (kbd   "n") 'magit-blame-next-chunk)
+(define-key map (kbd   "N") 'magit-blame-next-chunk-same-commit)
+(define-key map (kbd   "b") 'magit-blame-addition)
+(define-key map (kbd   "r") 'magit-blame-removal)
+(define-key map (kbd   "f") 'magit-blame-reverse)
+(define-key map (kbd   "B") 'magit-blame)
+(define-key map (kbd   "c") 'magit-blame-cycle-style)
+(define-key map (kbd   "q") 'magit-blame-quit)
+(define-key map (kbd "M-w") 'magit-blame-copy-hash)
+(define-key map (kbd "SPC") 'magit-diff-show-or-scroll-up)
+(define-key map (kbd "S-SPC") 'magit-diff-show-or-scroll-down)
+(define-key map (kbd "DEL") 'magit-diff-show-or-scroll-down)
 #+end_center
 
 ** 智能tab补全
 #+begin_src emacs-lisp
-  ;; 智能tab补全. 有个新的 smart-tab-mode
-  (use-package smart-tabs-mode
-	:ensure t
-	:hook ((prog-mode . smart-tabs-mode)))
+;; 智能tab补全. 有个新的 smart-tab-mode
+(use-package smart-tabs-mode
+  :ensure t
+  :hook ((prog-mode . smart-tabs-mode)))
 #+end_src
 ** 智能跳转行首和行尾
 #+begin_src emacs-lisp
@@ -649,287 +715,300 @@
 #+end_src
 ** 快速选择窗口
 #+begin_src emacs-lisp
-	;; (use-package ace-window
-	;;   :ensure t
+;; (use-package ace-window
+;;   :ensure t
 
-	;;   :bind
-	;;   ("M-o" . ace-window))
-  (use-package window-numbering
-    :ensure t
-	:init (window-numbering-mode 1))
+;;   :bind
+;;   ("M-o" . ace-window))
+(use-package window-numbering
+  :ensure t
+  :init (window-numbering-mode 1))
 #+end_src
 ** 剪切板 kill ring
-   类似于vscode的clipboard. 但是没有快速选择的方式
+类似于vscode的clipboard. 但是没有快速选择的方式
 #+begin_src emacs-lisp
-   ;; (global-set-key "\C-xy" '(lambda ()
-   ;;                                 (interactive)
-   ;;                                 (popup-menu 'yank-menu)))
-  (use-package browse-kill-ring
-    :ensure t
-    :bind
-    (:map global-map
-	  ("C-c k" . 'browse-kill-ring)
-	  ("C-c C-k" . 'browse-kill-ring))
-    :config
-    ;; 高亮当前选择项
-    (setq browse-kill-ring-highlight-current-entry t)
-    )
-#+end_src
-** 有道翻译
-#+begin_src emacs-lisp
-  ;; 有道词典
-  (use-package youdao-dictionary
-    :ensure t
-    :bind
-    (:map global-map
-          ;; 会自动隐藏. 但是对于查看长文档翻译时候,不太方便
-	  ;; ("C-c y" . youdao-dictionary-search-at-point-tooltip)
-	  ;; 不会移动隐藏.但是有操作会隐藏
-	  ("C-c y" . youdao-dictionary-search-at-point+))
-    :config
-    ;; Enable Cache
-    (setq url-automatic-caching t)
-    ;; Integrate with popwin-el (https://github.com/m2ym/popwin-el)
-    ;; (push "*Youdao Dictionary*" popwin:special-display-config)
-
-    ;; Set file path for saving search history
-    (setq youdao-dictionary-search-history-file "~/.emacs.d/.youdao")
-
-    ;; Enable Chinese word segmentation support (支持中文分词)
-    ;; (setq youdao-dictionary-use-chinese-word-segmentation t)
-    )
-
-#+end_src
-** 插入翻译文字
-#+begin_src emacs-lisp
-  (require 'insert-translated-name)
-  (global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
-  (global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
-  (global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
-  (global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
+;; (global-set-key "\C-xy" '(lambda ()
+;;                                 (interactive)
+;;                                 (popup-menu 'yank-menu)))
+(use-package browse-kill-ring
+  :ensure t
+  :bind
+  (:map global-map
+		("C-c k" . 'browse-kill-ring)
+		("C-c C-k" . 'browse-kill-ring))
+  :config
+  ;; 高亮当前选择项
+  (setq browse-kill-ring-highlight-current-entry t)
+  )
 #+end_src
 ** company自动补全
 #+begin_src emacs-lisp
-  (use-package company
-	:ensure t
-	:config
-	(global-company-mode)
-	;; (add-to-list 'company-backends #'company-tabnine)
-	;; Optionally enable completion-as-you-type behavior.
-	(setq company-idle-delay 0)
-	;; show quik select number
-	(setq company-show-numbers t)
-	(setq company-minimum-prefix-length 1)
-	;; 大小写问题修复
-	(setq company-dabbrev-downcase nil)
-	)
-  ;;  (use-package company-tabnine
-  ;;	:custom ((company-tabnine-always-trigger nil)))
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode)
+  ;; (add-to-list 'company-backends #'company-tabnine)
+  ;; Optionally enable completion-as-you-type behavior.
+  (setq company-idle-delay 0)
+  ;; show quik select number
+  (setq company-show-numbers t)
+  (setq company-minimum-prefix-length 1)
+  ;; 大小写问题修复
+  (setq company-dabbrev-downcase nil)
+  )
+;;  (use-package company-tabnine
+;;	:custom ((company-tabnine-always-trigger nil)))
 
 #+end_src
-** 写英文帮助
+** 翻译,英文字典
 #+begin_src emacs-lisp
-  (require 'company-english-helper)
-  (global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
+;; 有道词典
+;; (use-package youdao-dictionary
+;;   :ensure t
+;;   :bind
+;;   (:map global-map
+;; 		;; 会自动隐藏. 但是对于查看长文档翻译时候,不太方便
+;; 	;; ("C-c y" . youdao-dictionary-search-at-point-tooltip)
+;; 	;; 不会移动隐藏.但是有操作会隐藏
+;; 	("C-c y" . youdao-dictionary-search-at-point+))
+;;   :config
+;;   ;; Enable Cache
+;;   (setq url-automatic-caching t)
+;;   ;; Integrate with popwin-el (https://github.com/m2ym/popwin-el)
+;;   ;; (push "*Youdao Dictionary*" popwin:special-display-config)
+
+;;   ;; Set file path for saving search history
+;;   (setq youdao-dictionary-search-history-file "~/.emacs.d/.youdao")
+
+;;   ;; Enable Chinese word segmentation support (支持中文分词)
+;;   ;; (setq youdao-dictionary-use-chinese-word-segmentation t)
+;;   )
+;; google 翻译
+(use-package go-translate
+  :ensure t
+  :config
+  (setq go-translate-base-url "https://translate.google.cn"
+		go-translate-extra-directions '(("en" . "zh-CN"))
+		go-translate-target-language "en"
+		go-translate-local-language "zh-CN"
+		go-translate-buffer-follow-p t
+		go-translate-inputs-function #'go-translate-inputs-current-or-prompt
+		go-translate-token-current (cons 430675 2721866130))
+  :bind
+  (:map global-map
+		("C-c e y" . 'go-translate-popup-current)
+		("C-c y" . 'go-translate)
+		)
+  )
+
+;; 插入翻译文字
+(require 'insert-translated-name)
+(global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
+(global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
+(global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
+(global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
+;; 写英文帮助
+(require 'company-english-helper)
+(global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
 #+end_src
 ** 书签
 #+begin_src emacs-lisp
-  (use-package bm
-	   :ensure t
-	   :demand t
+(use-package bm
+  :ensure t
+  :demand t
 
-	   :init
-	   ;; restore on load (even before you require bm)
-	   (setq bm-restore-repository-on-load t)
-
-
-	   :config
-	   ;; Allow cross-buffer 'next'
-	   (setq bm-cycle-all-buffers t)
-
-	   ;; where to store persistant files
-	   (setq bm-repository-file "~/.emacs.d/bm-repository")
-
-	   ;; save bookmarks
-	   (setq-default bm-buffer-persistence t)
-
-	   ;; Loading the repository from file when on start up.
-	   (add-hook 'after-init-hook 'bm-repository-load)
-
-	   ;; Saving bookmarks
-	   (add-hook 'kill-buffer-hook #'bm-buffer-save)
-
-	   ;; Saving the repository to file when on exit.
-	   ;; kill-buffer-hook is not called when Emacs is killed, so we
-	   ;; must save all bookmarks first.
-	   (add-hook 'kill-emacs-hook #'(lambda nil
-					    (bm-buffer-save-all)
-					    (bm-repository-save)))
-
-	   ;; The `after-save-hook' is not necessary to use to achieve persistence,
-	   ;; but it makes the bookmark data in repository more in sync with the file
-	   ;; state.
-	   (add-hook 'after-save-hook #'bm-buffer-save)
-
-	   ;; Restoring bookmarks
-	   (add-hook 'find-file-hooks   #'bm-buffer-restore)
-	   (add-hook 'after-revert-hook #'bm-buffer-restore)
-
-	   ;; The `after-revert-hook' is not necessary to use to achieve persistence,
-	   ;; but it makes the bookmark data in repository more in sync with the file
-	   ;; state. This hook might cause trouble when using packages
-	   ;; that automatically reverts the buffer (like vc after a check-in).
-	   ;; This can easily be avoided if the package provides a hook that is
-	   ;; called before the buffer is reverted (like `vc-before-checkin-hook').
-	   ;; Then new bookmarks can be saved before the buffer is reverted.
-	   ;; Make sure bookmarks is saved before check-in (and revert-buffer)
-	   (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+  :init
+  ;; restore on load (even before you require bm)
+  (setq bm-restore-repository-on-load t)
 
 
-	   :bind (("<f2>" . bm-next)
-		  ("S-<f2>" . bm-previous)
-		  ("C-<f2>" . bm-toggle)
-		  ("<f1>" . bm-toggle))
-	   )
+  :config
+  ;; Allow cross-buffer 'next'
+  (setq bm-cycle-all-buffers t)
+
+  ;; where to store persistant files
+  (setq bm-repository-file "~/.emacs.d/bm-repository")
+
+  ;; save bookmarks
+  (setq-default bm-buffer-persistence t)
+
+  ;; Loading the repository from file when on start up.
+  (add-hook 'after-init-hook 'bm-repository-load)
+
+  ;; Saving bookmarks
+  (add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+  ;; Saving the repository to file when on exit.
+  ;; kill-buffer-hook is not called when Emacs is killed, so we
+  ;; must save all bookmarks first.
+  (add-hook 'kill-emacs-hook #'(lambda nil
+								 (bm-buffer-save-all)
+								 (bm-repository-save)))
+
+  ;; The `after-save-hook' is not necessary to use to achieve persistence,
+  ;; but it makes the bookmark data in repository more in sync with the file
+  ;; state.
+  (add-hook 'after-save-hook #'bm-buffer-save)
+
+  ;; Restoring bookmarks
+  (add-hook 'find-file-hooks   #'bm-buffer-restore)
+  (add-hook 'after-revert-hook #'bm-buffer-restore)
+
+  ;; The `after-revert-hook' is not necessary to use to achieve persistence,
+  ;; but it makes the bookmark data in repository more in sync with the file
+  ;; state. This hook might cause trouble when using packages
+  ;; that automatically reverts the buffer (like vc after a check-in).
+  ;; This can easily be avoided if the package provides a hook that is
+  ;; called before the buffer is reverted (like `vc-before-checkin-hook').
+  ;; Then new bookmarks can be saved before the buffer is reverted.
+  ;; Make sure bookmarks is saved before check-in (and revert-buffer)
+  (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+
+  :bind (("<f2>" . bm-next)
+		 ("S-<f2>" . bm-previous)
+		 ("C-<f2>" . bm-toggle)
+		 ("<f1>" . bm-toggle))
+  )
 #+end_src
 ** multiple-cursors 多列编辑
 #+begin_src emacs-lisp
-	(use-package multiple-cursors
-		:ensure t
-		:bind
-		(:map global-map
-	   ;; M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
-	   ("M-I" . 'mc/edit-lines)
-	   ;; 下一行相似的
-	   ("C->" . 'mc/mark-next-like-this)
-	   ;; 上一行相似的
-	   ("C-<" . 'mc/mark-previous-like-this)
-	   ;; 所有匹配的行
-	   ("C-c C-<" . 'mc/mark-all-like-this)
-	   ;; 插入数字
-	   ;;("M-N" . '@-ask- 'mc/insert-numbers)
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  (:map global-map
+		;; M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
+		("M-I" . 'mc/edit-lines)
+		;; 下一行相似的
+		("C->" . 'mc/mark-next-like-this)
+		;; 上一行相似的
+		("C-<" . 'mc/mark-previous-like-this)
+		;; 所有匹配的行
+		("C-c C-<" . 'mc/mark-all-like-this)
+		;; 插入数字
+		;;("M-N" . '@-ask- 'mc/insert-numbers)
 		)
-	  )
-	;; 按回车. 插入新行.使用C-g退出多行
-	(define-key mc/keymap (kbd "<return>") nil)
-	;; 鼠标点选某一行
-	(global-unset-key (kbd "M-<down-mouse-1>"))
-	(global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+  )
+;; 按回车. 插入新行.使用C-g退出多行
+(define-key mc/keymap (kbd "<return>") nil)
+;; 鼠标点选某一行
+(global-unset-key (kbd "M-<down-mouse-1>"))
+(global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
 
-	(defun ask-number ()
-	   (let ((val (string-to-number(read-from-minibuffer "Enter Start Number "))))
-		 (if (integerp val)
-		   val
-		 (ask-number))))
+(defun ask-number ()
+  (let ((val (string-to-number(read-from-minibuffer "Enter Start Number "))))
+	(if (integerp val)
+		val
+	  (ask-number))))
 
-	(defun @-ask-inter-num ()
-	  (interactive)
-	  (mc/insert-numbers (ask-number)))
-	;; 手动输入数字起始(默认是0)
-	(global-set-key (kbd "M-N") '@-ask-inter-num)
+(defun @-ask-inter-num ()
+  (interactive)
+  (mc/insert-numbers (ask-number)))
+;; 手动输入数字起始(默认是0)
+(global-set-key (kbd "M-N") '@-ask-inter-num)
 #+end_src
 ** 高亮代码中的todo
 #+begin_src emacs-lisp
-  (use-package hl-todo
-	:ensure t
-	:hook
-	(prog-mode . hl-todo-mode)
-	(text-mode . hl-todo-mode)
-	:config
-	(setq hl-todo-keyword-faces
+(use-package hl-todo
+  :ensure t
+  :hook
+  (prog-mode . hl-todo-mode)
+  (text-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-keyword-faces
 		'(("TODO"   . "#FF0000")
 		  ("FIXME"  . "#FF0000")
 		  ("DEBUG"  . "#A020F0")
 		  ("GOTCHA" . "#FF4500")
 		  ("STUB"   . "#1E90FF")
 		  ("NOTE"   . "#36bf36"))
-	))
+		))
 #+end_src
 ** git/todo 搜集代码中的todo
 #+begin_src emacs-lisp
-   ;; (use-package dash
-   ;;   :ensure t)
-   ;; (use-package pcre2el
-   ;;   :ensure t)
-   ;; (use-package f
-   ;;   :ensure t)
-   ;; (use-package async
-   ;;   :ensure t)
-   ;; (use-package s
-   ;;   :ensure t)
+;; (use-package dash
+;;   :ensure t)
+;; (use-package pcre2el
+;;   :ensure t)
+;; (use-package f
+;;   :ensure t)
+;; (use-package async
+;;   :ensure t)
+;; (use-package s
+;;   :ensure t)
 
-   ;; (use-package magit-todos
-   ;;   :ensure t
-   ;;   :init
-   ;;   (require 'dash)
-   ;;   (require 'pcre2el)
-   ;;   (require 'f)
-   ;;   (require 'async)
-   ;;   (require 's)
-   ;;   :commands (magit-todos-mode)
-   ;;   :config
-   ;;   ;; (setq magit-todos-recursive t)
-   ;;   ;; (setq magit-todos-depth 100)
-   ;;   ;; 这个是不包含的文件
-   ;;   ;; (setq magit-todos-exclude-globs '("*.html"))
-   ;;   ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
-   ;;   ;; (setq magit-todos-keyword-suffix "")
-   ;;   :hook
-   ;;   (magit-mode . magit-todos-mode)
-   ;;   )
-	;; 使用过程中. 发现. 如果使用treemacs 打开目录. 打开 magit. magit 正常. 但是magit-todos 没有显示. 需要打开一个项目文件才行.
+;; (use-package magit-todos
+;;   :ensure t
+;;   :init
+;;   (require 'dash)
+;;   (require 'pcre2el)
+;;   (require 'f)
+;;   (require 'async)
+;;   (require 's)
+;;   :commands (magit-todos-mode)
+;;   :config
+;;   ;; (setq magit-todos-recursive t)
+;;   ;; (setq magit-todos-depth 100)
+;;   ;; 这个是不包含的文件
+;;   ;; (setq magit-todos-exclude-globs '("*.html"))
+;;   ;; 修改匹配后缀 原始 => "\\(?:([^)]+)\\)?:"
+;;   ;; (setq magit-todos-keyword-suffix "")
+;;   :hook
+;;   (magit-mode . magit-todos-mode)
+;;   )
+;; 使用过程中. 发现. 如果使用treemacs 打开目录. 打开 magit. magit 正常. 但是magit-todos 没有显示. 需要打开一个项目文件才行.
 
-  ;; (setq magit-todos-nice nil)
+;; (setq magit-todos-nice nil)
 
 #+end_src
 ** rg 支持
 #+begin_src emacs-lisp
-	(use-package rg
-	  :ensure t
-	  ;; :bind
-	  ;; (:map global-map
-	  ;; ("C-c s" rg-menu))
+(use-package rg
+  :ensure t
+  ;; :bind
+  ;; (:map global-map
+  ;; ("C-c s" rg-menu))
 
-	  :config
-	  (rg-enable-default-bindings)
-	  )
+  :config
+  (rg-enable-default-bindings)
+  )
 ;; (rg-enable-menu)
 #+end_src
 ** 折叠
 #+begin_src emacs-lisp
-  ;; (hs-minor-mode t)
-  ;; (define-globalized-minor-mode global-hs-minor-mode hs-minor-mode
-  ;;   (lambda () (hs-minor-mode)))
-  ;; (global-hs-minor-mode 1)
-  ;; (defun czy-hs-hooks ())
-  ;; (add-hook 'hs-minor-mode-hook #'czy-hs-hooks)
-  ;;(hs-minor-mode)
+;; (hs-minor-mode t)
+;; (define-globalized-minor-mode global-hs-minor-mode hs-minor-mode
+;;   (lambda () (hs-minor-mode)))
+;; (global-hs-minor-mode 1)
+;; (defun czy-hs-hooks ())
+;; (add-hook 'hs-minor-mode-hook #'czy-hs-hooks)
+;;(hs-minor-mode)
 
-  (use-package hideshow
-	:ensure nil
-	:hook (prog-mode . hs-minor-mode)
-	:config
-	(defun my/toggle-fold ()
-	  (interactive)
-	  (save-excursion
-		(end-of-line)
-		(if (hs-already-hidden-p)
-			(hs-show-block)
-		  (hs-hide-block))))
-	:bind (:map prog-mode-map
-				("C-c o" . my/toggle-fold)
-				("C-c h a" . hs-hide-block)
-				("C-c h b" . hs-show-block)
-				("C-c h h" . hs-hide-all)
-				("C-c h s" . hs-show-all)
-				("C-c h t" . hs-toggle-hiding)
-				)
-	)
-  ;; (global-set-key "\C-cha"	      'hs-hide-block)
-  ;; (global-set-key "\C-chb"	      'hs-show-block)
-  ;; (global-set-key "\C-chh"          'hs-hide-all)
-  ;; (global-set-key "\C-chs"          'hs-show-all)
-  ;; (global-set-key "\C-cht"	      'hs-toggle-hiding)
+(use-package hideshow
+  :ensure nil
+  :hook (prog-mode . hs-minor-mode)
+  :config
+  (defun my/toggle-fold ()
+	(interactive)
+	(save-excursion
+	  (end-of-line)
+	  (if (hs-already-hidden-p)
+		  (hs-show-block)
+		(hs-hide-block))))
+  :bind (:map prog-mode-map
+			  ("C-c o" . my/toggle-fold)
+			  ("C-c h a" . hs-hide-block)
+			  ("C-c h b" . hs-show-block)
+			  ("C-c h h" . hs-hide-all)
+			  ("C-c h s" . hs-show-all)
+			  ("C-c h t" . hs-toggle-hiding)
+			  )
+  )
+;; (global-set-key "\C-cha"	      'hs-hide-block)
+;; (global-set-key "\C-chb"	      'hs-show-block)
+;; (global-set-key "\C-chh"          'hs-hide-all)
+;; (global-set-key "\C-chs"          'hs-show-all)
+;; (global-set-key "\C-cht"	      'hs-toggle-hiding)
 #+end_src
 
 * 文件格式
@@ -937,49 +1016,49 @@
 #+begin_src emacs-lisp
 (use-package json-mode
   :ensure t)
-  ;;:hook ((json-mode . lsp)))
+;;:hook ((json-mode . lsp)))
 #+end_src
 ** yaml
 #+begin_src emacs-lisp
-  (use-package yaml-mode
-	:ensure t
-	:mode "\\.yml\\|ymal\\'")
-	;; :hook ((yaml-mode . lsp)))
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yml\\|ymal\\'")
+;; :hook ((yaml-mode . lsp)))
 #+end_src
 ** markdown
-   #+begin_src emacs-lisp
-	 (use-package markdown-mode
-	   :commands (markdown-mode gfm-mode)
-	   :mode (("README\\.md\\'" . gfm-mode)
-			  ("\\.md\\'" . markdown-mode)
-			  ("\\.markdown\\'" . markdown-mode))
-	   :init (setq markdown-command "multimarkdown"))
-   #+end_src
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+		 ("\\.md\\'" . markdown-mode)
+		 ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+#+end_src
 ** toml
 #+begin_src emacs-lisp
 (use-package toml-mode
   :ensure t)
-  ;; :hook ((toml-mode . lsp)))
+;; :hook ((toml-mode . lsp)))
 #+end_src
 
 ** docker file
 #+begin_src emacs-lisp
 (use-package dockerfile-mode
   :ensure t)
-  ;; :hook ((dockerfile-mode . lsp)))
+;; :hook ((dockerfile-mode . lsp)))
 #+end_src
 
 ** protobuf
 #+begin_src emacs-lisp
 (use-package protobuf-mode
   :ensure t)
-  ;; :hook ((protobuf-mode . lsp)))
-  (defconst my-protobuf-style
-    '((c-basic-offset . 2)
-      (indent-tabs-mode . nil)))
+;; :hook ((protobuf-mode . lsp)))
+(defconst my-protobuf-style
+  '((c-basic-offset . 2)
+    (indent-tabs-mode . nil)))
 
-  (add-hook 'protobuf-mode-hook
-    (lambda () (c-add-style "my-style" my-protobuf-style t)))
+(add-hook 'protobuf-mode-hook
+		  (lambda () (c-add-style "my-style" my-protobuf-style t)))
 #+end_src
 
 ** thrift
@@ -989,35 +1068,35 @@
 #+end_src
 ** plantuml
 #+begin_src emacs-lisp
-  (use-package plantuml-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
-	(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-    ;; jar 配置
-    (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
-    (setq plantuml-default-exec-mode 'jar)
+(use-package plantuml-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+  ;; jar 配置
+  (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
+  (setq plantuml-default-exec-mode 'jar)
     ;;;; 使用server
-    ;; (setq plantuml-default-exec-mode 'server)
-    ;; (setq plantuml-server-url "https://www.plantuml.com/plantuml")
-    ;; 执行文件
-    ;;(setq plantuml-executable-path "")
-    ;;(setq plantuml-default-exec-mode 'executable)
-    )
+  ;; (setq plantuml-default-exec-mode 'server)
+  ;; (setq plantuml-server-url "https://www.plantuml.com/plantuml")
+  ;; 执行文件
+  ;;(setq plantuml-executable-path "")
+  ;;(setq plantuml-default-exec-mode 'executable)
+  )
 #+end_src
 * 编程支持
 ** flyspell 拼写检查
-   禁用拼写检查. 看着好闹心.
+禁用拼写检查. 看着好闹心.
 #+begin_src emacs-lisp
-  ;; flyspell 拼写检查
-  ;;(use-package flyspell
-  ;;  ;;:ensure t
-  ;;  :disabled
-  ;;  :config
-  ;;  (flyspell-mode +1))
-  ;; (add-hook 'before-save-hook (lambda () (flyspell-buffer)))
-  ;;(add-hook 'text-mode-hook 'flyspell-mode)
-  ;;(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; flyspell 拼写检查
+;;(use-package flyspell
+;;  ;;:ensure t
+;;  :disabled
+;;  :config
+;;  (flyspell-mode +1))
+;; (add-hook 'before-save-hook (lambda () (flyspell-buffer)))
+;;(add-hook 'text-mode-hook 'flyspell-mode)
+;;(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 #+end_src
 ** flycheck
 #+begin_src emacs-lisp
@@ -1026,51 +1105,67 @@
 #+end_src
 ** lsp 语言服务器
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-	:ensure t
-	:commands (lsp lsp-deferred)
-	:hook (go-mode . lsp-deferred)
-	:bind (:map lsp-mode-map
-				("M-." . lsp-find-definition)
-				("M-n" . lsp-find-references))
-	)
+(use-package lsp-mode
+  :ensure t
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :commands (lsp lsp-deferred)
+  :hook(
+		(go-mode . lsp-deferred)
+		(lsp-mode . lsp-enable-which-key-integration)
+		)
+  :bind (:map lsp-mode-map
+			  ("M-." . lsp-find-definition)
+			  ("M-n" . lsp-find-references))
+  :custom ((lsp-log-io nil)
+		   (lsp-eldoc-render-all nil)
+		   (lsp-completion-provider t)
+		   (lsp-signature-render-documentation nil)
+		   (lsp-rust-server 'rust-analyzer)
+		   (lsp-rust-analyzer-cargo-watch-enable nil)
+		   (lsp-go-hover-kind "NoDocumentation")
+		   (lsp-go-use-placeholders t)
+		   (lsp-diagnostics-provider :none)
+		   (lsp-modeline-diagnostics-enable nil)
+		   (lsp-file-watch-threshold 2000))
+  )
 #+end_src
 ** lsp-ui
 #+begin_src emacs-lisp
-  ;; Optional - provides fancier overlays.
-  (use-package lsp-ui
-	:ensure t
-	:commands lsp-ui-mode)
+;; Optional - provides fancier overlays.
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
 #+end_src
 ** nox 替代 lsp-mode
 #+begin_src emacs-lisp
-  ;; (require 'nox)
+;; (require 'nox)
 
-  ;; (dolist (hook (list
-  ;; 			   'js-mode-hook
-  ;; 			   'rust-mode-hook
-  ;; 			   'python-mode-hook
-  ;; 			   'ruby-mode-hook
-  ;; 			   'java-mode-hook
-  ;; 			   'sh-mode-hook
-  ;; 			   'php-mode-hook
-  ;; 			   ;'c-mode-common-hook
-  ;; 			   'c-mode-hook
-  ;; 			   'csharp-mode-hook
-  ;; 			   'c++-mode-hook
-  ;; 			   'haskell-mode-hook
-  ;; 			   'go-mode-hook
-  ;; 			   ))
-  ;;   (add-hook hook '(lambda () (nox-ensure))))
+;; (dolist (hook (list
+;; 			   'js-mode-hook
+;; 			   'rust-mode-hook
+;; 			   'python-mode-hook
+;; 			   'ruby-mode-hook
+;; 			   'java-mode-hook
+;; 			   'sh-mode-hook
+;; 			   'php-mode-hook
+;; 			   ;'c-mode-common-hook
+;; 			   'c-mode-hook
+;; 			   'csharp-mode-hook
+;; 			   'c++-mode-hook
+;; 			   'haskell-mode-hook
+;; 			   'go-mode-hook
+;; 			   ))
+;;   (add-hook hook '(lambda () (nox-ensure))))
 
-  ;;   (global-set-key (kbd "M-9") 'imenu)
-  ;;   (global-set-key (kbd "M-8") 'nox-show-doc)
+;;   (global-set-key (kbd "M-9") 'imenu)
+;;   (global-set-key (kbd "M-8") 'nox-show-doc)
 
 #+end_src
 ** dap-mode (调试支持)
 #+begin_src emacs-lisp
-  (use-package dap-mode
-	:ensure t)
+(use-package dap-mode
+  :ensure t)
 #+end_src
 
 ** Yasnippet
@@ -1095,236 +1190,332 @@
 #+end_src
 ** treemacs
 #+begin_src emacs-lisp
-  (use-package treemacs
-	:ensure t
-	:defer t
-	;; :init
-	;; (with-eval-after-load 'winum
-	;;  (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-	:config
-	(progn
-	  (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-			treemacs-deferred-git-apply-delay      0.5
-			treemacs-directory-name-transformer    #'identity
-			treemacs-display-in-side-window        t
-			treemacs-eldoc-display                 t
-			treemacs-file-event-delay              5000
-			treemacs-file-extension-regex          treemacs-last-period-regex-value
-			treemacs-file-follow-delay             0.2
-			treemacs-file-name-transformer         #'identity
-			treemacs-follow-after-init             t
-			treemacs-git-command-pipe              ""
-			treemacs-goto-tag-strategy             'refetch-index
-			treemacs-indentation                   2
-			treemacs-indentation-string            " "
-			treemacs-is-never-other-window         nil
-			treemacs-max-git-entries               5000
-			treemacs-missing-project-action        'ask
-			treemacs-move-forward-on-expand        nil
-			treemacs-no-png-images                 nil
-			treemacs-no-delete-other-windows       t
-			treemacs-project-follow-cleanup        nil
-			treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-			treemacs-position                      'left
-			treemacs-recenter-distance             0.1
-			treemacs-recenter-after-file-follow    nil
-			treemacs-recenter-after-tag-follow     nil
-			treemacs-recenter-after-project-jump   'always
-			treemacs-recenter-after-project-expand 'on-distance
-			treemacs-show-cursor                   nil
-			treemacs-show-hidden-files             t
-			treemacs-silent-filewatch              nil
-			treemacs-silent-refresh                nil
-			treemacs-sorting                       'alphabetic-asc
-			treemacs-space-between-root-nodes      t
-			treemacs-tag-follow-cleanup            t
-			treemacs-tag-follow-delay              1.5
-			treemacs-user-mode-line-format         nil
-			treemacs-user-header-line-format       nil
-			treemacs-width                         35
-			treemacs-workspace-switch-cleanup      nil)
+(use-package treemacs
+  :ensure t
+  :defer t
+  ;; :init
+  ;; (with-eval-after-load 'winum
+  ;;  (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+	(setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+		  treemacs-deferred-git-apply-delay      0.5
+		  treemacs-directory-name-transformer    #'identity
+		  treemacs-display-in-side-window        t
+		  treemacs-eldoc-display                 t
+		  treemacs-file-event-delay              5000
+		  treemacs-file-extension-regex          treemacs-last-period-regex-value
+		  treemacs-file-follow-delay             0.2
+		  treemacs-file-name-transformer         #'identity
+		  treemacs-follow-after-init             t
+		  treemacs-git-command-pipe              ""
+		  treemacs-goto-tag-strategy             'refetch-index
+		  treemacs-indentation                   2
+		  treemacs-indentation-string            " "
+		  treemacs-is-never-other-window         nil
+		  treemacs-max-git-entries               5000
+		  treemacs-missing-project-action        'ask
+		  treemacs-move-forward-on-expand        nil
+		  treemacs-no-png-images                 nil
+		  treemacs-no-delete-other-windows       t
+		  treemacs-project-follow-cleanup        nil
+		  treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+		  treemacs-position                      'left
+		  treemacs-recenter-distance             0.1
+		  treemacs-recenter-after-file-follow    nil
+		  treemacs-recenter-after-tag-follow     nil
+		  treemacs-recenter-after-project-jump   'always
+		  treemacs-recenter-after-project-expand 'on-distance
+		  treemacs-show-cursor                   nil
+		  treemacs-show-hidden-files             t
+		  treemacs-silent-filewatch              nil
+		  treemacs-silent-refresh                nil
+		  treemacs-sorting                       'alphabetic-asc
+		  treemacs-space-between-root-nodes      t
+		  treemacs-tag-follow-cleanup            t
+		  treemacs-tag-follow-delay              1.5
+		  treemacs-user-mode-line-format         nil
+		  treemacs-user-header-line-format       nil
+		  treemacs-width                         35
+		  treemacs-workspace-switch-cleanup      nil)
 
-	  ;; The default width and height of the icons is 22 pixels. If you are
-	  ;; using a Hi-DPI display, uncomment this to double the icon size.
-	  ;;(treemacs-resize-icons 44)
+	;; The default width and height of the icons is 22 pixels. If you are
+	;; using a Hi-DPI display, uncomment this to double the icon size.
+	;;(treemacs-resize-icons 44)
 
-	  (treemacs-follow-mode t)
-	  (treemacs-filewatch-mode t)
-	  (treemacs-fringe-indicator-mode t)
-	  (pcase (cons (not (null (executable-find "git")))
-				   (not (null treemacs-python-executable)))
-		(`(t . t)
-		 (treemacs-git-mode 'deferred))
-		(`(t . _)
-		 (treemacs-git-mode 'simple))))
-	:bind
-	(:map global-map
-		  ("M-0"       . treemacs-select-window)
-		  ("C-x t 1"   . treemacs-delete-other-windows)
-		  ("C-x t t"   . treemacs)
-		  ;;("C-x t B"   . treemacs-bookmark)
-		  ;;("C-x t C-t" . treemacs-find-file)
-		  ("C-x t M-t" . treemacs-find-tag)
-		  ;; ("j" . treemacs-next-line)
-		  ;; ("k" . treemacs-previous-line)
-		  )
-	(:map treemacs-mode-map
-		  ("j" . treemacs-next-line)
-		  ("k" . treemacs-previous-line)
-		  )
-	)
+	(treemacs-follow-mode t)
+	(treemacs-filewatch-mode t)
+	(treemacs-fringe-indicator-mode t)
+	(pcase (cons (not (null (executable-find "git")))
+				 (not (null treemacs-python-executable)))
+	  (`(t . t)
+	   (treemacs-git-mode 'deferred))
+	  (`(t . _)
+	   (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+		("<f12>"       . treemacs-select-window)
+		("C-x t 1"   . treemacs-delete-other-windows)
+		("C-x t t"   . treemacs)
+		;;("C-x t B"   . treemacs-bookmark)
+		;;("C-x t C-t" . treemacs-find-file)
+		("C-x t M-t" . treemacs-find-tag)
+		;; ("j" . treemacs-next-line)
+		;; ("k" . treemacs-previous-line)
+		)
+  (:map treemacs-mode-map
+		("j" . treemacs-next-line)
+		("k" . treemacs-previous-line)
+		)
+  )
 
-  ;;(use-package treemacs-evil
-  ;;  :after treemacs evil
-  ;;  :ensure t)
+;;(use-package treemacs-evil
+;;  :after treemacs evil
+;;  :ensure t)
 
-  (use-package treemacs-projectile
-	:after treemacs projectile
-	:ensure t)
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
 
-  (use-package treemacs-icons-dired
-	:after treemacs dired
-	:ensure t
-	:config (treemacs-icons-dired-mode))
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
 
-  (use-package treemacs-magit
-	:after treemacs magit
-	:ensure t)
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
 
-  (use-package treemacs-persp ;;treemacs-persective if you use perspective.el vs. persp-mode
-	:after treemacs persp-mode ;;or perspective vs. persp-mode
-	:ensure t
-	:config (treemacs-set-scope-type 'Perspectives))
+(use-package treemacs-persp ;;treemacs-persective if you use perspective.el vs. persp-mode
+  :after treemacs persp-mode ;;or perspective vs. persp-mode
+  :ensure t
+  :config (treemacs-set-scope-type 'Perspectives))
 
-  (use-package lsp-treemacs
-	:ensure t
-	:config
-	(lsp-treemacs-sync-mode 1)
-	;; 将窗口放在右边.
-	(setq lsp-treemacs-symbols-position-params  `((side . right)
-												  (slot . 1)
-												  (window-width . 100)))
-	:bind
-	;; 添加快捷键
-	("s-3" . lsp-treemacs-symbols)
-	("s-1" . 'imenu)
-	("s-2" . lsp-treemacs-errors-list)
-	)
+(use-package lsp-treemacs
+  :ensure t
+  :config
+  (lsp-treemacs-sync-mode 1)
+  ;; 将窗口放在右边.
+  (setq lsp-treemacs-symbols-position-params  `((side . right)
+												(slot . 1)
+												(window-width . 100)))
+  :bind
+  ;; 添加快捷键
+  ("s-3" . lsp-treemacs-symbols)
+  ("s-1" . 'imenu)
+  ("s-2" . lsp-treemacs-errors-list)
+  )
 
 #+end_src
 * 编程语言
 ** golang 语言
 #+begin_src emacs-lisp
-	;; Set up before-save hooks to format buffer and add/delete imports.
-	;; Make sure you don't have other gofmt/goimports hooks enabled.
-	(defun lsp-go-install-save-hooks ()
-	  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-	  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-	(defun nox-go-install-save-hooks ()
-	  (add-hook 'before-save-hook #'nox-format t t))
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(defun nox-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'nox-format t t))
 
 
-	;; go语言支持
-	(use-package go-mode
-	  :mode "\\.go\\'"
-	  :init
-	  (setq gofmt-command "goimports")
-	  :config
-		;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks))
-		(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-	  :hook ((go-mode . lsp)))
+;; go语言支持
+(use-package go-mode
+  :mode "\\.go\\'"
+  :init
+  (setq gofmt-command "goimports")
+  :config
+  ;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks)
+  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  :hook ((go-mode . lsp))
+  :bind
+  (:map go-mode-map
+		("<f9>" . gofmt))
+  )
 
-	;; 折叠代码
-	(add-hook 'go-mode-hook 'hs-minor-mode)
-	;; 禁用自动保存
-	(add-hook 'go-mode-hook 'auto-save-disable)
 
-	;; 使用gocode 提供代码类型显示(在minibuffer)
-	(use-package go-eldoc
-	  :ensure t
-	  :hook ((gp-mode-hook . go-eldoc-setup)))
+;; ;; 禁用自动保存
+;; (add-hook 'go-mode-hook 'auto-save-disable)
 
-	;; ;; 使用guru 进行代码导航
-	;; (use-package go-guru
-	;;   :ensure t
-	;;   :hook (go-mode . go-guru-hl-identifier-mode))
+;; 使用gocode 提供代码类型显示(在minibuffer)
+(use-package go-eldoc
+  :ensure t
+  :after go-mode
+  :hook ((go-mode . go-eldoc-setup)))
 
-	;; go代码调试
-	(use-package go-dlv
-	  :after go-mode
-	  :ensure t)
+;; ;; 使用guru 进行代码导航
+;; (use-package go-guru
+;;   :ensure t
+;;   :hook (go-mode . go-guru-hl-identifier-mode))
 
-	;; go 包测试
-	(use-package gotest
-	  :after go-mode
-	  :ensure t)
+;; go代码调试
+(use-package go-dlv
+  :after go-mode
+  :ensure t)
 
-	;; go 生成测试代码
-	(use-package go-gen-test
-	  :after go-mode
-	  :ensure t)
+;; go 包测试
+(use-package gotest
+  :after go-mode
+  :ensure t
+  :bind (:map go-mode-map
+			  ("C-c t f" . go-test-current-file)
+			  ("C-c t t" . go-test-current-test)
+			  ("C-c t p" . go-test-current-project)
+			  ("C-c t b" . go-test-current-benchmark)
+			  ("C-x x" . go-run))
+  )
 
-	;; go lint
-	(use-package golint
-	  :after go-mode
-	  :ensure t)
+;; go 生成测试代码
+(use-package go-gen-test
+  :after go-mode
+  :ensure t)
 
-	;; go 调试
-  (require 'dap-go)
-  (dap-go-setup)
+;; go lint
+;; (use-package golint
+;;   :after go-mode
+;;   :ensure t)
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
+;; go 调试
+(require 'dap-go)
+(dap-go-setup)
 #+end_src
 ** lua 语言
 #+begin_src emacs-lisp
-  (use-package lua-mode
-	:ensure t
-	:config
-	;; (setq lsp-clients-luarocks-bin-dir "/usr/local/bin/")
-	;; (setq lsp-clients-lua-lsp-server-install-dir "/usr/local/bin/lua-lsp")
-	(setq lsp-clients-lua-language-server-bin "~/.emacs.d/.cache/lsp/lua-language-server/bin/macOS/lua-language-server")
-	;; (setq lsp-lua-diagnostics-globals t)
-	(setq lsp-lua-diagnostics-disable (vector "unused-local" "lowercase-global" "trailing-space" "empty-block"))
-	(setq lsp-lua-diagnostics-globals (vector "global" "flags"))
-	;; (setq lsp-lua-diagnostics-disable nil)
-	:hook ((lua-mode . lsp))
-	)
+(use-package lua-mode
+  :ensure t
+  :config
+  ;; (setq lsp-clients-luarocks-bin-dir "/usr/local/bin/")
+  ;; (setq lsp-clients-lua-lsp-server-install-dir "/usr/local/bin/lua-lsp")
+  (setq lsp-clients-lua-language-server-bin "~/.emacs.d/.cache/lsp/lua-language-server/bin/macOS/lua-language-server")
+  ;; (setq lsp-lua-diagnostics-globals t)
+  (setq lsp-lua-diagnostics-disable (vector "unused-local" "lowercase-global" "trailing-space" "empty-block"))
+  (setq lsp-lua-diagnostics-globals (vector "global" "flags"))
+  ;; (setq lsp-lua-diagnostics-disable nil)
+  :hook ((lua-mode . lsp))
+  )
 
-  ;; (message lsp-clients-lua-language-server-install-dir)
+;; (message lsp-clients-lua-language-server-install-dir)
 #+end_src
 * org mode
 ** org-bullets
-  #+begin_src emacs-lisp
-	(use-package org-bullets
-	  :ensure t
-	  :hook (org-mode . org-bullets-mode)
-	  :config
-	  ;;(add-hook 'org-mode-hook #'org-bullets-mode)
-	  )
-  #+end_src
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode)
+  :config
+  ;;(add-hook 'org-mode-hook #'org-bullets-mode)
+  )
+#+end_src
 ** org 基础配置
 #+begin_src emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package ox-gfm
+  :ensure t)
+(use-package htmlize
+  :ensure t)
+(use-package ob-http
+  :ensure t)
+(use-package ob-sql-mode
+  :ensure t)
+
+(use-package org
+  :ensure nil
+  :bind
+  (:map global-map
+		("C-c a" . org-agenda)
+		("C-c b" . org-iswitchb)
+		("C-c c" . org-capture))
+  (:map org-mode-map
+		("C-c l" . org-store-link)
+		("s-<return>" . org-table-copy-down))
+  :custom
+  (org-default-notes-file (expand-file-name "~/org/default.org"))
+  (org-agenda-files '("~/org/" "~/org/work/" "~/org/knowledge/"))
+  :init
+  ;; https://orgmode.org/worg/org-contrib/babel/languages.html
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((js . t)
+	 (shell . t)
+	 (python . t)
+	 (makefile . t)
+	 (http . t)
+	 (clojure . t)
+	 (sql . t)
+	 (awk . t)
+	 (sed . t)
+	 (emacs-lisp . t)))
+  (setq org-src-tab-acts-natively t
+		;; 代码区域禁用第一层缩进 https://emacs.stackexchange.com/a/18892/16450
+		org-src-preserve-indentation t
+		org-log-done 'time
+		org-startup-folded "showall"
+		org-startup-indented t
+		org-image-actual-width nil
+		org-export-with-sub-superscripts nil
+		org-hide-emphasis-markers nil
+		;; terminal emacs can't display those lovely images :-(
+		org-startup-with-inline-images t
+		org-confirm-babel-evaluate nil)
+  ;; markdown export require emacs 25 https://stackoverflow.com/a/33033533/2163429
+  (require 'ox-md nil t)
+  (require 'org-tempo)
+  (custom-set-faces
+   '(org-level-1 ((t (:inherit outline-1 :height 1.6 :bold t))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.4 :bold t))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.2 :bold t))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.0 :bold t))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.0 :bold t))))
+   )
+  ;; #+LaTeX_HEADER: \usepackage{CJK}
+  ;; #+LaTeX_HEADER: \begin{CJK}{UTF8}{gbsn}
+  (add-to-list 'org-latex-packages-alist '("" "CJKutf8" t))
+
+  (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
+
+  (setq org-publish-project-alist
+		'(("org-notes"
+		   :base-directory "~/study-note/"
+		   :base-extension "org"
+		   :publishing-directory "~/Documents/public_notes"
+		   :recursive t
+		   :publishing-function org-html-publish-to-html
+		   :headline-levels 4             ; Just the default for this project.
+		   :auto-preamble t)
+
+		  ("org-static"
+		   :base-directory "~/study-note/"
+		   :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+		   :publishing-directory "~/Documents/public_notes"
+		   :recursive t
+		   :publishing-function org-publish-attachment))))
+
 ;; org 基础配置
-;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-;(add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(global-set-key "\C-cc" 'org-capture)
-(setq org-default-notes-file "~/org/default.org")
-;; org agenda
-(setq org-agenda-files '("~/org/" "~/org/work/" "~/org/knowledge/"))
-(setq org-refile-use-outline-path 'file)
-(setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
-(setq org-outline-path-complete-in-steps nil)
-(setq org-refile-allow-creating-parent-nodes 'confirm)
-;; 设置org-todo 依赖
-(setq org-enforce-todo-dependencies t)
-;; 使用org-depend
-(require 'org-depend)
-;; 显示图片设置
-(setq org-image-actual-width (/ (display-pixel-width) 3))
-;;
-(org-display-inline-images)
+                                        ;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+                                        ;(add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
+;; (global-set-key "\C-cl" 'org-store-link)
+;; (global-set-key "\C-ca" 'org-agenda)
+;; (global-set-key "\C-cb" 'org-iswitchb)
+;; (global-set-key "\C-cc" 'org-capture)
+;; (setq org-default-notes-file "~/org/default.org")
+;; ;; org agenda
+;; (setq org-agenda-files '("~/org/" "~/org/work/" "~/org/knowledge/"))
+;; (setq org-refile-use-outline-path 'file)
+;; (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+;; (setq org-outline-path-complete-in-steps nil)
+;; (setq org-refile-allow-creating-parent-nodes 'confirm)
+;; ;; 设置org-todo 依赖
+;; (setq org-enforce-todo-dependencies t)
+;; ;; 使用org-depend
+;; (require 'org-depend)
+;; ;; 显示图片设置
+;; (setq org-image-actual-width (/ (display-pixel-width) 3))
+;; ;;
+;; (org-display-inline-images)
 #+end_src
 #+begin_src emacs-lisp
 ;; (add-to-list 'load-path "~/.emacs.d/externs/org-protocol-capture-html")
@@ -1338,60 +1529,60 @@
 (require 'server)
 (or (server-running-p)
     (server-start))
-;(server-start)
+                                        ;(server-start)
 #+end_src
 ** org web tool
 #+begin_src emacs-lisp
-  ;; brew install pandoc pandoc-citeproc librsvg python homebrew/cask/basictex
-  (use-package org-web-tools
-	:ensure t)
-  ;; 使用 org-web-tools-read-url-as-org 转换剪切板中的连接为org.并在新缓冲区中打开.
-  ;; 使用 org-web-tools-convert-links-to-page-entries	将entry中的url转换为org.并添加到当前entry下面
+;; brew install pandoc pandoc-citeproc librsvg python homebrew/cask/basictex
+(use-package org-web-tools
+  :ensure t)
+;; 使用 org-web-tools-read-url-as-org 转换剪切板中的连接为org.并在新缓冲区中打开.
+;; 使用 org-web-tools-convert-links-to-page-entries	将entry中的url转换为org.并添加到当前entry下面
 
 
-  ;; 使用 org-board-archive 下载网站
-  (use-package org-board
-	:ensure t)
-  ;; 例子
-  ;; ** TODO Linkers (20-part series)
-  ;; :PROPERTIES:
-  ;; :URL:          http://a3f.at/lists/linkers
-  ;; :WGET_OPTIONS: --recursive -l 1 --span-hosts
-  ;; :ID:       A339E336-5CD3-447D-A658-C9A7263BD32E
-  ;; :ARCHIVED_AT: [[file:/Users/chenzhiyuan/org/knowledge/data/A3/39E336-5CD3-447D-A658-C9A7263BD32E/2020-11-23T13:57:47+0800/][2020-11-23T13:57:47+0800]]
-  ;; :END:
+;; 使用 org-board-archive 下载网站
+(use-package org-board
+  :ensure t)
+;; 例子
+;; ** TODO Linkers (20-part series)
+;; :PROPERTIES:
+;; :URL:          http://a3f.at/lists/linkers
+;; :WGET_OPTIONS: --recursive -l 1 --span-hosts
+;; :ID:       A339E336-5CD3-447D-A658-C9A7263BD32E
+;; :ARCHIVED_AT: [[file:/Users/chenzhiyuan/org/knowledge/data/A3/39E336-5CD3-447D-A658-C9A7263BD32E/2020-11-23T13:57:47+0800/][2020-11-23T13:57:47+0800]]
+;; :END:
 #+end_src
 ** org-capture
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; emacs org capture config
-  ;; '("t" "Task" entry (file+headline "" "Tasks") "* TODO %?\n  %u\n  %a")
-  ;; 清空
-  ;; 网上抓取的日志
-  ;; (add-to-list 'org-capture-templates '("n" "Web site" entry
-  ;;  (file "")
-  ;;  "* %a :website:\n\n%U %?\n\n%:initial"))
-  ;; 设置 org-capture
-  (setq org-capture-templates
-	'(
-	  ;; 工作相关记录 - 全部放入临时文件
-	  ("w" "work")
-	  ("wt" "Work Task" entry
-	   (file+olp "~/org/todo.org" "工作记录" "临时任务")
-	   "*** TODO %?\n%U\n")
-	  ("wb" "Work Bug Record" entry
-	   (file+olp "~/org/todo.org" "工作记录" "BUG")
-	   "*** TODO BUG %?\n%U\n")
-	  ("wr" "Record" entry
-	   (file+datetree "~/org/todo.org")
-	   "* %U - %^{heading}\n  %?")
-	  ;; 知识记录
-	  ("k" "Knowledge")
-	  ("kw" "Collection Web Knowledge" entry
-	   (file+olp "~/org/knowledge/index.org" "web")
-	   "** %{headline} \n%U\n")
+;; emacs org capture config
+;; '("t" "Task" entry (file+headline "" "Tasks") "* TODO %?\n  %u\n  %a")
+;; 清空
+;; 网上抓取的日志
+;; (add-to-list 'org-capture-templates '("n" "Web site" entry
+;;  (file "")
+;;  "* %a :website:\n\n%U %?\n\n%:initial"))
+;; 设置 org-capture
+(setq org-capture-templates
+	  '(
+		;; 工作相关记录 - 全部放入临时文件
+		("w" "work")
+		("wt" "Work Task" entry
+		 (file+olp "~/org/todo.org" "工作记录" "临时任务")
+		 "*** TODO %?\n%U\n")
+		("wb" "Work Bug Record" entry
+		 (file+olp "~/org/todo.org" "工作记录" "BUG")
+		 "*** TODO BUG %?\n%U\n")
+		("wr" "Record" entry
+		 (file+datetree "~/org/todo.org")
+		 "* %U - %^{heading}\n  %?")
+		;; 知识记录
+		("k" "Knowledge")
+		("kw" "Collection Web Knowledge" entry
+		 (file+olp "~/org/knowledge/index.org" "web")
+		 "** %{headline} \n%U\n")
+		)
 	  )
-	)
 #+end_src
 ** org-publis1h
 ** org 自动补全
@@ -1399,36 +1590,36 @@
 (use-package ido-completing-read+
   :ensure t)
 (defun @-insert-src-block (src-code-type)
-    "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
-    (interactive
-     (let ((src-code-types
-	    '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
-	      "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
-	      "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
-	      "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
-	      "scheme" "sqlite" "html" "go")))
-       (list (ido-completing-read+ "Source code type: " src-code-types))))
-    (progn
-      (newline-and-indent)
-      (insert (format "\n#+begin_src %s\n" src-code-type))
-      (newline-and-indent)
-      (insert "#+end_src\n")
-      (previous-line 2)
-      (org-edit-src-code)))
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+  (interactive
+   (let ((src-code-types
+	      '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
+			"calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+			"octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+			"haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+			"scheme" "sqlite" "html" "go")))
+     (list (ido-completing-read+ "Source code type: " src-code-types))))
+  (progn
+    (newline-and-indent)
+    (insert (format "\n#+begin_src %s\n" src-code-type))
+    (newline-and-indent)
+    (insert "#+end_src\n")
+    (previous-line 2)
+    (org-edit-src-code)))
 #+end_src
 
 ** org-projectile
 #+begin_src emacs-lisp
-  (use-package org-projectile
-	:bind (("C-c n p" . org-projectile-project-todo-completing-read))
-	:config
-	(progn
-	  (setq org-projectile-per-project-filepath
-			"~/org/ap.org")
-	  ;; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
-	  ;;(push (org-projectile-project-todo-entry) org-capture-templates))
+(use-package org-projectile
+  :bind (("C-c n p" . org-projectile-project-todo-completing-read))
+  :config
+  (progn
+	(setq org-projectile-per-project-filepath
+		  "~/org/ap.org")
+	;; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+	;;(push (org-projectile-project-todo-entry) org-capture-templates))
 	:ensure t)
-)
-  ;; (princ org-capture-templates)
+  )
+;; (princ org-capture-templates)
 
 #+end_src

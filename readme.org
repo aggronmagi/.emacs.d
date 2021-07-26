@@ -79,6 +79,8 @@ https://github.com/alphapapa/org-web-tools
 
 ** Lisp
 
+[[http://smacs.github.io/elisp/][Emacs Lisp 简明教程]]
+
 [[https://acl.readthedocs.io/en/latest/zhCN/index.html][ANSI Common Lisp 中文版]]
 
 [[https://www.w3cschool.cn/on_lisp/][On Lisp 中文版]]

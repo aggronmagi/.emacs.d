@@ -7,6 +7,11 @@
 		autopair-insert-or-skip-quote
 		autopair-newline
 		autopair-skip-close-maybe
+		awesome-pair-double-quote
+		awesome-pair-equal
+		awesome-pair-open-curly
+		awesome-pair-open-round
+		awesome-pair-space
 		browse-kill-ring
 		c-electric-semi&comma
 		c-electric-slash
