@@ -14,8 +14,7 @@
   :group 'fastwork)
 
 (defcustom fastwork-file-title '(concat "#+startup: showall\n"
-										"#+title: " (format-time-string "%Y-%m-%d记录\n")
-										"\n\n* 会议记录\n\n*BUG\n\n")
+										"#+title: " (format-time-string "%Y-%m-%d\n"))
   "文件头"
   :group 'fastwork)
 

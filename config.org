@@ -1646,5 +1646,5 @@
 (require 'fastwork)
 (setq fastwork-file-title '(concat "#+startup: showall\n"
 								   "#+title: " (format-time-string "%Y-%m-%d记录\n")
-								   "\n\n* 会议记录\n\n*BUG\n\n"))
+								   "\n\n* 会议记录\n\n* BUG\n\n"))
 #+end_src
