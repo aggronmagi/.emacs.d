@@ -49,7 +49,7 @@
 
 *** emacs
 
-[[https://raw.githubusercontent.com/aborn/emacs-cookbook/master/emacs-cookbook.pdf][Emacs实践笔记pdf下载地址]]
+[[https://raw.githubusercontent.com/aborn/emacs-cookbook/master/emacs-cookbook.pdf][Emacs实践笔记pdf下载地址]] => [[https://github.com/aborn/emacs-cookbook][https://github.com/aborn/emacs-cookbook]]
 
 *** org mode
 

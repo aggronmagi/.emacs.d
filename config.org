@@ -787,7 +787,7 @@
 (use-package go-translate
   :ensure t
   :config
-  (setq go-translate-base-url "https://translate.google.cn"
+  (setq go-translate-base-url "https://translate.google.com"
 		go-translate-extra-directions '(("en" . "zh-CN"))
 		go-translate-target-language "en"
 		go-translate-local-language "zh-CN"
@@ -1083,6 +1083,18 @@
   ;;(setq plantuml-executable-path "")
   ;;(setq plantuml-default-exec-mode 'executable)
   )
+#+end_src
+** pdf
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+	:ensure t
+	;; :init
+   
+	:config
+	(pdf-tools-install)
+	;; (setq pdf-view-dark-minor-mode t)
+	(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) 
+	)
 #+end_src
 * 编程支持
 ** flyspell 拼写检查
@@ -1433,8 +1445,9 @@
 		("C-c l" . org-store-link)
 		("s-<return>" . org-table-copy-down))
   :custom
-  (org-default-notes-file (expand-file-name "~/org/default.org"))
-  (org-agenda-files '("~/org/" "~/org/work/" "~/org/knowledge/"))
+  (org-default-notes-file (expand-file-name "~/org/index.org"))
+  (org-agenda-files '("~/org/work/" "~/org/knowledge/"))
+  :hook ((org-mode . toggle-truncate-lines))
   :init
   ;; https://orgmode.org/worg/org-contrib/babel/languages.html
   (org-babel-do-load-languages
@@ -1565,25 +1578,28 @@
 ;; 设置 org-capture
 (setq org-capture-templates
 	  '(
-		;; 工作相关记录 - 全部放入临时文件
-		("w" "work")
-		("wt" "Work Task" entry
-		 (file+olp "~/org/todo.org" "工作记录" "临时任务")
-		 "*** TODO %?\n%U\n")
-		("wb" "Work Bug Record" entry
-		 (file+olp "~/org/todo.org" "工作记录" "BUG")
-		 "*** TODO BUG %?\n%U\n")
-		("wr" "Record" entry
-		 (file+datetree "~/org/todo.org")
-		 "* %U - %^{heading}\n  %?")
-		;; 知识记录
-		("k" "Knowledge")
-		("kw" "Collection Web Knowledge" entry
-		 (file+olp "~/org/knowledge/index.org" "web")
-		 "** %{headline} \n%U\n")
+		;; 工作相关记录
+		;; ("w" "工作相关") - 暂不分组
+		("t" "工作任务" entry
+		 (file+olp "~/org/work/work.org" "临时记录" "任务")
+		 "*** TODO %^{标题} :task:\n %?\n%U\n")
+		("b" "BUG记录" entry
+		 (file+olp "~/org/work/work.org" "临时记录" "BUG")
+		 "*** TODO %^{标题} :bug:\n %?\n%U\n")
+		("r" "备忘信息" entry
+		 (file+olp "~/org/work/work.org" "备忘录")
+		 "** %^{标题}\n %?\n%U\n")
+		("p" "账号密码" entry
+		 (file+olp "~/org/work/note.org" "账号密码")
+		 "** %^{标题}\n  %?\n%U\n")
+		("d" "文档记录" entry
+		 (file+olp "~/org/work/note.org" "文档")
+		 "** %^{标题}\n %?\n")
 		)
 	  )
 #+end_src
+
+
 ** org-publis1h
 ** org 自动补全
 #+begin_src emacs-lisp
