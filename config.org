@@ -1639,3 +1639,12 @@
 ;; (princ org-capture-templates)
 
 #+end_src
+
+* 自己写的插件
+** 快速创建当日记录文件
+#+begin_src emacs-lisp
+(require 'fastwork)
+(setq fastwork-file-title '(concat "#+startup: showall\n"
+								   "#+title: " (format-time-string "%Y-%m-%d记录\n")
+								   "\n\n* 会议记录\n\n*BUG\n\n"))
+#+end_src
