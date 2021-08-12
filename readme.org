@@ -72,6 +72,7 @@
 |          | C-c t b            | 测试当前基准测试                                      |
 |          | C-x x              | go run                                                |
 | work     | <f8>               | 快速打开当日记录文件(没有自动创建)                    |
+| org      | C-c C-w            | org-refile                                            |
 
 
 ** 参考

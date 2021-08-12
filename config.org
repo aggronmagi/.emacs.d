@@ -1453,6 +1453,11 @@
   :custom
   (org-default-notes-file (expand-file-name "~/org/index.org"))
   (org-agenda-files '("~/org/work/" "~/org/knowledge/"))
+  (org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (org-refile-use-outline-path 'file)
+  (org-outline-path-complete-in-steps nil)
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-log-refile 'time)
   :hook ((org-mode . toggle-truncate-lines))
   :init
   ;; https://orgmode.org/worg/org-contrib/babel/languages.html
