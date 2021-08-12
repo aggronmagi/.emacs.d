@@ -353,12 +353,18 @@
 ** back-button
 #+begin_src emacs-lisp
 ;; back-button 跳转
+(setq back-button-local-keystrokes '("s-."))
+(setq back-button-local-backward-keystrokes '("s-["))
+(setq back-button-local-forward-keystrokes '("s-]"))
+(setq back-button-global-keystrokes '("s->"))
+(setq back-button-global-backward-keystrokes '("s-{"))
+(setq back-button-global-forward-keystrokes '("s-}"))
 (require 'back-button)
 (back-button-mode 1)
-(global-set-key (kbd "s-[") 'back-button-local-backward)
-(global-set-key (kbd "s-]") 'back-button-local-forward)
-(global-set-key (kbd "s-{") 'back-button-global-backward)
-(global-set-key (kbd "s-}") 'back-button-global-forward)
+;; (global-set-key (kbd "s-[") 'back-button-local-backward)
+;; (global-set-key (kbd "s-]") 'back-button-local-forward)
+;; (global-set-key (kbd "s-{") 'back-button-global-backward)
+;; (global-set-key (kbd "s-}") 'back-button-global-forward)
 #+end_src
 ** highlight-thing
 #+begin_src emacs-lisp
@@ -538,8 +544,8 @@
 		   ("M-x" . counsel-M-x)
 		   ("C-x f" . counsel-switch-buffer)
 		   ("C-x C-f" . counsel-find-file)
-		   ;;("C-s" . swiper-isearch)
-		   ;;("C-r" . swiper-isearch-backward)
+		   ("C-s" . swiper)
+		   ("C-r" . swiper-isearch-backward)
 		   ))
 
   (use-package ivy-avy
@@ -866,7 +872,7 @@
 
 
   :bind (("<f2>" . bm-next)
-		 ("S-<f2>" . bm-previous)
+		 ("M-<f2>" . bm-previous)
 		 ("C-<f2>" . bm-toggle)
 		 ("<f1>" . bm-toggle))
   )
@@ -1646,5 +1652,5 @@
 (require 'fastwork)
 (setq fastwork-file-title '(concat "#+startup: showall\n"
 								   "#+title: " (format-time-string "%Y-%m-%d记录\n")
-								   "\n\n* 会议记录\n\n* BUG\n\n"))
+								   "* 会议记录\n* BUG分析\n"))
 #+end_src

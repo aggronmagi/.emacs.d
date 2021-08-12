@@ -9,27 +9,70 @@
 *** TODO [C] lua语言支持 - lsp -
 
 ** 常用命令记录
-*** 's-p' 项目中查找文件
-*** 'M-0' 打开文件树视图(treemacs)
-*** 'M-9' 打开当前文件符号视图(lsp-treemacs)=> 函数列表
-*** 'M-8' 错误视图(lsp-treemacs)
-*** "C-c k" 剪切板列表
-*** "M-(1-n)"  快速切换窗口(window-numbering)
-*** "C-c y" 有道翻译
-*** <f2> / S-<f2>" <f1> 仿照vs的书签
-*** 多列编辑
-**** M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
-**** "C->" 下一个匹配处插入光标
-**** "C-<" 上一个匹配处插入光标
-**** "C-c C-<" 所有匹配处插入光标
-**** "M-N"  在多个光标处 顺序的插入数字 手动输入数字起始(默认是0)
-*** "C-x u" undo-tree
-*** "C-x g" magit
-*** "C-s" swiper
-*** "M-x" counsel-M-x
-*** "C-c a" org-agenda
-*** "C-c c" org-capture
-*** "M-s h ." 高亮某个单词 M-s h u 取消某个高亮
+命令列表
+|          | 命令               | 描述                                                  |
+|----------+--------------------+-------------------------------------------------------|
+| 项目     | s-p                | 在项目中查找文件(find-file-in-project)                |
+|          | s-1                | 函数跳转列表                                          |
+|          | s-2                | 错误视图(lsp-treemacs)                                |
+|          | s-3                | 函数列表(lsp-treemacs)                                |
+|          | f12                | 打开文件树视图(treemacs)                              |
+|          | M-(1-n)            | 快速跳转窗口(win-num)                                 |
+| 书签     | f1\nC-f2           | 切换书签(bm-toggle)                                   |
+|          | f2                 | 跳转到下个书签(bm-next)                               |
+|          | M-f2               | 跳转上个书签(bm-previous)                             |
+| 英文     | C-c y\nC-c e y     | google翻译                                            |
+|          | C-c e h            | 英文自动完成                                          |
+|          | C-c e e            | 开启后将输入的中文翻译成英文\n (English translation)  |
+|          | C-c e v            | 将翻译的英文使用驼峰显示\n (englishTranslation)       |
+|          | C-c e u            | 将翻译的英文单词用下划线分隔\n (english_translation)  |
+|          | C-c e r            | 将光标所在的文字翻译成英文\n (english_translation)    |
+| 多列编辑 | M-I(Meta-Shirft-i) | 先选中一块区域.按下快捷键之后,每行添加光标(仿vs-code) |
+|          | M-N                | 在多个光标处 顺序的插入数字 手动输入数字起始(默认是0) |
+|          | C-<                | 上一个匹配处插入光标 >                                |
+|          | C-c C-<            | 所有匹配处插入光标                                    |
+|          | C->                | 下一个匹配处插入光标                                  |
+| 折叠     | C-c h a            | hide-block                                            |
+|          | C-c h b            | show block                                            |
+|          | C-c h h            | hide all                                              |
+|          | C-c h s            | show all                                              |
+|          | C-c h t            | toggle hiding                                         |
+| 跳转     | s-[                | 当前buffer回退                                        |
+|          | s-]                | 当前buffer前进                                        |
+|          | s-{                | 全局 backward                                         |
+|          | s-}                | 全局 forward                                          |
+|          | C-c SPC            | 跳转字符 (avy-goto-char)                              |
+|          | C-c C-l            | 页面内跳转行(avy-goto-line)                           |
+|          | C-c SPC            | 跳转单词(avy-goto-word-1)                             |
+|          | M-.                | 跳转定义(lsp/非lsp)                                   |
+|          | M-n                | 查找引用(lsp)                                         |
+|          | M-?                | 查找引用(非lsp,xref-find-references)                  |
+|          | M-r                | 屏幕内光标跳转(move-to-window-line-top-bottom)        |
+| 功能列表 | C-x g              | magit                                                 |
+|          | C-x u              | undo-tree                                             |
+|          | C-c c              | org-capture                                           |
+|          | C-c s              | rg                                                    |
+|          | C-c l              | lsp-mode                                              |
+| 功能增强 | C-x C-b            | ibuffer                                               |
+|          | C-c k              | browse-kill-ring (另外的buffer内选择yank)             |
+|          | M-y                | counsel-yank-pop (在minibuffer内选择yank)             |
+|          | M-x                | counsel-M-x                                           |
+|          | C-x f              | counsel-switch-buffer                                 |
+|          | C-x C-f            | counsel-find-file                                     |
+|          | C-c C-r\n<f6>      | ivy-resume                                            |
+|          | C-`                | 控制台(vterm-toggle)                                  |
+|          | C-a                | 智能跳转行首(mwim-beginning)                          |
+|          | C-e                | 智能跳转行尾(mwin-end)                                |
+|          | C-s                | 搜索(swiper)                                          |
+|          | C-r                | 逆向搜索                                              |
+| GO       | <f9>               | 格式化代码                                            |
+|          | C-c t f            | 测试当前文件                                          |
+|          | C-c t t            | 测试当前函数                                          |
+|          | C-c t p            | 测试当前项目                                          |
+|          | C-c t b            | 测试当前基准测试                                      |
+|          | C-x x              | go run                                                |
+| work     | <f8>               | 快速打开当日记录文件(没有自动创建)                    |
+
 
 ** 参考
 
