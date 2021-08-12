@@ -18,10 +18,10 @@
 |          | s-3                | 函数列表(lsp-treemacs)                                |
 |          | f12                | 打开文件树视图(treemacs)                              |
 |          | M-(1-n)            | 快速跳转窗口(win-num)                                 |
-| 书签     | f1\nC-f2           | 切换书签(bm-toggle)                                   |
+| 书签     | f1 或 C-f2         | 切换书签(bm-toggle)                                   |
 |          | f2                 | 跳转到下个书签(bm-next)                               |
 |          | M-f2               | 跳转上个书签(bm-previous)                             |
-| 英文     | C-c y\nC-c e y     | google翻译                                            |
+| 英文     | C-c y 或 C-c e y   | google翻译                                            |
 |          | C-c e h            | 英文自动完成                                          |
 |          | C-c e e            | 开启后将输入的中文翻译成英文\n (English translation)  |
 |          | C-c e v            | 将翻译的英文使用驼峰显示\n (englishTranslation)       |
@@ -59,7 +59,7 @@
 |          | M-x                | counsel-M-x                                           |
 |          | C-x f              | counsel-switch-buffer                                 |
 |          | C-x C-f            | counsel-find-file                                     |
-|          | C-c C-r\n<f6>      | ivy-resume                                            |
+|          | C-c C-r 或 <f6>    | ivy-resume                                            |
 |          | C-`                | 控制台(vterm-toggle)                                  |
 |          | C-a                | 智能跳转行首(mwim-beginning)                          |
 |          | C-e                | 智能跳转行尾(mwin-end)                                |
