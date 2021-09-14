@@ -33,12 +33,38 @@
 #+begin_src emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; mac 修复环境变量
+;; (use-package exec-path-from-shell
+;;   :if (memq window-system '(mac ns))
+;;   :ensure t
+;;   :config
+;;   (exec-path-from-shell-initialize)
+;;   (exec-path-from-shell-copy-env "GOPATH"))
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :ensure t
-  :config
+  :init
   (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH"))
+  (add-to-list 'exec-path (concat invocation-directory "bin") t)
+  (exec-path-from-shell-copy-env "GOPATH")
+  (setenv "LIBRARY_PATH" "/usr/local/lib/gcc/11/")
+  (setq comp-deferred-compilation t)
+  ;; (if (and (fboundp 'native-comp-available-p)
+  ;;          (native-comp-available-p))
+  ;;     (progn
+  ;;       (message "Native comp is available")
+  ;;       ;; Using Emacs.app/Contents/MacOS/bin since it was compiled with
+  ;;       ;; ./configure --prefix="$PWD/nextstep/Emacs.app/Contents/MacOS"
+  ;;       (add-to-list 'exec-path (concat invocation-directory "bin") t)
+  ;;       (setenv "LIBRARY_PATH" (concat (getenv "LIBRARY_PATH")
+  ;;                                      (when (getenv "LIBRARY_PATH")
+  ;;                                        ":")
+  ;;                                      ;; This is where Homebrew puts gcc libraries.
+  ;;                                      (car (file-expand-wildcards
+  ;;                                            (expand-file-name "~/homebrew/opt/gcc/lib/gcc/*")))))
+  ;;       ;; Only set after LIBRARY_PATH can find gcc libraries.
+  ;;       (setq comp-deferred-compilation t))
+  ;;   (message "Native comp is *not* available"))
+  )
 
 ;; 复制,粘贴使用下面配置,将导致multiple-cursor的复制,粘贴失效
 ;; copy paste
@@ -1898,10 +1924,10 @@ Lisp function does not specify a special indentation."
 ;;   :ensure t
 ;;   :hook (go-mode . go-guru-hl-identifier-mode))
 
-;; go代码调试
-(use-package go-dlv
-  :after go-mode
-  :ensure t)
+;; ;; go代码调试
+;; (use-package go-dlv
+;;   :after go-mode
+;;   :ensure t)
 
 ;; go 包测试
 (use-package gotest
