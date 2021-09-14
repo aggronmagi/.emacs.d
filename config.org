@@ -956,7 +956,7 @@
 (use-package go-translate
   :ensure t
   :config
-  (setq go-translate-base-url "https://translate.google.com"
+  (setq go-translate-base-url "https://translate.google.cn"
 		;; go-translate-extra-directions '(("zh-CN" . "en"))
 		go-translate-target-language "en"
 		go-translate-local-language "zh-CN"
