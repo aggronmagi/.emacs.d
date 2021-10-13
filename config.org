@@ -202,6 +202,16 @@
 	(and (display-graphic-p)
 		 (require 'all-the-icons nil t)))
 #+end_src
+** restart
+#+begin_src emacs-lisp
+(use-package restart-emacs
+  :ensure t
+  :config
+  (setq restart-emacs-restore-frames t)
+  :bind
+  (:map global-map
+   ("<f10>" . restart-emacs)))
+#+end_src
 * 显示
 
 ** hydra
@@ -950,6 +960,7 @@
   (setq company-minimum-prefix-length 1)
   ;; 大小写问题修复
   (setq company-dabbrev-downcase nil)
+  ;; (setq company-dabbrev-code-everywhere t)
   )
 ;;  (use-package company-tabnine
 ;;	:custom ((company-tabnine-always-trigger nil)))
@@ -982,6 +993,7 @@
 (use-package go-translate
   :ensure t
   :config
+  (require 'facemenu)
   (setq go-translate-base-url "https://translate.google.cn"
 		;; go-translate-extra-directions '(("zh-CN" . "en"))
 		go-translate-target-language "en"
@@ -1697,8 +1709,6 @@ Lisp function does not specify a special indentation."
 		   (lsp-eldoc-render-all nil)
 		   (lsp-completion-provider t)
 		   (lsp-signature-render-documentation nil)
-		   (lsp-rust-server 'rust-analyzer)
-		   (lsp-rust-analyzer-cargo-watch-enable nil)
 		   (lsp-go-hover-kind "NoDocumentation")
 		   (lsp-go-use-placeholders t)
 		   (lsp-diagnostics-provider :none)
