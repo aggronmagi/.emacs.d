@@ -992,7 +992,6 @@
 		 ;; (gts-prompt-picker :texter (gts-current-or-selection-texter) :single t)
 
 		 :engines ; 翻译引擎，可以配置多个。另外可以传入不同的 Parser 从而使用不同样式的输出
-
 		 (list
           (gts-bing-engine)
           ;;(gts-google-engine)
@@ -1041,7 +1040,9 @@
 	(gts-translator
 	 :picker (gts-noprompt-picker
 			  :texter (aggron/gts-code-comment-texter))
-	 :engines (gts-google-engine)
+	 :engines (list 
+			   (gts-bing-engine)
+			   (gts-google-engine))
 	 ;; render 
 	 :render (gts-buffer-render)
 	 ))
@@ -1050,24 +1051,45 @@
   (defun aggron/translate-code-comment-command ()
 	(interactive)
 	(gts-translate aggron/translate-code-comment-tranlater))
-  
+
+  ;; 将翻译放入剪切板
+  (defvar aggron/translate-copy-tranlater
+	(gts-translator
+	 :picker (gts-noprompt-picker
+			  :texter (aggron/gts-code-comment-texter))
+	 :engines (list 
+			   (gts-bing-engine)
+			   (gts-google-engine))
+	 :render (gts-kill-ring-render)
+	 ))
+
+  (defun aggron/translate-comment-copy-command()
+	(interactive)
+	(gts-translate aggron/translate-copy-tranlater))
+  ;; 插入翻译文字
+  (require 'insert-translated-name)
+  ;; (global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
+  ;; (global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
+  ;; (global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
+  ;; (global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
+
+
+  ;; 写英文帮助
+  (require 'company-english-helper)
+  ;; (global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
+
   :bind
   (:map global-map
-   ("C-c e y" . 'gts-do-translate)
-   ("C-c y" . 'aggron/translate-code-comment-command)
+   ("C-c y" . aggron/translate-code-comment-command)
+   ("C-c e y" . gts-do-translate)
+   ("C-c e c" . aggron/translate-comment-copy-command)
+   ("C-c e h" . toggle-company-english-helper)
+   ("C-c e e" . insert-translated-name-insert-original-translation)
+   ("C-c e v" . insert-translated-name-insert-with-camel)
+   ("C-c e u" . insert-translated-name-insert-with-underline)
+   ("C-c e r" . insert-translated-name-replace)
    )
   )
-;; translate-code-comment-command
-
-;; 插入翻译文字
-(require 'insert-translated-name)
-(global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
-(global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
-(global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
-(global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
-;; 写英文帮助
-(require 'company-english-helper)
-(global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
 
 ;; 有道词典
 ;; (use-package youdao-dictionary
