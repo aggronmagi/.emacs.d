@@ -44,7 +44,7 @@
 ;;   (exec-path-from-shell-initialize)
 ;;   (exec-path-from-shell-copy-env "GOPATH"))
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
+  ;; :if (memq window-system '(mac ns))
   :ensure t
   :init
   (exec-path-from-shell-initialize)
@@ -214,7 +214,7 @@
   (setq restart-emacs-restore-frames t)
   :bind
   (:map global-map
-   ("<f10>" . restart-emacs)))
+   ("M-<f10>" . restart-emacs)))
 #+end_src
 * 显示
 ** 滚动条
@@ -465,7 +465,7 @@
   :ensure t)
 #+end_src
 
-** frame-font
+** 字体,中文支持
 #+begin_src emacs-lisp
 ;;
 (use-package frame
@@ -475,10 +475,20 @@
   (blink-cursor-mode 0)
 
   (when (display-graphic-p)
-	(add-to-list 'default-frame-alist '(font . "Hack-15"))
+	;;(add-to-list 'default-frame-alist '(font . "Hack-15"))
 	(add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
   (setq-default cursor-type 't))
+;; 中文支持
+(use-package cnfonts
+  :ensure t
+  :config
+  ;; 让 cnfonts 随着 Emacs 自动生效。
+  (cnfonts-enable)
+  ;; ;; 不同的标题，使用的字体大小也不同
+  ;; (setq cnfonts-use-face-font-rescale t)
+  
+  )
 
 #+end_src
 
@@ -744,7 +754,7 @@
 	:custom ((avy-all-windows nil)
 			 (avy-keys (number-sequence ?a ?z)))
 	:bind (("C-x SPC" . avy-goto-char)
-		   ("C-c C-l" . avy-goto-line)
+		   ("C-c j" . avy-goto-line)
 		   ("C-C SPC" . avy-goto-word-1)))
 
 #+end_src
@@ -782,13 +792,6 @@
 ;;   (add-to-list 'jump-tree-pos-list-record-commands 'xref-find-definitions)
 ;;   )
 ;; (jump-tree-jump-next)
-#+end_src
-** 在项目中查找文件
-#+begin_src emacs-lisp
-(use-package find-file-in-project
-  :ensure t
-  :bind
-  ("s-p" . find-file-in-project))
 #+end_src
 ** which-key 按键提示
 #+begin_src emacs-lisp
@@ -1041,8 +1044,8 @@
 	 :picker (gts-noprompt-picker
 			  :texter (aggron/gts-code-comment-texter))
 	 :engines (list 
-			   (gts-bing-engine)
-			   (gts-google-engine))
+			   (gts-google-engine)
+			   (gts-bing-engine))
 	 ;; render 
 	 :render (gts-buffer-render)
 	 ))
@@ -1792,8 +1795,9 @@ Lisp function does not specify a special indentation."
 		   (lsp-signature-render-documentation nil)
 		   (lsp-go-hover-kind "NoDocumentation")
 		   (lsp-go-use-placeholders t)
-		   (lsp-diagnostics-provider :none)
-		   (lsp-modeline-diagnostics-enable nil)
+		   ;; 语法检测
+		   ;; (lsp-diagnostics-provider :none)
+		   ;; (lsp-modeline-diagnostics-enable nil)
 		   (lsp-file-watch-threshold 2000))
   )
 #+end_src
@@ -1851,9 +1855,19 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** project支持
 #+begin_src emacs-lisp
+;; (use-package find-file-in-project
+;;   :ensure t
+;;   :bind
+;;   ("M-P" . find-file-in-project))
 ;; 项目支持
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :config
+  ;; C-x p 前缀 f 查找文件
+  :bind
+  (:map global-map
+   ("M-P" . project-find-file))
+  )
 #+end_src
 ** treemacs
 #+begin_src emacs-lisp
@@ -1997,10 +2011,14 @@ Lisp function does not specify a special indentation."
   :config
   ;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks)
   ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  
+  ;; go 调试
+  (require 'dap-go)
+  (dap-go-setup)
   :hook ((go-mode . lsp))
   :bind
   (:map go-mode-map
-		("<f9>" . gofmt))
+   ("<f9>" . gofmt))
   )
 
 
@@ -2028,11 +2046,11 @@ Lisp function does not specify a special indentation."
   :after go-mode
   :ensure t
   :bind (:map go-mode-map
-			  ("C-c t f" . go-test-current-file)
-			  ("C-c t t" . go-test-current-test)
-			  ("C-c t p" . go-test-current-project)
-			  ("C-c t b" . go-test-current-benchmark)
-			  ("C-x x" . go-run))
+		 ("C-c t f" . go-test-current-file)
+		 ("C-c t t" . go-test-current-test)
+		 ("C-c t p" . go-test-current-project)
+		 ("C-c t b" . go-test-current-benchmark)
+		 ("C-x x" . go-run))
   )
 
 ;; go 生成测试代码
@@ -2048,9 +2066,6 @@ Lisp function does not specify a special indentation."
   :ensure t
   :hook (go-mode . flycheck-golangci-lint-setup))
 
-;; go 调试
-(require 'dap-go)
-(dap-go-setup)
 #+end_src
 ** lua 语言
 #+begin_src emacs-lisp
@@ -2071,10 +2086,29 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** c/c++
 #+begin_src emacs-lisp
-;; ubuntu
-(setq lsp-clangd-binary-path "/usr/bin/clangd-12")
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
+;; ;; ubuntu
+;; (setq lsp-clangd-binary-path "/usr/bin/clangd-12")
+;; (add-hook 'c-mode-hook 'lsp)
+;; (add-hook 'c++-mode-hook 'lsp)
+;; C/C++ Mode
+(use-package cc-mode
+  :ensure t
+  :bind (:map c-mode-base-map
+         ("C-c c" . compile))
+  :hook
+  (c-mode-common . (lambda () (c-set-style "stroustrup")))
+  (c-mode . lsp)
+  (c++-mode . lsp)
+  :init (setq-default c-basic-offset 4)
+  :config
+  ;; ubuntu
+  (setq lsp-clangd-binary-path "/usr/bin/clangd-12")
+  (use-package modern-cpp-font-lock
+	:ensure t
+	:diminish
+	:config
+	(modern-c++-font-lock-global-mode t))
+  )
 #+end_src
 
 * org mode
