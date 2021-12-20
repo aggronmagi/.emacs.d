@@ -4,6 +4,30 @@
 ** 包管理
 #+begin_src emacs-lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defconst sys/win32p
+  (eq system-type 'windows-nt)
+  "Are we running on a WinTel system?")
+
+
+(defconst sys/linuxp
+  (eq system-type 'gnu/linux)
+  "Are we running on a GNU/Linux system?")
+
+(defconst sys/macp
+  (eq system-type 'darwin)
+  "Are we running on a Mac system?")
+
+(defconst sys/mac-x-p
+  (and (display-graphic-p) sys/macp)
+  "Are we running under X on a Mac system?")
+
+(defconst sys/mac-ns-p
+  (eq window-system 'ns)
+  "Are we running on a GNUstep or Macintosh Cocoa display?")
+
+(defconst sys/mac-cocoa-p
+  (featurep 'cocoa)
+  "Are we running with Cocoa on a Mac system?")
 ;; 包管理
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -44,7 +68,7 @@
 ;;   (exec-path-from-shell-initialize)
 ;;   (exec-path-from-shell-copy-env "GOPATH"))
 (use-package exec-path-from-shell
-  ;; :if (memq window-system '(mac ns))
+  :if (not sys/win32p)
   :ensure t
   :init
   (exec-path-from-shell-initialize)
@@ -475,11 +499,12 @@
   (blink-cursor-mode 0)
 
   (when (display-graphic-p)
-	;;(add-to-list 'default-frame-alist '(font . "Hack-15"))
+	(add-to-list 'default-frame-alist '(font . "Hack-15"))
 	(add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
   (setq-default cursor-type 't))
 ;; 中文支持
+(if (not sys/win32p)
 (use-package cnfonts
   :ensure t
   :config
@@ -488,7 +513,7 @@
   ;; ;; 不同的标题，使用的字体大小也不同
   ;; (setq cnfonts-use-face-font-rescale t)
   
-  )
+  ))
 
 #+end_src
 
@@ -528,17 +553,18 @@
               (lambda (&rest _)
                 (posframe-delete-all))))
   :config
-  (with-no-warnings
-    (defun my-posframe--prettify-frame (&rest _)
-      (set-face-background 'fringe nil posframe--frame))
-    (advice-add #'posframe--create-posframe :after #'my-posframe--prettify-frame)
+  ;; (with-no-warnings                     
+  ;;   (defun my-posframe--prettify-frame (&rest _)
+  ;;     (set-face-background 'fringe nil posframe--frame))
+  ;;   (advice-add #'posframe--create-posframe :after #'my-posframe--prettify-frame)
 
-    (defun posframe-poshandler-frame-center-near-bottom (info)
-      (cons (/ (- (plist-get info :parent-frame-width)
-                  (plist-get info :posframe-width))
-               2)
-            (/ (plist-get info :parent-frame-height)
-               2)))))
+  ;;   (defun posframe-poshandler-frame-center-near-bottom (info)
+  ;;     (cons (/ (- (plist-get info :parent-frame-width)
+  ;;                 (plist-get info :posframe-width))
+  ;;              2)
+  ;;           (/ (plist-get info :parent-frame-height)
+  ;;              2))))
+  )
 #+end_src
 * 工具
 ** auto-save
@@ -555,12 +581,20 @@
 ** back-button
 #+begin_src emacs-lisp
 ;; back-button 跳转
-(setq back-button-local-keystrokes '("s-."))
-(setq back-button-local-backward-keystrokes '("s-["))
-(setq back-button-local-forward-keystrokes '("s-]"))
-(setq back-button-global-keystrokes '("s->"))
-(setq back-button-global-backward-keystrokes '("s-{"))
-(setq back-button-global-forward-keystrokes '("s-}"))
+(if sys/win32p
+	(progn
+	  (setq back-button-local-keystrokes '("C-c x ."))
+	  (setq back-button-local-backward-keystrokes '("C-c x ["))
+	  (setq back-button-local-forward-keystrokes '("C-c x ]"))
+	  (setq back-button-global-keystrokes '("C-c x >"))
+	  (setq back-button-global-backward-keystrokes '("C-c x {"))
+	  (setq back-button-global-forward-keystrokes '("C-c x }")))
+  (setq back-button-local-keystrokes '("s-."))
+  (setq back-button-local-backward-keystrokes '("s-["))
+  (setq back-button-local-forward-keystrokes '("s-]"))
+  (setq back-button-global-keystrokes '("s->"))
+  (setq back-button-global-backward-keystrokes '("s-{"))
+  (setq back-button-global-forward-keystrokes '("s-}")))
 (require 'back-button)
 (back-button-mode 1)
 ;; (global-set-key (kbd "s-[") 'back-button-local-backward)
@@ -814,11 +848,13 @@
 #+end_src
 ** vterm
 #+begin_src emacs-lisp
-(use-package vterm
-  :ensure t
-  :bind (:map vterm-mode-map
-         ("C-`" . shell-pop))
-  :init (setq vterm-always-compile-module t))
+(when (or sys/linuxp sys/macp sys/mac-x-p sys/mac-cocoa-p)
+	(use-package vterm
+	  :ensure t
+	  :bind (:map vterm-mode-map
+			 ("C-`" . shell-pop))
+	  :init (setq vterm-always-compile-module t))
+  )
 ;; (use-package vterm-toggle
 ;;   :ensure t
 ;;   :bind (("C-`" . vterm-toggle))
@@ -832,8 +868,8 @@
   :bind ("C-`" . shell-pop)
   :init (setq shell-pop-window-size 30
               shell-pop-shell-type
-              (cond ((fboundp 'vterm) '("vterm" "*vterm*" #'vterm))
-					(sys/win32p '("eshell" "*eshell*" #'eshell))
+              (cond (sys/win32p '("eshell" "*eshell*" #'eshell))
+					((fboundp 'vterm) '("vterm" "*vterm*" #'vterm))
 					(t '("terminal" "*terminal*"
 						 (lambda () (term shell-pop-term-shell)))))))
 
@@ -1736,6 +1772,8 @@ Lisp function does not specify a special indentation."
   ;; jar 配置
   (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
   (setq plantuml-default-exec-mode 'jar)
+  (add-to-list
+   'org-src-lang-modes '("plantuml" . plantuml))
     ;;;; 使用server
   ;; (setq plantuml-default-exec-mode 'server)
   ;; (setq plantuml-server-url "https://www.plantuml.com/plantuml")
@@ -1746,15 +1784,16 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** pdf
 #+begin_src emacs-lisp
-  (use-package pdf-tools
-	:ensure t
-	;; :init
-   
-	:config
-	(pdf-tools-install)
-	;; (setq pdf-view-dark-minor-mode t)
-	(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) 
-	)
+  (when (and (display-graphic-p) (not sys/win32p))
+	(use-package pdf-tools
+	  :ensure nil
+	  ;; :init
+
+	  :config
+	  (pdf-tools-install)
+	  ;; (setq pdf-view-dark-minor-mode t)
+	  (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) 
+	  ))
 #+end_src
 * 编程支持
 ** flyspell 拼写检查
@@ -1835,8 +1874,9 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** dap-mode (调试支持)
 #+begin_src emacs-lisp
-(use-package dap-mode
-  :ensure t)
+(when (display-graphic-p)
+  (use-package dap-mode
+	:ensure t))
 #+end_src
 
 ** Yasnippet
@@ -1862,11 +1902,20 @@ Lisp function does not specify a special indentation."
 ;; 项目支持
 (use-package projectile
   :ensure t
-  :config
   ;; C-x p 前缀 f 查找文件
   :bind
   (:map global-map
    ("M-P" . project-find-file))
+  :config
+  (projectile-mode +1)
+  ;; (if (or sys/macp sys/mac-x-p sys/mac-cocoa-p)
+  ;;     ;; Recommended keymap prefix on macOS
+  ;;     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  ;;   )
+  ;; (if (or sys/linuxp sys/win32p)
+	  ;; Recommended keymap prefix on Windows/Linux
+	  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+   ;;)
   )
 #+end_src
 ** treemacs
@@ -2066,6 +2115,11 @@ Lisp function does not specify a special indentation."
   :ensure t
   :hook (go-mode . flycheck-golangci-lint-setup))
 
+;; go 调试
+(when (display-graphic-p)
+  (require 'dap-go)
+  (dap-go-setup))
+
 #+end_src
 ** lua 语言
 #+begin_src emacs-lisp
@@ -2078,6 +2132,7 @@ Lisp function does not specify a special indentation."
   ;; (setq lsp-lua-diagnostics-globals t)
   (setq lsp-lua-diagnostics-disable (vector "unused-local" "lowercase-global" "trailing-space" "empty-block"))
   (setq lsp-lua-diagnostics-globals (vector "global" "flags"))
+  (setq lua-indent-level 4)
   ;; (setq lsp-lua-diagnostics-disable nil)
   :hook ((lua-mode . lsp))
   )
@@ -2102,13 +2157,15 @@ Lisp function does not specify a special indentation."
   :init (setq-default c-basic-offset 4)
   :config
   ;; ubuntu
-  (setq lsp-clangd-binary-path "/usr/bin/clangd-12")
+  (if sys/linuxp 
+	(setq lsp-clangd-binary-path "/usr/bin/clangd-12"))
   (use-package modern-cpp-font-lock
 	:ensure t
 	:diminish
 	:config
 	(modern-c++-font-lock-global-mode t))
   )
+
 #+end_src
 
 * org mode
@@ -2144,9 +2201,15 @@ Lisp function does not specify a special indentation."
   (:map org-mode-map
 		("C-c l" . org-store-link)
 		("s-<return>" . org-table-copy-down))
+  :config
+    (if sys/win32p
+	  (progn 
+		(setq org-default-notes-file (expand-file-name "~/org/index.org"))
+		(setq org-agenda-files '("~/org/work/" "~/org/knowledge/")))
+	(setq org-default-notes-file (expand-file-name "d:/org/index.org"))
+	(setq org-agenda-files '("d:/org/work/" "d:/org/knowledge/"))
+	)
   :custom
-  (org-default-notes-file (expand-file-name "~/org/index.org"))
-  (org-agenda-files '("~/org/work/" "~/org/knowledge/"))
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil)
@@ -2359,5 +2422,7 @@ Lisp function does not specify a special indentation."
 (require 'fastwork)
 (setq fastwork-file-title '(concat "#+startup: showall\n"
 								   "#+title: " (format-time-string "%Y-%m-%d记录\n")
-								   "* 会议记录\n* BUG分析\n"))
+								   "* 工作记录\n* BUG分析\n"))
+(if sys/win32p
+	(setq fastwork-dir "d:/org/work/record/"))
 #+end_src

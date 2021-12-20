@@ -1,6 +1,6 @@
 .cache
 auto-save-list
-elpa
+elpa*
 transient
 .lsp-session-v1
 .savehist
@@ -10,6 +10,8 @@ config.el
 bookmarks
 externs
 projectile-bookmarks.eld
+projectile.cache
+server
 recentf
 tramp
 .DS_Store
@@ -27,4 +29,4 @@ projects
 session*
 cnfonts
 eshell/
-
+network-security*
