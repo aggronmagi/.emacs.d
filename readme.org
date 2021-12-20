@@ -6,7 +6,6 @@
 
 ** todo
 *** TODO [A] vterm 配置. 查看官网
-*** TODO [C] lua语言支持 - lsp -
 
 ** 常用命令记录
 命令列表

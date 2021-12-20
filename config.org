@@ -1774,6 +1774,7 @@ Lisp function does not specify a special indentation."
   ;; jar 配置
   (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
   (setq plantuml-default-exec-mode 'jar)
+  (setq plantuml-indent-level 2)
   (add-to-list
    'org-src-lang-modes '("plantuml" . plantuml))
     ;;;; 使用server
@@ -2103,26 +2104,37 @@ Lisp function does not specify a special indentation."
 		 ("C-c t b" . go-test-current-benchmark)
 		 ("C-x x" . go-run))
   )
+  ;; go 生成测试代码
+  (use-package go-gen-test
+	:after go-mode
+	:ensure t)
 
-;; go 生成测试代码
-(use-package go-gen-test
-  :after go-mode
-  :ensure t)
+  ;; go lint
+  ;; (use-package golint
+  ;;   :after go-mode
+  ;;   :ensure t)
+  (use-package flycheck-golangci-lint
+	:ensure t
+	:hook (go-mode . flycheck-golangci-lint-setup))
 
-;; go lint
-;; (use-package golint
-;;   :after go-mode
-;;   :ensure t)
-(use-package flycheck-golangci-lint
-  :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
-
-;; go 调试
 (when (display-graphic-p)
   (require 'dap-go)
   (dap-go-setup))
 
 #+end_src
+golang 工具
+#+begin_quote
+go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest
+go install github.com/ramya-rao-a/go-outline@latest
+go install github.com/cweill/gotests/gotests@latest
+go install github.com/fatih/gomodifytags@latest
+go install github.com/josharian/impl@latest
+go install github.com/haya14busa/goplay/cmd/goplay@latest
+go install github.com/go-delve/delve/cmd/dlv@latest
+go install honnef.co/go/tools/cmd/staticcheck@latest
+go install golang.org/x/tools/gopls@latest
+# go install github.com/go-delve/delve/cmd/dlv@2f13672765fe dlv-dap
+#+end_quote
 ** lua 语言
 #+begin_src emacs-lisp
 (use-package lua-mode
