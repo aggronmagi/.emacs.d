@@ -225,10 +225,10 @@
 #+end_src
 ** 函数
 #+begin_src emacs-lisp
-  (defun icons-displayable-p ()
-	"Return non-nil if `all-the-icons' is displayable."
-	(and (display-graphic-p)
-		 (require 'all-the-icons nil t)))
+(defun icons-displayable-p ()
+  "Return non-nil if `all-the-icons' is displayable."
+  (and (display-graphic-p)
+	   (require 'all-the-icons nil t)))
 #+end_src
 ** restart
 #+begin_src emacs-lisp
@@ -756,42 +756,42 @@
 #+end_src
 ** counsel
 #+begin_src emacs-lisp
-  (use-package smex
-	:ensure t
-	:init
-	(setq smex-save-file "~/.emacs.d/.smex-items")
-	:config
-	(smex-initialize)
-	)
-  ;; counsel ivy swiper
-  (use-package counsel
-	:ensure t
-	:init
-	(ivy-mode 1)
-	(setq ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy)
-								  (t . ivy--regex-plus)))
-	:custom ((ivy-use-virtual-buffers t)
-			 (ivy-count-format "(%d/%d) ")
-			 (ivy-initial-inputs-alist nil)
-			 (ivy-height 15)
-			 (ivy-extra-directories '("./"))
-			 (counsel-switch-buffer-preview-virtual-buffers nil))
-	:bind (("M-y" . counsel-yank-pop)
-		   ("C-c C-r" . ivy-resume)
-		   ("<f6>" . ivy-resume)
-		   ("M-x" . counsel-M-x)
-		   ("C-x f" . counsel-switch-buffer)
-		   ("C-x C-f" . counsel-find-file)
-		   ("C-s" . swiper)
-		   ("C-r" . swiper-isearch-backward)
-		   ))
+(use-package smex
+  :ensure t
+  :init
+  (setq smex-save-file "~/.emacs.d/.smex-items")
+  :config
+  (smex-initialize)
+  )
+;; counsel ivy swiper
+(use-package counsel
+  :ensure t
+  :init
+  (ivy-mode 1)
+  (setq ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy)
+								(t . ivy--regex-plus)))
+  :custom ((ivy-use-virtual-buffers t)
+		   (ivy-count-format "(%d/%d) ")
+		   (ivy-initial-inputs-alist nil)
+		   (ivy-height 15)
+		   (ivy-extra-directories '("./"))
+		   (counsel-switch-buffer-preview-virtual-buffers nil))
+  :bind (("M-y" . counsel-yank-pop)
+		 ("C-c C-r" . ivy-resume)
+		 ("<f6>" . ivy-resume)
+		 ("M-x" . counsel-M-x)
+		 ("C-x f" . counsel-switch-buffer)
+		 ("C-x C-f" . counsel-find-file)
+		 ("C-s" . swiper)
+		 ("C-r" . swiper-isearch-backward)
+		 ))
 
-  (use-package ivy-avy
-	:custom ((avy-all-windows nil)
-			 (avy-keys (number-sequence ?a ?z)))
-	:bind (("C-x SPC" . avy-goto-char)
-		   ("C-c j" . avy-goto-line)
-		   ("C-C SPC" . avy-goto-word-1)))
+(use-package ivy-avy
+  :custom ((avy-all-windows nil)
+		   (avy-keys (number-sequence ?a ?z)))
+  :bind (("C-x SPC" . avy-goto-char)
+		 ("C-c j" . avy-goto-line)
+		 ("C-C SPC" . avy-goto-word-1)))
 
 #+end_src
 ** ivy-posframe mac 使用有bug.
@@ -851,11 +851,11 @@
 ** vterm
 #+begin_src emacs-lisp
 (when (or sys/linuxp sys/macp sys/mac-x-p sys/mac-cocoa-p)
-	(use-package vterm
-	  :ensure t
-	  :bind (:map vterm-mode-map
-			 ("C-`" . shell-pop))
-	  :init (setq vterm-always-compile-module t))
+  (use-package vterm
+	:ensure t
+	:bind (:map vterm-mode-map
+		   ("C-`" . shell-pop))
+	:init (setq vterm-always-compile-module t))
   )
 ;; (use-package vterm-toggle
 ;;   :ensure t
@@ -924,7 +924,7 @@
   :ensure t
   :bind
   (:map global-map
-		("C-c g b" . 'magit-blame-addition)))
+   ("C-c g b" . 'magit-blame-addition)))
 ;; 缓冲区中查看.修改,暂存文件
 (use-package git-gutter+
   :ensure t
@@ -987,8 +987,8 @@
   :ensure t
   :bind
   (:map global-map
-		("C-c k" . 'browse-kill-ring)
-		("C-c C-k" . 'browse-kill-ring))
+   ("C-c k" . 'browse-kill-ring)
+   ("C-c C-k" . 'browse-kill-ring))
   :config
   ;; 高亮当前选择项
   (setq browse-kill-ring-highlight-current-entry t)
@@ -1220,17 +1220,17 @@
   :ensure t
   :bind
   (:map global-map
-		;; M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
-		("M-I" . 'mc/edit-lines)
-		;; 下一行相似的
-		("C->" . 'mc/mark-next-like-this)
-		;; 上一行相似的
-		("C-<" . 'mc/mark-previous-like-this)
-		;; 所有匹配的行
-		("C-c C-<" . 'mc/mark-all-like-this)
-		;; 插入数字
-		;;("M-N" . '@-ask- 'mc/insert-numbers)
-		)
+   ;; M-I(Ctrl-Shirft-i) vscode快捷键. 先选中一块区域.按下快捷键之后,每行添加光标
+   ("M-I" . 'mc/edit-lines)
+   ;; 下一行相似的
+   ("C->" . 'mc/mark-next-like-this)
+   ;; 上一行相似的
+   ("C-<" . 'mc/mark-previous-like-this)
+   ;; 所有匹配的行
+   ("C-c C-<" . 'mc/mark-all-like-this)
+   ;; 插入数字
+   ;;("M-N" . '@-ask- 'mc/insert-numbers)
+   )
   )
 ;; 按回车. 插入新行.使用C-g退出多行
 (define-key mc/keymap (kbd "<return>") nil)
@@ -1339,13 +1339,13 @@
 		  (hs-show-block)
 		(hs-hide-block))))
   :bind (:map prog-mode-map
-			  ("C-c o" . my/toggle-fold)
-			  ("C-c h a" . hs-hide-block)
-			  ("C-c h b" . hs-show-block)
-			  ("C-c h h" . hs-hide-all)
-			  ("C-c h s" . hs-show-all)
-			  ("C-c h t" . hs-toggle-hiding)
-			  )
+		 ("C-c o" . my/toggle-fold)
+		 ("C-c h a" . hs-hide-block)
+		 ("C-c h b" . hs-show-block)
+		 ("C-c h h" . hs-hide-all)
+		 ("C-c h s" . hs-show-all)
+		 ("C-c h t" . hs-toggle-hiding)
+		 )
   )
 ;; (global-set-key "\C-cha"	      'hs-hide-block)
 ;; (global-set-key "\C-chb"	      'hs-show-block)
@@ -1787,16 +1787,16 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** pdf
 #+begin_src emacs-lisp
-  (when (and (display-graphic-p) (not sys/win32p))
-	(use-package pdf-tools
-	  :ensure nil
-	  ;; :init
+(when (and (display-graphic-p) (not sys/win32p))
+  (use-package pdf-tools
+	:ensure nil
+	;; :init
 
-	  :config
-	  (pdf-tools-install)
-	  ;; (setq pdf-view-dark-minor-mode t)
-	  (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) 
-	  ))
+	:config
+	(pdf-tools-install)
+	;; (setq pdf-view-dark-minor-mode t)
+	(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) 
+	))
 #+end_src
 * 编程支持
 ** flyspell 拼写检查
@@ -1829,8 +1829,8 @@ Lisp function does not specify a special indentation."
 		(lsp-mode . lsp-enable-which-key-integration)
 		)
   :bind (:map lsp-mode-map
-			  ("M-." . lsp-find-definition)
-			  ("M-n" . lsp-find-references))
+		 ("M-." . lsp-find-definition)
+		 ("M-n" . lsp-find-references))
   :custom ((lsp-log-io nil)
 		   (lsp-eldoc-render-all nil)
 		   (lsp-completion-provider t)
@@ -1916,9 +1916,9 @@ Lisp function does not specify a special indentation."
   ;;     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   ;;   )
   ;; (if (or sys/linuxp sys/win32p)
-	  ;; Recommended keymap prefix on Windows/Linux
-	  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-   ;;)
+  ;; Recommended keymap prefix on Windows/Linux
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  ;;)
   )
 #+end_src
 ** treemacs
@@ -1987,19 +1987,19 @@ Lisp function does not specify a special indentation."
 	   (treemacs-git-mode 'simple))))
   :bind
   (:map global-map
-		("<f12>"       . treemacs-select-window)
-		("C-x t 1"   . treemacs-delete-other-windows)
-		("C-x t t"   . treemacs)
-		;;("C-x t B"   . treemacs-bookmark)
-		;;("C-x t C-t" . treemacs-find-file)
-		("C-x t M-t" . treemacs-find-tag)
-		;; ("j" . treemacs-next-line)
-		;; ("k" . treemacs-previous-line)
-		)
+   ("<f12>"       . treemacs-select-window)
+   ("C-x t 1"   . treemacs-delete-other-windows)
+   ("C-x t t"   . treemacs)
+   ;;("C-x t B"   . treemacs-bookmark)
+   ;;("C-x t C-t" . treemacs-find-file)
+   ("C-x t M-t" . treemacs-find-tag)
+   ;; ("j" . treemacs-next-line)
+   ;; ("k" . treemacs-previous-line)
+   )
   (:map treemacs-mode-map
-		("j" . treemacs-next-line)
-		("k" . treemacs-previous-line)
-		)
+   ("j" . treemacs-next-line)
+   ("k" . treemacs-previous-line)
+   )
   )
 
 ;;(use-package treemacs-evil
@@ -2104,18 +2104,18 @@ Lisp function does not specify a special indentation."
 		 ("C-c t b" . go-test-current-benchmark)
 		 ("C-x x" . go-run))
   )
-  ;; go 生成测试代码
-  (use-package go-gen-test
-	:after go-mode
-	:ensure t)
+;; go 生成测试代码
+(use-package go-gen-test
+  :after go-mode
+  :ensure t)
 
-  ;; go lint
-  ;; (use-package golint
-  ;;   :after go-mode
-  ;;   :ensure t)
-  (use-package flycheck-golangci-lint
-	:ensure t
-	:hook (go-mode . flycheck-golangci-lint-setup))
+;; go lint
+;; (use-package golint
+;;   :after go-mode
+;;   :ensure t)
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
 
 (when (display-graphic-p)
   (require 'dap-go)
@@ -2172,7 +2172,7 @@ go install golang.org/x/tools/gopls@latest
   :config
   ;; ubuntu
   (if sys/linuxp 
-	(setq lsp-clangd-binary-path "/usr/bin/clangd-12"))
+	  (setq lsp-clangd-binary-path "/usr/bin/clangd-12"))
   (use-package modern-cpp-font-lock
 	:ensure t
 	:diminish
@@ -2209,14 +2209,14 @@ go install golang.org/x/tools/gopls@latest
   :ensure nil
   :bind
   (:map global-map
-		("C-c a" . org-agenda)
-		("C-c b" . org-iswitchb)
-		("C-c c" . org-capture))
+   ("C-c a" . org-agenda)
+   ("C-c b" . org-iswitchb)
+   ("C-c c" . org-capture))
   (:map org-mode-map
-		("C-c l" . org-store-link)
-		("s-<return>" . org-table-copy-down))
+   ("C-c l" . org-store-link)
+   ("s-<return>" . org-table-copy-down))
   :config
-    (if sys/win32p
+  (if sys/win32p
 	  (progn 
 		(setq org-default-notes-file (expand-file-name "~/org/index.org"))
 		(setq org-agenda-files '("~/org/work/" "~/org/knowledge/")))
@@ -2380,13 +2380,13 @@ go install golang.org/x/tools/gopls@latest
 		)
 	  )
 (setq org-todo-keywords
-        '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)")
-          (sequence "⚑(T)" "🏴(I)" "❓(H)" "|" "✔(D)" "✘(C)"))
-        org-todo-keyword-faces '(("HANGUP" . warning)
-                                 ("❓" . warning))
-        org-priority-faces '((?A . error)
-                             (?B . warning)
-                             (?C . success)))
+      '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)")
+        (sequence "⚑(T)" "🏴(I)" "❓(H)" "|" "✔(D)" "✘(C)"))
+      org-todo-keyword-faces '(("HANGUP" . warning)
+                               ("❓" . warning))
+      org-priority-faces '((?A . error)
+                           (?B . warning)
+                           (?C . success)))
 #+end_src
 
 
