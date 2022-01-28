@@ -499,12 +499,12 @@
   (blink-cursor-mode 0)
 
   (when (display-graphic-p)
-	(add-to-list 'default-frame-alist '(font . "Hack-15"))
+	;;(add-to-list 'default-frame-alist '(font . "Hack-15"))
 	(add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
   (setq-default cursor-type 't))
 ;; 中文支持
-(if (not sys/win32p)
+;;(if (not sys/win32p)
 (use-package cnfonts
   :ensure t
   :config
@@ -513,7 +513,8 @@
   ;; ;; 不同的标题，使用的字体大小也不同
   ;; (setq cnfonts-use-face-font-rescale t)
   
-  ))
+  )
+;;)
 
 #+end_src
 
@@ -546,6 +547,7 @@
 ** posframe
 #+begin_src emacs-lisp
 (use-package posframe
+  :if (not sys/win32p)
   :hook (after-load-theme . posframe-delete-all)
   :init
   (with-eval-after-load 'persp-mode
@@ -570,13 +572,15 @@
 ** auto-save
 #+begin_src emacs-lisp
 (require 'auto-save)
-(auto-save-enable)
 ;; quietly sav
 (setq auto-save-silent t)
 ;; ;; automatically delete spaces at the end of the line when saving
 ;; (setq auto-save-delete-trailing-whitespace t)
 ;; The idle seconds to auto save file.
-(setq auto-save-idle 10)
+(setq auto-save-idle 3)
+;; 开启自动保存
+(auto-save-enable)
+
 #+end_src
 ** back-button
 #+begin_src emacs-lisp
@@ -689,6 +693,7 @@
 ** minibuffer
 #+begin_src emacs-lisp
 (use-package mini-frame
+  :if (not sys/win32p)
   :ensure t
   :config
   (mini-frame-mode))
@@ -718,9 +723,6 @@
 ;; 		(right-fringe . 5))))
 
 ;;   (maple-minibuffer-mode)
-
-
-
 
 #+end_src
 ** ivy
