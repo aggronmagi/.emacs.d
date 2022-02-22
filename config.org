@@ -2147,6 +2147,8 @@ go install golang.org/x/tools/gopls@latest
   (setq lsp-lua-diagnostics-disable (vector "unused-local" "lowercase-global" "trailing-space" "empty-block"))
   (setq lsp-lua-diagnostics-globals (vector "global" "flags"))
   (setq lua-indent-level 4)
+  (setq lua-indent-nested-block-content-align nil)
+  (setq lua-indent-close-paren-align nil)
   ;; (setq lsp-lua-diagnostics-disable nil)
   :hook ((lua-mode . lsp))
   )
