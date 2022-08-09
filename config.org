@@ -814,9 +814,10 @@
 (use-package undo-tree
   :ensure t
   :config
-  (global-undo-tree-mode)
   (setq undo-tree-visualizer-timestamps t)
-  (setq undo-tree-visualizer-diff t))
+  (setq undo-tree-visualizer-diff t)
+  (setq undo-tree-auto-save-history nil)
+  (global-undo-tree-mode))
 #+end_src
 ** jump-tree 跳转
 包太老了. 没有办法用.
