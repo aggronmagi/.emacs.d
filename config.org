@@ -1879,6 +1879,8 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** dap-mode (调试支持)
 #+begin_src emacs-lisp
+;; (use-package dap-mode
+;;   :ensure t)
 (use-package dap-mode
   :functions dap-hydra/nil
   :diminish
