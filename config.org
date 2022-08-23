@@ -1778,6 +1778,7 @@ Lisp function does not specify a special indentation."
   (setq plantuml-indent-level 2)
   (add-to-list
    'org-src-lang-modes '("plantuml" . plantuml))
+  (plantuml-set-output-type "png")
     ;;;; 使用server
   ;; (setq plantuml-default-exec-mode 'server)
   ;; (setq plantuml-server-url "https://www.plantuml.com/plantuml")
@@ -1878,9 +1879,33 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** dap-mode (调试支持)
 #+begin_src emacs-lisp
-(when (display-graphic-p)
-  (use-package dap-mode
-	:ensure t))
+(use-package dap-mode
+  :functions dap-hydra/nil
+  :diminish
+  :bind (:map lsp-mode-map
+		 ("<f5>" . dap-debug)
+		 ("M-<f5>" . dap-hydra)
+		 ("<f7>" . dap-breakpoint-toggle)
+		 ("C-<f5>" . dap-continue)
+		 ("C-<f6>" . dap-step-out)
+		 ("C-<f7>" . dap-step-in)
+		 ("C-<f8>" . dap-next))
+  :hook ((after-init     . dap-auto-configure-mode)
+		 (dap-stopped    . (lambda (_) (dap-hydra)))
+		 (dap-terminated . (lambda (_) (dap-hydra/nil)))
+
+		 (python-mode            . (lambda () (require 'dap-python)))
+		 (ruby-mode              . (lambda () (require 'dap-ruby)))
+		 (java-mode              . (lambda () (require 'dap-java)))
+		 ((c-mode c++-mode)      . (lambda () (require 'dap-lldb)))
+		 ((objc-mode swift-mode) . (lambda () (require 'dap-lldb)))
+		 (php-mode               . (lambda () (require 'dap-php)))
+		 (elixir-mode            . (lambda () (require 'dap-elixir)))
+		 ((js-mode js2-mode)     . (lambda () (require 'dap-chrome)))
+		 (powershell-mode        . (lambda () (require 'dap-pwsh))))
+  :init
+  (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls))
+  )
 #+end_src
 
 ** Yasnippet
@@ -2061,17 +2086,46 @@ Lisp function does not specify a special indentation."
   :mode "\\.go\\'"
   :init
   (setq gofmt-command "goimports")
-  :config
-  ;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks)
-  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-  
-  ;; go 调试
-  (require 'dap-go)
-  (dap-go-setup)
   :hook ((go-mode . lsp))
   :bind
   (:map go-mode-map
    ("<f9>" . gofmt))
+  :config
+  ;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks)
+  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  ;; go 调试
+  ;;(require 'dap-go)
+  ;;(dap-go-setup)
+  (require 'dap-dlv-go)
+
+  (dap-register-debug-template "Wall-Server Unoptimized Debug"
+							   (list :type "go"
+									 :request "launch"
+									 :name "Wall Server Debug"
+									 :mode "debug"
+									 :program (expand-file-name "~/walle/walle/example/gotcp/server")
+									 :buildFlags "-gcflags '-N -l'"
+									 ;;:buildFlags "-gcflags '-N -l' -ldflags '-X \"pkg.jcndev.com/game-framework/three-d.BaseDir=/Users/aggron/workspace/data/\"'"
+									 :args nil
+									 :env "CGO_ENABLED=\"0\""
+									 :envFile nil
+									 :workspace (expand-file-name "~/walle/walle")
+									 :cwd (expand-file-name "~/walle/walle")))
+
+  (dap-register-debug-template "Wall-Client Unoptimized Debug"
+							   (list :type "go"
+									 :request "launch"
+									 :name "Walle Client Debug"
+									 :mode "debug"
+									 :program (expand-file-name "~/walle/walle/example/gotcp/client")
+									 :buildFlags "-gcflags '-N -l'"
+									 :args nil
+									 :env "CGO_ENABLED=\"0\""
+									 :envFile nil
+									 :workspace (expand-file-name "~/walle/walle")
+									 :cwd (expand-file-name "~/walle/walle")))
+
+  
   )
 
 
@@ -2093,6 +2147,7 @@ Lisp function does not specify a special indentation."
 ;; (use-package go-dlv
 ;;   :after go-mode
 ;;   :ensure t)
+;;(use-package go-dlv)
 
 ;; go 包测试
 (use-package gotest
@@ -2103,11 +2158,22 @@ Lisp function does not specify a special indentation."
 		 ("C-c t t" . go-test-current-test)
 		 ("C-c t p" . go-test-current-project)
 		 ("C-c t b" . go-test-current-benchmark)
+		 ("C-c t c" . go-test-current-coverage)
 		 ("C-x x" . go-run))
   )
+
+(use-package go-tag
+  :bind (:map go-mode-map
+         ("C-c t a" . go-tag-add)
+         ("C-c t r" . go-tag-remove))
+  :init (setq go-tag-args (list "-transform" "camelcase"))
+  :ensure t)
+
 ;; go 生成测试代码
 (use-package go-gen-test
   :after go-mode
+  :bind (:map go-mode-map
+         ("C-c t g" . go-gen-test-dwim))
   :ensure t)
 
 ;; go lint
@@ -2118,10 +2184,9 @@ Lisp function does not specify a special indentation."
   :ensure t
   :hook (go-mode . flycheck-golangci-lint-setup))
 
-(when (display-graphic-p)
-  (require 'dap-go)
-  (dap-go-setup))
-
+(use-package go-playground
+  :diminish
+  :commands (go-playground-mode))
 #+end_src
 golang 工具
 #+begin_quote
@@ -2136,6 +2201,12 @@ go install honnef.co/go/tools/cmd/staticcheck@latest
 go install golang.org/x/tools/gopls@latest
 # go install github.com/go-delve/delve/cmd/dlv@2f13672765fe dlv-dap
 #+end_quote
+
+https://github.com/fatih/gomodifytags
+
+https://github.com/cweill/gotests
+
+
 ** lua 语言
 #+begin_src emacs-lisp
 (use-package lua-mode
@@ -2197,7 +2268,7 @@ go install golang.org/x/tools/gopls@latest
 #+end_src
 ** org 基础配置
 #+begin_src emacs-lisp
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ox-gfm
   :ensure t)
@@ -2210,6 +2281,42 @@ go install golang.org/x/tools/gopls@latest
 
 (use-package org
   :ensure nil
+  :pretty-hydra
+  ((:title (pretty-hydra-title "Org Template" 'fileicon "org" :face 'all-the-icons-green :height 1.1 :v-adjust 0.0)
+	:color blue :quit-key "q")
+   ("Basic"
+	(("a" (hot-expand "<a") "ascii")
+	 ("c" (hot-expand "<c") "center")
+	 ("C" (hot-expand "<C") "comment")
+	 ("e" (hot-expand "<e") "example")
+	 ("E" (hot-expand "<E") "export")
+	 ("h" (hot-expand "<h") "html")
+	 ("l" (hot-expand "<l") "latex")
+	 ("n" (hot-expand "<n") "note")
+	 ("o" (hot-expand "<q") "quote")
+	 ("v" (hot-expand "<v") "verse"))
+	"Head"
+	(("i" (hot-expand "<i") "index")
+	 ("A" (hot-expand "<A") "ASCII")
+	 ("I" (hot-expand "<I") "INCLUDE")
+	 ("H" (hot-expand "<H") "HTML")
+	 ("L" (hot-expand "<L") "LaTeX"))
+	"Source"
+	(("s" (hot-expand "<s") "src")
+	 ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
+	 ("y" (hot-expand "<s" "python :results output") "python")
+	 ("p" (hot-expand "<s" "perl") "perl")
+	 ("r" (hot-expand "<s" "ruby") "ruby")
+	 ("S" (hot-expand "<s" "sh") "sh")
+	 ("j" (hot-expand "<s" "json") "json")
+	 ("g" (hot-expand "<s" "go") "golang"))
+	"Misc"
+	(("u" (hot-expand "<s" "plantuml :file CHANGE.png") "plantuml")
+	 ("Y" (hot-expand "<s" "ipython :session :exports both :results raw drawer\n$0") "ipython")
+	 ("P" (progn
+			(insert "#+HEADERS: :results output :exports both :shebang \"#!/usr/bin/env perl\"\n")
+			(hot-expand "<s" "perl")) "Perl tangled")
+	 ("<" self-insert-command "ins"))))
   :bind
   (:map global-map
    ("C-c a" . org-agenda)
@@ -2217,22 +2324,44 @@ go install golang.org/x/tools/gopls@latest
    ("C-c c" . org-capture))
   (:map org-mode-map
    ("C-c l" . org-store-link)
-   ("s-<return>" . org-table-copy-down))
-  :config
-  (if sys/win32p
-	  (progn 
-		(setq org-default-notes-file (expand-file-name "~/org/index.org"))
-		(setq org-agenda-files '("~/org/work/" "~/org/knowledge/")))
-	(setq org-default-notes-file (expand-file-name "d:/org/index.org"))
-	(setq org-agenda-files '("d:/org/work/" "d:/org/knowledge/"))
-	)
+   ("s-<return>" . org-table-copy-down)
+   ("<" . (lambda ()
+			"Insert org template."
+			(interactive)
+			(if (or (region-active-p) (looking-back "^\s*" 1))
+				(org-hydra/body)
+			  (self-insert-command 1)))))
   :custom
+  (org-default-notes-file (expand-file-name "~/org/index.org"))
+  (org-agenda-files '("~/org/work/" "~/org/knowledge/"))
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil)
   (org-refile-allow-creating-parent-nodes 'confirm)
   (org-log-refile 'time)
   :hook ((org-mode . toggle-truncate-lines))
+  :config
+  ;; For hydra
+  (defun hot-expand (str &optional mod)
+	"Expand org template.
+
+  STR is a structure template string recognised by org like <s. MOD is a
+  string with additional parameters to add the begin line of the
+  structure element. HEADER string includes more parameters that are
+  prepended to the element after the #+HEADER: tag."
+	(let (text)
+	  (when (region-active-p)
+		(setq text (buffer-substring (region-beginning) (region-end)))
+		(delete-region (region-beginning) (region-end)))
+	  (insert str)
+	  (if (fboundp 'org-try-structure-completion)
+		  (org-try-structure-completion) ; < org 9
+		(progn
+		  ;; New template expansion since org 9
+		  (require 'org-tempo nil t)
+		  (org-tempo-complete-tag)))
+	  (when mod (insert mod) (forward-line))
+	  (when text (insert text))))
   :init
   ;; https://orgmode.org/worg/org-contrib/babel/languages.html
   (org-babel-do-load-languages

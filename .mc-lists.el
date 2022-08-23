@@ -7,8 +7,10 @@
 		autopair-insert-or-skip-quote
 		autopair-newline
 		autopair-skip-close-maybe
+		awesome-pair-close-round
 		awesome-pair-double-quote
 		awesome-pair-equal
+		awesome-pair-forward-delete
 		awesome-pair-open-curly
 		awesome-pair-open-round
 		awesome-pair-space
@@ -25,6 +27,8 @@
 		mouse-set-region
 		mwim-beginning
 		mwim-end
+		org-force-self-insert
+		org-self-insert-command
 		treemacs-leftclick-action
 		yank-rectangle
 		))
