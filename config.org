@@ -577,7 +577,7 @@
 ;; ;; automatically delete spaces at the end of the line when saving
 ;; (setq auto-save-delete-trailing-whitespace t)
 ;; The idle seconds to auto save file.
-(setq auto-save-idle 3)
+(setq auto-save-idle 1)
 ;; 开启自动保存
 (auto-save-enable)
 
@@ -2327,6 +2327,7 @@ https://github.com/cweill/gotests
   (:map org-mode-map
    ("C-c l" . org-store-link)
    ("s-<return>" . org-table-copy-down)
+   ("M-[" . org-mark-ring-goto)
    ("<" . (lambda ()
 			"Insert org template."
 			(interactive)
@@ -2568,7 +2569,7 @@ https://github.com/cweill/gotests
 ** 快速创建当日记录文件
 #+begin_src emacs-lisp
 (require 'fastwork)
-(setq fastwork-file-title '(concat "#+startup: showall\n"
+(setq fastwork-file-title '(concat "#+startup: context\n"
 								   "#+title: " (format-time-string "%Y-%m-%d记录\n")
 								   "* 工作记录\n* BUG分析\n"))
 (if sys/win32p
