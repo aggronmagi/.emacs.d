@@ -925,7 +925,10 @@
   :ensure t
   :bind
   (:map global-map
-   ("C-c g b" . 'magit-blame-addition)))
+   ("C-c g b" . 'magit-blame-addition))
+  :config
+  (magit-maybe-define-global-key-bindings t))
+  ;;(magit-status)
 ;; 缓冲区中查看.修改,暂存文件
 (use-package git-gutter+
   :ensure t
@@ -2450,6 +2453,7 @@ https://github.com/cweill/gotests
 #+begin_src emacs-lisp
 ;; (add-to-list 'load-path "~/.emacs.d/externs/org-protocol-capture-html")
 ;; (require 'org-protocol-capture-html)
+(setq org-latex-compiler "xelatex")
 #+end_src
 ** org 外部交互
 #+begin_src emacs-lisp
