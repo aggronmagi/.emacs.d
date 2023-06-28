@@ -479,7 +479,7 @@
   ;; No cursor blinking, it's distracting
   (blink-cursor-mode 0)
 
-  (when (display-graphic-p)x
+  (when (display-graphic-p)
 	;;(add-to-list 'default-frame-alist '(font . "Hack-15"))
 	(add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
@@ -1452,7 +1452,7 @@
 #+begin_src emacs-lisp
 (use-package foreign-regexp
   :ensure t
-  :config
+  :init
   (custom-set-variables
    '(foreign-regexp/regexp-type 'perl) ;; Choose your taste of foreign regexp
                                     ;; from 'perl, 'ruby or 'javascript.
@@ -2097,7 +2097,8 @@ Lisp function does not specify a special indentation."
 #+end_src
 ** tree-sitter
 #+begin_src emacs-lisp
-(use-package tree-sitter-langs)
+(use-package tree-sitter-langs
+  :ensure t)
 (use-package tree-sitter
   :ensure t
   :config
