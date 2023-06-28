@@ -54,6 +54,8 @@
 (use-package keyfreq
   :ensure t
   :config
+  (setq keyfreq-file "~/.emacs.d/cache/keyfreq")
+  (setq keyfreq-file-lock "~/.emacs.d/cache/keyfreq.lock")
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 #+end_src
@@ -74,7 +76,7 @@
   (exec-path-from-shell-initialize)
   (add-to-list 'exec-path (concat invocation-directory "bin") t)
   (exec-path-from-shell-copy-env "GOPATH")
-  (setenv "LIBRARY_PATH" "/usr/local/lib/gcc/11/")
+  ;;(setenv "LIBRARY_PATH" "/usr/local/lib/gcc/11/")
   (setq comp-deferred-compilation t)
   ;; (if (and (fboundp 'native-comp-available-p)
   ;;          (native-comp-available-p))
@@ -94,24 +96,6 @@
   ;;   (message "Native comp is *not* available"))
   )
 
-;; 复制,粘贴使用下面配置,将导致multiple-cursor的复制,粘贴失效
-;; copy paste
-;; (cond ((string-equal system-type "darwin")
-;;        (progn
-;;          ;; modify option and command key
-;;          ;;(setq mac-comman-modifier 'control)
-;;          ;;(setq mac-option-modifier 'meta)
-;;
-;;          ;; batter copy and paste support for mac os x
-;;          (defun copy-from-osx ()
-;;            (shell-command-to-string "pbpaste"))
-;;          (defun paste-to-osx (text &optional push)
-;;            (let ((process-connection-type nil))
-;;              (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-;;                (process-send-string proc text)
-;;                (process-send-eof proc))))
-;;          (setq interprogram-cut-function 'paste-to-osx)
-;;          (setq interprogram-paste-function 'copy-from-osx))))
 #+end_src
 ** 编码和语言环境
 #+begin_src emacs-lisp
@@ -248,6 +232,8 @@
 ** hydra
 #+begin_src emacs-lisp
 
+(use-package hydra
+  :hook (emacs-lisp-mode . hydra-add-imenu))
 (use-package pretty-hydra
   :ensure t
   :bind ("<f6>" . toggles-hydra/body)
@@ -370,17 +356,12 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 括号匹配相关
 (setq show-paren-mode nil)
-;; ;; 括号自动补全
-;; (use-package autopair
-;;   :ensure t
-;;   :init
-;;   (defun @-enable-autopair ()
-;; 	(autopair-mode t))
-;;   :hook
-;;   (progn
-;; 	(prog-mode . @-enable-autopair)
-;; 	(emacs-lisp-mode . @-enable-autopair)
-;; 	))
+
+;; Automatic parenthesis pairing
+(use-package elec-pair
+  :ensure nil
+  :hook (after-init . electric-pair-mode)
+  :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
 
 ;; 高亮括号匹配
 (use-package highlight-parentheses
@@ -498,7 +479,7 @@
   ;; No cursor blinking, it's distracting
   (blink-cursor-mode 0)
 
-  (when (display-graphic-p)
+  (when (display-graphic-p)x
 	;;(add-to-list 'default-frame-alist '(font . "Hack-15"))
 	(add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
@@ -521,8 +502,26 @@
 ** 编辑
 #+begin_src emacs-lisp
 (use-package delsel
-  :ensure nil
+  :ensure t
   :hook (after-init . delete-selection-mode))
+#+end_src
+
+** url
+#+begin_src emacs-lisp
+
+;; Pass a URL to a WWW browser
+(use-package browse-url
+  :ensure t
+  :defines dired-mode-map
+  :bind (("C-c C-z ." . browse-url-at-point)
+         ("C-c C-z b" . browse-url-of-buffer)
+         ("C-c C-z r" . browse-url-of-region)
+         ("C-c C-z u" . browse-url)
+         ("C-c C-z e" . browse-url-emacs)
+         ("C-c C-z v" . browse-url-of-file))
+  :init
+  (with-eval-after-load 'dired
+    (bind-key "C-c C-z f" #'browse-url-of-file dired-mode-map)))
 #+end_src
 
 ** 复制文件名
@@ -541,8 +540,8 @@
 #+end_src
 ** 分词
 #+begin_src emacs-lisp
-(use-package subword
-  :hook (after-init . global-subword-mode))
+;; (use-package subword
+;;   :hook (after-init . global-subword-mode))
 #+end_src
 ** posframe
 #+begin_src emacs-lisp
@@ -629,74 +628,74 @@
 #+end_src
 ** awesome-pair
 #+begin_src emacs-lisp
-(require 'awesome-pair)
-(dolist (hook (list
-			   'c-mode-common-hook
-			   'c-mode-hook
-			   'c++-mode-hook
-			   'java-mode-hook
-			   'haskell-mode-hook
-			   'emacs-lisp-mode-hook
-			   'lisp-interaction-mode-hook
-			   'lisp-mode-hook
-			   'maxima-mode-hook
-			   'ielm-mode-hook
-			   'sh-mode-hook
-			   'makefile-gmake-mode-hook
-			   'php-mode-hook
-			   'python-mode-hook
-			   'js-mode-hook
-			   'go-mode-hook
-			   'qml-mode-hook
-			   'jade-mode-hook
-			   'css-mode-hook
-			   'ruby-mode-hook
-			   'coffee-mode-hook
-			   'rust-mode-hook
-			   'qmake-mode-hook
-			   'lua-mode-hook
-			   'swift-mode-hook
-			   'minibuffer-inactive-mode-hook
-			   ))
-  (add-hook hook '(lambda () (awesome-pair-mode 1))))
+;; (require 'awesome-pair)
+;; (dolist (hook (list
+;; 			   'c-mode-common-hook
+;; 			   'c-mode-hook
+;; 			   'c++-mode-hook
+;; 			   'java-mode-hook
+;; 			   'haskell-mode-hook
+;; 			   'emacs-lisp-mode-hook
+;; 			   'lisp-interaction-mode-hook
+;; 			   'lisp-mode-hook
+;; 			   'maxima-mode-hook
+;; 			   'ielm-mode-hook
+;; 			   'sh-mode-hook
+;; 			   'makefile-gmake-mode-hook
+;; 			   'php-mode-hook
+;; 			   'python-mode-hook
+;; 			   'js-mode-hook
+;; 			   'go-mode-hook
+;; 			   'qml-mode-hook
+;; 			   'jade-mode-hook
+;; 			   'css-mode-hook
+;; 			   'ruby-mode-hook
+;; 			   'coffee-mode-hook
+;; 			   'rust-mode-hook
+;; 			   'qmake-mode-hook
+;; 			   'lua-mode-hook
+;; 			   'swift-mode-hook
+;; 			   'minibuffer-inactive-mode-hook
+;; 			   ))
+;;   (add-hook hook '(lambda () (awesome-pair-mode 1))))
 
 
 
-(define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
-(define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
-(define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
-(define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
-(define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
-(define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
-(define-key awesome-pair-mode-map (kbd "=") 'awesome-pair-equal)
+;; (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
+;; (define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
+;; (define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
+;; (define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
+;; (define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
+;; (define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
+;; (define-key awesome-pair-mode-map (kbd "=") 'awesome-pair-equal)
 
-;; (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
-(define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
+;; ;; (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
+;; (define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
 
-(define-key awesome-pair-mode-map (kbd "SPC") 'awesome-pair-space)
+;; (define-key awesome-pair-mode-map (kbd "SPC") 'awesome-pair-space)
 
-(define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete)
-(define-key awesome-pair-mode-map (kbd "C-d") 'awesome-pair-forward-delete)
-(define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
+;; (define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete)
+;; (define-key awesome-pair-mode-map (kbd "C-d") 'awesome-pair-forward-delete)
+;; (define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
 
-(define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote)
-(define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
-(define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
-(define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
-(define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
+;; (define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote)
+;; (define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
+;; (define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
+;; (define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
+;; (define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
 
-(define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-right)
-(define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-left)
-(define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
+;; (define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-right)
+;; (define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-left)
+;; (define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
 #+end_src
 
 ** minibuffer
 #+begin_src emacs-lisp
-(use-package mini-frame
-  :if (not sys/win32p)
-  :ensure t
-  :config
-  (mini-frame-mode))
+;; (use-package mini-frame
+;;   :if (not sys/win32p)
+;;   :ensure t
+;;   :config
+;;   (mini-frame-mode))
 
 ;; git clone https://github.com/honmaple/emacs-maple-minibuffer ~/.emacs.d/lisp/maple-minibuffer
 
@@ -759,7 +758,7 @@
 (use-package smex
   :ensure t
   :init
-  (setq smex-save-file "~/.emacs.d/.smex-items")
+  (setq smex-save-file "~/.emacs.d/cache/smex-items")
   :config
   (smex-initialize)
   )
@@ -778,11 +777,11 @@
 		   (counsel-switch-buffer-preview-virtual-buffers nil))
   :bind (("M-y" . counsel-yank-pop)
 		 ("C-c C-r" . ivy-resume)
-		 ("<f6>" . ivy-resume)
+		 ;;("<f6>" . ivy-resume)
 		 ("M-x" . counsel-M-x)
 		 ("C-x f" . counsel-switch-buffer)
 		 ("C-x C-f" . counsel-find-file)
-		 ("C-s" . swiper)
+		 ("C-s" . isearch-forward)
 		 ("C-r" . swiper-isearch-backward)
 		 ))
 
@@ -845,7 +844,8 @@
   :ensure t
   :config
   (setq recentf-max-saved-items 200
-		recentf-max-menu-items 15)
+		recentf-max-menu-items 15
+		recentf-save-file "~/.emacs.d/cache/recentf")
   ;;:bind ("<f3>" . helm-recentf)
   :hook ((after-init-hook . recentf-mode)))
 #+end_src
@@ -855,7 +855,7 @@
   (use-package vterm
 	:ensure t
 	:bind (:map vterm-mode-map
-		   ("C-`" . shell-pop))
+		   ("C-<escape>" . shell-pop))
 	:init (setq vterm-always-compile-module t))
   )
 ;; (use-package vterm-toggle
@@ -868,7 +868,7 @@
 ;; Shell Pop
 (use-package shell-pop
   :ensure t
-  :bind ("C-`" . shell-pop)
+  :bind ("C-<escape>" . shell-pop)
   :init (setq shell-pop-window-size 30
               shell-pop-shell-type
               (cond (sys/win32p '("eshell" "*eshell*" #'eshell))
@@ -957,10 +957,10 @@
 
 ** 智能tab补全
 #+begin_src emacs-lisp
-;; 智能tab补全. 有个新的 smart-tab-mode
-(use-package smart-tabs-mode
-  :ensure t
-  :hook ((prog-mode . smart-tabs-mode)))
+;; ;; 智能tab补全. 有个新的 smart-tab-mode
+;; (use-package smart-tabs-mode
+;;   :ensure t
+;;   :hook ((prog-mode . smart-tabs-mode)))
 #+end_src
 ** 智能跳转行首和行尾
 #+begin_src emacs-lisp
@@ -1448,6 +1448,17 @@
         (helpful--goto-char-widen pos)))
     (advice-add #'helpful--navigate :override #'my-helpful--navigate)))
 #+end_src
+** regex
+#+begin_src emacs-lisp
+(use-package foreign-regexp
+  :ensure t
+  :config
+  (custom-set-variables
+   '(foreign-regexp/regexp-type 'perl) ;; Choose your taste of foreign regexp
+                                    ;; from 'perl, 'ruby or 'javascript.
+   '(reb-re-syntax 'foreign-regexp))   ;; Tell re-builder to use foreign regexp.
+)
+#+end_src
 * 文件格式
 ** elisp
 #+begin_src emacs-lisp
@@ -1794,7 +1805,7 @@ Lisp function does not specify a special indentation."
 #+begin_src emacs-lisp
 (when (and (display-graphic-p) (not sys/win32p))
   (use-package pdf-tools
-	:ensure nil
+	:ensure t
 	;; :init
 
 	:config
@@ -1837,7 +1848,7 @@ Lisp function does not specify a special indentation."
 		 ("M-." . lsp-find-definition)
 		 ("M-n" . lsp-find-references))
   :custom ((lsp-log-io nil)
-		   (lsp-eldoc-render-all nil)
+		   ;; (lsp-eldoc-render-all nil)
 		   (lsp-completion-provider t)
 		   (lsp-signature-render-documentation nil)
 		   (lsp-go-hover-kind "NoDocumentation")
@@ -1853,7 +1864,14 @@ Lisp function does not specify a special indentation."
 ;; Optional - provides fancier overlays.
 (use-package lsp-ui
   :ensure t
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :config
+  ;; ;; peek like vscode
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  ;; doc
+  (lsp-ui-doc-enable t)
+  )
 #+end_src
 ** nox 替代 lsp-mode
 #+begin_src emacs-lisp
@@ -1885,6 +1903,7 @@ Lisp function does not specify a special indentation."
 ;; (use-package dap-mode
 ;;   :ensure t)
 (use-package dap-mode
+  :ensure t
   :functions dap-hydra/nil
   :diminish
   :bind (:map lsp-mode-map
@@ -1921,7 +1940,8 @@ Lisp function does not specify a special indentation."
   :commands yas-minor-mode
   :hook
   (go-mode . yas-minor-mode)
-  (lua-mode . yas-minor-mode))
+  (lua-mode . yas-minor-mode)
+  (rust-mode . yas-minor-mode))
 
 ;; 预定义的
 (use-package yasnippet-snippets
@@ -1939,7 +1959,8 @@ Lisp function does not specify a special indentation."
   ;; C-x p 前缀 f 查找文件
   :bind
   (:map global-map
-   ("M-P" . project-find-file))
+   ("M-P" . project-find-file)
+   ("C-`" . projectile-run-vterm))
   :config
   (projectile-mode +1)
   ;; (if (or sys/macp sys/mac-x-p sys/mac-cocoa-p)
@@ -2074,6 +2095,16 @@ Lisp function does not specify a special indentation."
   )
 
 #+end_src
+** tree-sitter
+#+begin_src emacs-lisp
+(use-package tree-sitter-langs)
+(use-package tree-sitter
+  :ensure t
+  :config
+  (require 'tree-sitter-langs)
+  ;;(global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+end_src
 * 编程语言
 ** golang 语言
 #+begin_src emacs-lisp
@@ -2138,10 +2169,10 @@ Lisp function does not specify a special indentation."
 ;; (add-hook 'go-mode-hook 'auto-save-disable)
 
 ;; 使用gocode 提供代码类型显示(在minibuffer)
-(use-package go-eldoc
-  :ensure t
-  :after go-mode
-  :hook ((go-mode . go-eldoc-setup)))
+;; (use-package go-eldoc
+;;   :ensure t
+;;   :after go-mode
+;;   :hook ((go-mode . go-eldoc-setup)))
 
 ;; ;; 使用guru 进行代码导航
 ;; (use-package go-guru
@@ -2168,11 +2199,12 @@ Lisp function does not specify a special indentation."
   )
 
 (use-package go-tag
+  :ensure t
+  :init (setq go-tag-args (list "-transform" "camelcase"))
   :bind (:map go-mode-map
          ("C-c t a" . go-tag-add)
          ("C-c t r" . go-tag-remove))
-  :init (setq go-tag-args (list "-transform" "camelcase"))
-  :ensure t)
+  )
 
 ;; go 生成测试代码
 (use-package go-gen-test
@@ -2259,6 +2291,32 @@ https://github.com/cweill/gotests
 	(modern-c++-font-lock-global-mode t))
   )
 
+#+end_src
+** rust
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :ensure t
+  :hook
+  (rust-mode . lsp)
+  :bind
+  (:map rust-mode-map
+   ("<f9>" . rust-format-buffer))
+  :config
+  )
+
+(use-package cargo-mode
+  :ensure t
+  :config
+  (add-hook 'rust-mode-hook 'cargo-minor-mode))
+#+end_src
+** c#
+#+begin_src emacs-lisp
+(use-package csharp-mode
+  :ensure t
+  :hook
+  (csharp-mode . lsp))
+
+(setenv "DOTNET_ROOT" "/usr/local/share/dotnet/")
 #+end_src
 
 * org mode

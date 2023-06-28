@@ -20,6 +20,7 @@
 		dabbrev-completion
 		electric-newline-and-maybe-indent
 		end-of-buffer
+		gofmt
 		ignore
 		indent-for-tab-command
 		kill-ring-save
@@ -27,9 +28,14 @@
 		mouse-set-region
 		mwim-beginning
 		mwim-end
+		org-delete-char
 		org-force-self-insert
+		org-hydra/self-insert-command-and-exit
+		org-return
 		org-self-insert-command
+		org-yank
 		treemacs-leftclick-action
+		upcase-dwim
 		yank-rectangle
 		))
 
@@ -42,6 +48,7 @@
 		counsel-M-x
 		counsel-find-file
 		describe-key
+		go-import-add
 		handle-switch-frame
 		ivy-switch-buffer
 		keyboard-escape-quit
@@ -53,5 +60,6 @@
 		text-scale-adjust
 		treemacs-select-window
 		undo-tree-visualize
+		xref-find-references
 		youdao-dictionary-search-at-point+
 		))
