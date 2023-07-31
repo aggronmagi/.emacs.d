@@ -455,7 +455,7 @@
 ;; (global-display-line-numbers-mode 1)
 (use-package display-line-numbers
   :ensure nil
-  :hook ((prog-mode text-mode conf-mode) . display-line-numbers-mode))
+  :hook ((prog-mode conf-mode) . display-line-numbers-mode))
 ;; (use-package linum
 ;;   :ensure t
 ;;   :config
@@ -1459,6 +1459,13 @@
    '(reb-re-syntax 'foreign-regexp))   ;; Tell re-builder to use foreign regexp.
 )
 #+end_src
+** restclient
+#+begin_src emacs-lisp
+(use-package restclient
+  :ensure t
+  :mode "\\.restclient\\'"
+  )
+#+end_src
 * 文件格式
 ** elisp
 #+begin_src emacs-lisp
@@ -2004,7 +2011,7 @@ Lisp function does not specify a special indentation."
 		  treemacs-no-png-images                 nil
 		  treemacs-no-delete-other-windows       t
 		  treemacs-project-follow-cleanup        nil
-		  treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+		  treemacs-persist-file                  (expand-file-name "cache/treemacs-persist" user-emacs-directory)
 		  treemacs-position                      'left
 		  treemacs-recenter-distance             0.1
 		  treemacs-recenter-after-file-follow    nil
