@@ -118,6 +118,9 @@ avoid delete current indent space when you programming."
 (defvar auto-save-disable-predicates
   nil "disable auto save in these case.")
 
+(defvar auto-save-x-hook nil
+  "auto save hook, call when save buffers")
+
 ;; Emacs' default auto-save is stupid to generate #foo# files!
 (setq auto-save-default nil)
 
@@ -151,6 +154,7 @@ avoid delete current indent space when you programming."
                   (let ((inhibit-message t))
                     (basic-save-buffer)))
               (basic-save-buffer))
+			(run-hooks 'auto-save-x-hook)
             ))
         ;; Tell user when auto save files.
         (unless auto-save-silent

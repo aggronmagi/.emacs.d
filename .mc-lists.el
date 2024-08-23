@@ -14,52 +14,27 @@
 		awesome-pair-open-curly
 		awesome-pair-open-round
 		awesome-pair-space
-		browse-kill-ring
 		c-electric-semi&comma
 		c-electric-slash
-		dabbrev-completion
 		electric-newline-and-maybe-indent
-		end-of-buffer
-		gofmt
 		ignore
 		indent-for-tab-command
 		kill-ring-save
-		lsp-signature-previous
-		mouse-set-region
 		mwim-beginning
 		mwim-end
+		ns-open-file-using-panel
 		org-delete-char
 		org-force-self-insert
 		org-hydra/self-insert-command-and-exit
 		org-return
 		org-self-insert-command
 		org-yank
-		treemacs-leftclick-action
 		upcase-dwim
 		yank-rectangle
 		))
 
 (setq mc/cmds-to-run-once
       '(
-		@-ask-inter-num
-		beginning-of-buffer
-		c-indent-line-or-region
-		copy-rectangle-as-kill
-		counsel-M-x
-		counsel-find-file
-		describe-key
-		go-import-add
-		handle-switch-frame
-		ivy-switch-buffer
-		keyboard-escape-quit
-		kill-region
-		lsp-ui-doc--handle-mouse-movement
-		mouse-buffer-menu
-		move-past-close-and-reindent
-		ns-copy-including-secondary
-		text-scale-adjust
-		treemacs-select-window
-		undo-tree-visualize
-		xref-find-references
 		youdao-dictionary-search-at-point+
+		gofmt
 		))

@@ -39,6 +39,24 @@
       '(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+
 (package-initialize)
 
 ;; 安装use package
@@ -488,6 +506,8 @@
 ;;(if (not sys/win32p)
 (use-package cnfonts
   :ensure t
+  :custom
+  (cnfonts-personal-fontnames '(("CommitMonoyuan") () () () ()))
   :config
   ;; 让 cnfonts 随着 Emacs 自动生效。
   (cnfonts-enable)
@@ -1466,6 +1486,63 @@
   :mode "\\.restclient\\'"
   )
 #+end_src
+** proxy
+#+begin_src emacs-lisp
+(if (exec-path-from-shell-copy-env "EMACS_USE_PROXY")
+	(progn (setq url-proxy-services '(("https" . "127.0.0.1:7890") ("http" . "127.0.0.1:7890")))
+		   (print "set emacs proxy"))
+  (print "not use proxy"))
+#+end_src
+** chatgpt
+#+begin_src emacs-lisp
+(defun get-openai-key-from-file (file-name)
+	"Load Open API Key from local file"
+  (with-temp-buffer
+	(insert-file-contents-literally (expand-file-name file-name))
+	;; (base64-encode-string (buffer-string) t)))
+	(string-trim (buffer-string))))
+
+(use-package chatgpt-shell
+  :ensure t
+  :config
+  (setq chatgpt-shell-additional-curl-options (list "--proxy" "127.0.0.1:7890"
+             "--proxy-negotiate"
+             "--proxy-user" ":")
+		chatgpt-shell-openai-key (get-openai-key-from-file "~/.config/openai_token")))
+
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-proxy "127.0.0.1:7890"
+		gptel-api-key (get-openai-key-from-file "~/.config/openai_token")))
+#+end_src
+
+
+** clang-format
+#+begin_src emacs-lisp
+  ;; (use-package clang-format
+  ;;   :ensure t
+  ;;   :init
+  ;;   (custom-set-variables '(clang-format-style '"{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4}"))
+  (use-package clang-format+
+    :ensure t)
+ (custom-set-variables '(clang-format-style '"{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4}"))
+#+end_src
+
+** github-copilot
+#+begin_src emacs-lisp
+(use-package editorconfig
+  :ensure t)
+(use-package jsonrpc
+  :ensure t)
+(use-package copilot
+  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
+  :ensure t
+  :config
+  ;; (add-hook 'prog-mode-hook 'copilot-mode)
+  )
+#+end_src
+
 * 文件格式
 ** elisp
 #+begin_src emacs-lisp
@@ -1771,14 +1848,43 @@ Lisp function does not specify a special indentation."
 
 ** protobuf
 #+begin_src emacs-lisp
-(use-package protobuf-mode
-  :ensure t)
-;; :hook ((protobuf-mode . lsp)))
-(defconst my-protobuf-style
-  '((indent-tabs-mode . nil)))
+(defun protobuf-format ()
+  (interactive)
+  (if (and (buffer-file-name) (string-match "^.*kunlun.*.proto$" (buffer-file-name)))
+	  (progn
+		(custom-set-variables '(clang-format-executable '"/opt/homebrew/Cellar/clang-format@11/11.1.0/bin/clang-format-11"))
+		(clang-format-region (point-min) (point-max) "{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4}")
+		(message "kunlun format"))
+	(progn 
+	  (custom-set-variables '(clang-format-executable '"clang-format"))
+	  (clang-format-buffer))
+	))
+	
+  ;; (if (use-region-p)
+  ;; 	  (clang-format-region (region-beginning) (region-end) "{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4, SpaceBeforeTrailingComments: 1}")
+  ;; 	(clang-format-region (point-min) (point-max) "{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4, SpaceBeforeTrailingComments: 1}") ) )
 
-(add-hook 'protobuf-mode-hook
-		  (lambda () (c-add-style "my-style" my-protobuf-style t)))
+(defun protobuf-install-save-hooks ()
+  (add-hook 'before-save-hook #'protobuf-format t t))
+
+(use-package protobuf-mode
+  :ensure t
+  :init
+
+  :bind
+  (:map protobuf-mode-map
+   ("<f9>" . protobuf-format))
+  :config
+  ;; (add-hook 'protobuf-mode-hook #'protobuf-install-save-hooks)
+  )
+
+;; :hook ((protobuf-mode . lsp)))
+;; (defconst my-protobuf-style
+;;   '((indent-tabs-mode . nil)))
+
+;; (add-hook 'protobuf-mode-hook
+;; 		  (lambda () (c-add-style "my-style" my-protobuf-style t)))
+
 #+end_src
 
 ** thrift
@@ -1794,7 +1900,7 @@ Lisp function does not specify a special indentation."
   (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
   ;; jar 配置
-  (setq plantuml-jar-path "~/.emacs.d/plantuml.1.2020.19.jar")
+  (setq plantuml-jar-path "~/.emacs.d/plantuml-mit-1.2024.6.jar")
   (setq plantuml-default-exec-mode 'jar)
   (setq plantuml-indent-level 2)
   (add-to-list
@@ -1839,6 +1945,7 @@ Lisp function does not specify a special indentation."
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure t)
+
 #+end_src
 ** lsp 语言服务器
 #+begin_src emacs-lisp
@@ -1874,8 +1981,8 @@ Lisp function does not specify a special indentation."
   :commands lsp-ui-mode
   :config
   ;; ;; peek like vscode
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  ;; (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  ;; (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   ;; doc
   (lsp-ui-doc-enable t)
   )
@@ -2096,9 +2203,11 @@ Lisp function does not specify a special indentation."
   ("s-3" . lsp-treemacs-symbols)
   ("s-1" . 'imenu)
   ("s-2" . lsp-treemacs-errors-list)
+  ("s-4" . lsp-ui-flycheck-list)
   ("C-c 1" . 'imenu)
   ("C-c 2" . lsp-treemacs-errors-list)
   ("C-c 3" . lsp-treemacs-symbols)
+  ("C-c 4" . lsp-ui-flycheck-list)
   )
 
 #+end_src
@@ -2118,11 +2227,105 @@ Lisp function does not specify a special indentation."
 #+begin_src emacs-lisp
 ;; Set up before-save hooks to format buffer and add/delete imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(defun nox-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'nox-format t t))
+;; (defun lsp-go-install-save-hooks ()
+;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
+;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
+;; (defun nox-go-install-save-hooks ()
+;;   (add-hook 'before-save-hook #'nox-format t t))
+
+;;
+(defun kl-organize-imports()
+  "先使用goimports格式化代码,处理package导入移除问题. 然后去除goimport中的换行,按字母排序重新格式化代码"
+  (interactive)
+  (lsp-organize-imports)
+  (save-excursion
+	(goto-char (point-min))
+	(while (re-search-forward "import \(\n\\(\t.*\".*\"\n+\\)+\)" nil t)
+	  (replace-match (replace-regexp-in-string "\n+" "\n" (match-string 0))))
+	(lsp-format-buffer)))
+
+
+
+(defun kl-go-format-code ()
+  (interactive)
+  (if (and (buffer-file-name) (string-match "^.*kunlun.*.go$" (buffer-file-name)))
+	  (kl-organize-imports)
+	(lsp-organize-imports)
+	(lsp-format-buffer)))
+
+;; (defun kl-go-install-save-hooks ()
+;;   (add-hook 'before-save-hook #'kl-go-format-code t t))
+
+;; (defun flycheck-gostatick-setup ()
+;;   "Setup Flycheck staticcheck"
+;;   (add-to-list 'flycheck-checkers 'go-staticcheck))
+
+;; (defun xx()
+;;   (add-to-list `flycheck-checkers '))
+
+
+(defun string-hash-czy-save-ignore-case (a)
+  (sxhash-equal (upcase a)))
+
+(define-hash-table-test 'czy-save-ignore-case
+  'string-equal-ignore-case 'string-hash-czy-save-ignore-case)
+
+(defvar czy-save--last-buffer (current-buffer)
+  "last save buffer")
+
+(defvar czy-save--prog-buffers (make-hash-table :test 'czy-save-ignore-case)
+  "buffers modify by user, wait format")
+
+
+(defun czy-save--buffer-change(start end length)
+  "buffer change info"
+  ;; (message (buffer-file-name))
+  (when (or (derived-mode-p 'go-mode))
+	(setf (gethash (buffer-file-name (current-buffer)) czy-save--prog-buffers) t)
+	))
+
+;;(add-hook 'before-change-functions 'czy-save--buffer-change)
+(add-hook 'after-change-functions 'czy-save--buffer-change)
+(add-hook 'auto-save-x-hook '(lambda ()
+							   (czy-save--buffer-change 0 0 0)))
+
+;; (defun go-install-save-hooks ()
+;;   (add-hook 'before-save-hook #'czy-save--buffer-change t t))
+
+;; copy from flycheck and modify
+(defun czy-save-handle-buffer-switch ()
+  "auto save buffer when switch buffer"
+  (unless (or (equal czy-save--last-buffer (window-buffer))
+			  (minibufferp))
+	;; last buffer 
+	(when (buffer-file-name czy-save--last-buffer)
+	  (ignore-errors
+		(with-current-buffer czy-save--last-buffer
+		  (save-excursion 
+			(if (gethash (buffer-file-name) czy-save--prog-buffers) ;;(derived-mode-p 'go-mode)
+				(progn (kl-go-format-code)
+					   (message "auto format code... %s" (buffer-file-name))
+					   (if (buffer-modified-p)
+						   (basic-save-buffer czy-save--last-buffer))
+					   (remhash (buffer-file-name) czy-save--prog-buffers))
+			  (if (buffer-modified-p czy-save--last-buffer)
+				  (basic-save-buffer czy-save--last-buffer)))))))
+	(setq czy-save--last-buffer (window-buffer))
+	;; new buffer
+	;; (when (buffer-file-name czy-save--last-buffer)
+	;;   (ignore-errors
+	;; 	(with-current-buffer czy-save--last-buffer
+	;; 	  (save-excursion 
+	;; 		(if (derived-mode-p 'go-mode)
+	;; 			(progn (kl-go-format-code)
+	;; 				   (if (buffer-modified-p)
+	;; 					   (basic-save-buffer czy-save--last-buffer)))
+	;; 		  (if (buffer-modified-p czy-save--last-buffer)
+	;; 			  (basic-save-buffer czy-save--last-buffer)))))))
+	))
+
+
+(add-hook 'buffer-list-update-hook 'czy-save-handle-buffer-switch)
 
 
 ;; go语言支持
@@ -2130,13 +2333,17 @@ Lisp function does not specify a special indentation."
   :mode "\\.go\\'"
   :init
   (setq gofmt-command "goimports")
+  (setq gofmt-args nil)
+  ;; (setq gofmt-command "gofmt")
   :hook ((go-mode . lsp))
   :bind
   (:map go-mode-map
-   ("<f9>" . gofmt))
+   ("<f9>" . kl-go-format-code))
   :config
   ;; (add-hook 'go-mode-hook #'nox-go-install-save-hooks)
   ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  ;; (add-hook 'go-mode-hook #'kl-go-install-save-hooks)
+  ;; (add-hook 'go-mode-hook #'go-install-save-hooks)
   ;; go 调试
   ;;(require 'dap-go)
   ;;(dap-go-setup)
@@ -2210,24 +2417,34 @@ Lisp function does not specify a special indentation."
   :ensure t
   :init (setq go-tag-args (list "-transform" "camelcase"))
   :bind (:map go-mode-map
-         ("C-c t a" . go-tag-add)
-         ("C-c t r" . go-tag-remove))
+		 ("C-c t a" . go-tag-add)
+		 ("C-c t r" . go-tag-remove))
   )
 
 ;; go 生成测试代码
 (use-package go-gen-test
   :after go-mode
   :bind (:map go-mode-map
-         ("C-c t g" . go-gen-test-dwim))
+		 ("C-c t g" . go-gen-test-dwim))
   :ensure t)
 
 ;; go lint
 ;; (use-package golint
 ;;   :after go-mode
 ;;   :ensure t)
-(use-package flycheck-golangci-lint
-  :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
+;; (use-package flycheck-golangci-lint
+;;   :ensure t
+;;   :hook (go-mode . flycheck-golangci-lint-setup)
+;;   :config
+;;   (setq flycheck-golangci-lint-tests t)
+;;   (setq flycheck-golangci-lint-enable-all t)
+;;   )
+;; (use-package flymake-go-staticcheck
+;;   :ensure t
+;;   :hook
+;;   (go-mode . flymake-go-staticcheck-enable)
+;;   (go-mode . flymake-mode)
+;;   )
 
 (use-package go-playground
   :diminish
@@ -2635,6 +2852,12 @@ https://github.com/cweill/gotests
 
 #+end_src
 
+** sound
+#+begin_src emacs-lisp
+;; (use-package bongo
+;;   :ensure t)
+;; (require 'org-player.el)
+#+end_src
 * 自己写的插件
 ** 快速创建当日记录文件
 #+begin_src emacs-lisp
