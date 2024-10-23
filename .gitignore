@@ -32,3 +32,4 @@ eshell/
 network-security*
 cache/
 straight/
+.chatgpt-shell.el

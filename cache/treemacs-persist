@@ -1,0 +1,177 @@
+* No Perspective
+** work
+ - path :: ~/org/work
+** reworld
+ - path :: ~/org/reworld_work
+** notes
+ - path :: ~/org/notes
+** books
+ - path :: ~/org/books
+** env
+ - path :: ~/misc/env
+** emacs
+ - path :: ~/.emacs.d
+** dumptfs
+ - path :: ~/reworlder/tools/dumptfs
+** source
+ - path :: ~/misc/emacs
+* kunlun
+** pff-backend
+ - path :: ~/kunlun/pff_backend
+** push-exporter
+ - path :: ~/kunlun/tools/push_exporter
+** ugc_robot
+ - path :: ~/kunlun/tools/ugc_robot
+** run
+ - path :: ~/kunlun/run
+** walle
+ - path :: ~/walle/walle
+** server
+ - path :: ~/rummy/server
+** private
+ - path :: ~/kunlun/pff_private_server
+* rummy
+** server
+ - path :: ~/rummy/server
+** walle
+ - path :: ~/walle/walle
+** client
+ - path :: ~/rummy/client
+** ctl
+ - path :: ~/rummy/rummyctl
+** config
+ - path :: ~/rummy/config
+** svc_etcd
+ - path :: ~/walle/svc_etcd
+* duck-project
+** server
+ - path :: ~/selfwork/server
+* reworld
+** rwserver
+ - path :: ~/reworlder/reworld/RwServer
+** plat-old
+ - path :: ~/reworlder/reworld/Platform
+** server-old
+ - path :: ~/reworlder/reworld/Server
+** proto
+ - path :: ~/reworlder/reworld/Tools/PlatProtoFile
+** excel
+ - path :: ~/reworlder/reworld/execl
+** client
+ - path :: ~/reworlder/reworld/Client
+** crawlers
+ - path :: ~/reworlder/crawlers
+* minio
+** minio
+ - path :: ~/reworlder/dep/minio
+** minio-cli
+ - path :: ~/reworlder/dep/mc
+* ai-rel
+** chatgpt
+ - path :: ~/ref/go-openai
+** chatgpt-plugin
+ - path :: ~/ref/chatGPT-plugin-template
+* miniparty
+** IWorld
+ - path :: ~/reworlder/miniparty/rebuild/IWorld
+** proto
+ - path :: ~/reworlder/miniparty/rebuild/Tools/ReBuildProtoFile
+** xlsx
+ - path :: ~/reworlder/miniparty/rebuild/execl
+** pitaya-conv
+ - path :: ~/reworlder/tools/pitaya-conv
+** retool
+ - path :: ~/reworlder/tools/retool
+** rebcap
+ - path :: ~/reworlder/tools/rebcap
+** gamemsg
+ - path :: ~/reworlder/tools/gamemsg
+** tabtoy
+ - path :: ~/reworlder/tools/tabtoy
+** tk
+ - path :: ~/reworlder/tools/tk
+** gcount
+ - path :: ~/reworlder/tools/gcount
+** rpcxdump
+ - path :: ~/ref/rpcxdump
+* cap
+** rebcap
+ - path :: ~/reworlder/tools/rebcap
+** gopacket
+ - path :: ~/misc/gopacket
+** rpcxdump
+ - path :: ~/ref/rpcxdump
+* walle
+** walle
+ - path :: ~/walle/walle
+** plugins
+ - path :: ~/walle/wplugins
+** wctl
+ - path :: ~/walle/wctl
+** net-gnet
+ - path :: ~/walle/net_gnet
+** net-websocket
+ - path :: ~/walle/net_websocket
+** svc-log
+ - path :: ~/walle/svc_log
+** svc-db
+ - path :: ~/walle/svc_db
+** svc-xlsx
+ - path :: ~/walle/svc_xlsx
+** svc-redis
+ - path :: ~/walle/svc_redis
+** svc-cfgfile
+ - path :: ~/walle/svc_cfgfile
+** svc-etcd
+ - path :: ~/walle/svc_etcd
+** gogen
+ - path :: ~/walle/gogen
+** promptx
+ - path :: ~/walle/promptx
+* pb
+** protoc-gen-gopb
+ - path :: ~/reworlder/tools/protoc-gen-gopb
+** benchpb
+ - path :: ~/walle/benchpb
+* emacs-config
+** emacs
+ - path :: ~/.emacs.d
+** doom
+ - path :: ~/misc/doom
+** centaur
+ - path :: ~/misc/centaur
+* protokit
+** protoc-gen-zap
+ - path :: ~/reworlder/tools/protoc-gen-zap
+** protoc-gen-gopb
+ - path :: ~/reworlder/tools/protoc-gen-gopb
+** protobuf-go
+ - path :: ~/reworlder/tools/protobuf-go
+** wctl
+ - path :: ~/walle/wctl
+** plugins
+ - path :: ~/walle/wplugins
+* rust
+** hello
+ - path :: ~/learn/rust/hello
+** minigrep
+ - path :: ~/learn/rust/minigrep
+** clap
+ - path :: ~/learn/rust/clap
+** tlib
+ - path :: ~/learn/rust/tlib
+** wezterm
+ - path :: ~/misc/wezterm
+* godot
+** godot
+ - path :: ~/godot/godot
+* gcount
+** wctl
+ - path :: ~/walle/wctl
+* treesitter
+** tree-sitter
+ - path :: ~/ref/tree-sitter
+** rep-log
+ - path :: ~/reworlder/tools/repl
+** repl-go
+ - path :: ~/reworlder/tools/repl2

@@ -66,6 +66,9 @@
 
 ;; 新增本地lisp文件目录
 (add-to-list 'load-path "~/.emacs.d/lisp/")
+
+(use-package gnu-elpa-keyring-update
+  :ensure t)
 #+end_src
 ** 命令记录
 #+begin_src emacs-lisp
@@ -588,18 +591,23 @@
   )
 #+end_src
 * 工具
-** auto-save
+** x-save
 #+begin_src emacs-lisp
-(require 'auto-save)
+;;(require 'auto-save)
 ;; quietly sav
-(setq auto-save-silent t)
+;;(setq auto-save-silent t)
 ;; ;; automatically delete spaces at the end of the line when saving
 ;; (setq auto-save-delete-trailing-whitespace t)
 ;; The idle seconds to auto save file.
-(setq auto-save-idle 1)
+;;(setq auto-save-idle 1)
 ;; 开启自动保存
-(auto-save-enable)
+;;(auto-save-enable)
 
+(require 'x-save)
+(setq x-save-idle 1)
+(setq x-save-silent t)
+(setq x-save-delete-trailing-whitespace t)
+(x-save-enable)
 #+end_src
 ** back-button
 #+begin_src emacs-lisp
@@ -1040,143 +1048,166 @@
 #+end_src
 ** 翻译,英文字典
 #+begin_src emacs-lisp
+;; ;; google 翻译
+;; (use-package go-translate
+;;   :ensure t
+;;   :config
+;;   (setq gt-langs '(en zh))
+;;   ;; 配置默认的 translator
+;;   ;; 这些配置将被 gts-do-translate 命令使用
+;;   (setq gt-default-translator
+;; 		(gt-translator
+;; 		 ;; :picker ; 用于拾取初始文本、from、to，只能配置一个
+;; 		 ;;  (gts-noprompt-picker)
+;; 		 :taker
+;; 		  (gt-taker :text 'word :pick 'paragraph)
+;; 		 ;;(gts-noprompt-picker :texter (gts-whole-buffer-texter))
+;; 		 ;;(gts-prompt-picker)
+;; 		 ;;(gts-prompt-picker :single t)
+;; 		 ;; (gts-prompt-picker :texter (gts-current-or-selection-texter) :single t)
+
+;; 		 :engines ; 翻译引擎，可以配置多个。另外可以传入不同的 Parser 从而使用不同样式的输出
+;; 		 (list
+;;           (gt-bing-engine)
+;;           ;;(gts-google-engine)
+;;           ;;(gts-google-rpc-engine)
+;;           ;;(gts-deepl-engine :auth-key [YOUR_AUTH_KEY] :pro nil)
+;;           (gt-google-engine :parse (gt-google-summary-parser))
+;;           ;;(gts-google-engine :parser (gts-google-parser))
+;;           ;;(gts-google-rpc-engine :parser (gts-google-rpc-summary-parser))
+;;           (gt-google-rpc-engine :parse (gt-google-rpc-parser))
+;;           )
+
+;; 		 :render ; 渲染器，只能一个，用于输出结果到指定目标。如果使用 childframe 版本的，需自行安装 posframe
+;; 		 (gt-buffer-render)
+;; 		 ;;(gts-posframe-pop-render)
+;; 		 ;;(gts-posframe-pop-render :backcolor "#333333" :forecolor "#ffffff")
+;; 		 ;;(gts-posframe-pin-render)
+;; 		 ;;(gts-posframe-pin-render :position (cons 1200 20))
+;; 		 ;;(gts-posframe-pin-render :width 80 :height 25 :position (cons 1000 20) :forecolor "#ffffff" :backcolor "#111111")
+;; 		 ;;(gts-kill-ring-render)
+;; 		 ))
+
+;;   ;; ;; 用于代码注释翻译 去除注释token。 
+;;   ;; (defun aggron/trim-string (text)
+;;   ;; 	"trim newline"
+;;   ;; 	;; (rx (or "//" "--" "/*" "*/" "^#" ";;"))
+;;   ;; 	(string-join (split-string (replace-regexp-in-string "\\(?:\\*/\\|--\\|/[*/]\\|;;\\|\\^#\\)" "" (string-trim text))) " "))
+;;   ;; ;; 待翻译的文本
+;;   ;; (defun aggron/go-translate-current-text ()
+;;   ;;   "Get current text under cursor, selection or word."
+;;   ;;   (cond ((eq major-mode 'pdf-view-mode)
+;;   ;;          (if (pdf-view-active-region-p)
+;;   ;;              (car (pdf-view-active-region-text))))
+;;   ;;         ((use-region-p)
+;;   ;;          (aggron/trim-string (buffer-substring-no-properties (region-beginning) (region-end))))
+;;   ;;         (t (current-word t t))))
+
+;;   ;; ;; go-translate 定制texter
+;;   ;; (defclass aggron/gts-code-comment-texter (gt-texter) ())
+;;   ;; ;; go-translate texter gts-text 实现
+;;   ;; (cl-defmethod gt-text ((_ aggron/gts-code-comment-texter))
+;;   ;; 	(aggron/go-translate-current-text))
+
+;;   ;; ;; 代码注释翻译tranlater
+;;   ;; (defvar aggron/translate-code-comment-tranlater
+;;   ;; 	(gt-translator
+;;   ;; 	 :picker (gts-noprompt-picker
+;;   ;; 			  :texter (aggron/gts-code-comment-texter))
+;;   ;; 	 :engines (list 
+;;   ;; 			   (gts-google-engine)
+;;   ;; 			   (gts-bing-engine))
+;;   ;; 	 ;; render 
+;;   ;; 	 :render (gts-buffer-render)
+;;   ;; 	 ))
+
+;;   ;; ;; 翻译代码注释命令。去除"//"等注释token和换行。
+;;   ;; (defun aggron/translate-code-comment-command ()
+;;   ;; 	(interactive)
+;;   ;; 	(gt-translate aggron/translate-code-comment-tranlater))
+
+;;   ;; ;; 将翻译放入剪切板
+;;   ;; (defvar aggron/translate-copy-tranlater
+;;   ;; 	(gt-translator
+;;   ;; 	 :picker (gts-noprompt-picker
+;;   ;; 			  :texter (aggron/gts-code-comment-texter))
+;;   ;; 	 :engines (list 
+;;   ;; 			   (gts-bing-engine)
+;;   ;; 			   (gts-google-engine))
+;;   ;; 	 :render (gts-kill-ring-render)
+;;   ;; 	 ))
+
+;;   ;; (defun aggron/translate-comment-copy-command()
+;;   ;; 	(interactive)
+;;   ;; 	(gt-translate aggron/translate-copy-tranlater))
+;;   ;; 插入翻译文字
+;;   ;;(require 'insert-translated-name)
+;;   ;; (global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
+;;   ;; (global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
+;;   ;; (global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
+;;   ;; (global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
+
+
+;;   ;; 写英文帮助
+;;   ;; (require 'company-english-helper)
+;;   ;; (global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
+
+;;   :bind
+;;   (:map global-map
+;;    ;;("C-c y" . aggron/translate-code-comment-command)
+;;    ("C-c e y" . gt-do-translate)
+;;    ;;("C-c e c" . aggron/translate-comment-copy-command)
+;;    ;; ("C-c e h" . toggle-company-english-helper)
+;;    ;; ("C-c e e" . insert-translated-name-insert-original-translation)
+;;    ;; ("C-c e v" . insert-translated-name-insert-with-camel)
+;;    ;; ("C-c e u" . insert-translated-name-insert-with-underline)
+;;    ;; ("C-c e r" . insert-translated-name-replace)
+;;    )
+;;   )
+
+
 ;; google 翻译
 (use-package go-translate
   :ensure t
   :config
-  (setq gts-translate-list '(("en" "zh")))
-  ;; 配置默认的 translator
-  ;; 这些配置将被 gts-do-translate 命令使用
-  (setq gts-default-translator
-		(gts-translator
-		 :picker ; 用于拾取初始文本、from、to，只能配置一个
-		 (gts-noprompt-picker)
-		 ;;(gts-noprompt-picker :texter (gts-whole-buffer-texter))
-		 ;;(gts-prompt-picker)
-		 ;;(gts-prompt-picker :single t)
-		 ;; (gts-prompt-picker :texter (gts-current-or-selection-texter) :single t)
-
-		 :engines ; 翻译引擎，可以配置多个。另外可以传入不同的 Parser 从而使用不同样式的输出
-		 (list
-          (gts-bing-engine)
-          ;;(gts-google-engine)
-          ;;(gts-google-rpc-engine)
-          ;;(gts-deepl-engine :auth-key [YOUR_AUTH_KEY] :pro nil)
-          (gts-google-engine :parser (gts-google-summary-parser))
-          ;;(gts-google-engine :parser (gts-google-parser))
-          ;;(gts-google-rpc-engine :parser (gts-google-rpc-summary-parser))
-          (gts-google-rpc-engine :parser (gts-google-rpc-parser))
-          )
-
-		 :render ; 渲染器，只能一个，用于输出结果到指定目标。如果使用 childframe 版本的，需自行安装 posframe
-
-		 (gts-buffer-render)
-		 ;;(gts-posframe-pop-render)
-		 ;;(gts-posframe-pop-render :backcolor "#333333" :forecolor "#ffffff")
-		 ;;(gts-posframe-pin-render)
-		 ;;(gts-posframe-pin-render :position (cons 1200 20))
-		 ;;(gts-posframe-pin-render :width 80 :height 25 :position (cons 1000 20) :forecolor "#ffffff" :backcolor "#111111")
-		 ;;(gts-kill-ring-render)
-		 ))
-
   ;; 用于代码注释翻译 去除注释token。 
   (defun aggron/trim-string (text)
 	"trim newline"
 	;; (rx (or "//" "--" "/*" "*/" "^#" ";;"))
-	(string-join (split-string (replace-regexp-in-string "\\(?:\\*/\\|--\\|/[*/]\\|;;\\|\\^#\\)" "" (string-trim text))) " "))
+	(string-join (split-string (replace-regexp-in-string "\\(?:\\*/\\|--\\|/[*/]\\|;;\\|\\^#\\)" "" (string-trim text)))
+				 " "))
   ;; 待翻译的文本
   (defun aggron/go-translate-current-text ()
-    "Get current text under cursor, selection or word."
-    (cond ((eq major-mode 'pdf-view-mode)
+	"Get current text under cursor, selection or word."
+	(message "call aggron/go-translate-current-text")
+	(cond ((eq major-mode 'pdf-view-mode)
            (if (pdf-view-active-region-p)
                (car (pdf-view-active-region-text))))
           ((use-region-p)
            (aggron/trim-string (buffer-substring-no-properties (region-beginning) (region-end))))
           (t (current-word t t))))
 
-  ;; go-translate 定制texter
-  (defclass aggron/gts-code-comment-texter (gts-texter) ())
-  ;; go-translate texter gts-text 实现
-  (cl-defmethod gts-text ((_ aggron/gts-code-comment-texter))
-	(aggron/go-translate-current-text))
+  (setq gt-langs '(en zh))
+  (setq gt-default-translator
+		(gt-translator
+		 :taker
+		 (gt-taker :text (lambda () (aggron/go-translate-current-text)) :pick 'paragraph)
 
-  ;; 代码注释翻译tranlater
-  (defvar aggron/translate-code-comment-tranlater
-	(gts-translator
-	 :picker (gts-noprompt-picker
-			  :texter (aggron/gts-code-comment-texter))
-	 :engines (list 
-			   (gts-google-engine)
-			   (gts-bing-engine))
-	 ;; render 
-	 :render (gts-buffer-render)
-	 ))
-
-  ;; 翻译代码注释命令。去除"//"等注释token和换行。
-  (defun aggron/translate-code-comment-command ()
-	(interactive)
-	(gts-translate aggron/translate-code-comment-tranlater))
-
-  ;; 将翻译放入剪切板
-  (defvar aggron/translate-copy-tranlater
-	(gts-translator
-	 :picker (gts-noprompt-picker
-			  :texter (aggron/gts-code-comment-texter))
-	 :engines (list 
-			   (gts-bing-engine)
-			   (gts-google-engine))
-	 :render (gts-kill-ring-render)
-	 ))
-
-  (defun aggron/translate-comment-copy-command()
-	(interactive)
-	(gts-translate aggron/translate-copy-tranlater))
-  ;; 插入翻译文字
-  (require 'insert-translated-name)
-  ;; (global-set-key (kbd "C-c e e") 'insert-translated-name-insert-original-translation)
-  ;; (global-set-key (kbd "C-c e v") 'insert-translated-name-insert-with-camel)
-  ;; (global-set-key (kbd "C-c e u") 'insert-translated-name-insert-with-underline)
-  ;; (global-set-key (kbd "C-c e r") 'insert-translated-name-replace)
-
-
-  ;; 写英文帮助
-  (require 'company-english-helper)
-  ;; (global-set-key (kbd "C-c e h") 'toggle-company-english-helper)
+		 :engines
+		 (list
+		  (gt-youdao-dict-engine :if 'word)
+          (gt-google-rpc-engine :parse (gt-google-rpc-parser) :if 'word)
+		  (gt-youdao-suggest-engine :if 'word)
+          (gt-google-engine :parse (gt-google-summary-parser) :if 'not-word)
+          (gt-bing-engine :if 'not-word))
+		 :render (gt-buffer-render)))
 
   :bind
   (:map global-map
-   ("C-c y" . aggron/translate-code-comment-command)
-   ("C-c e y" . gts-do-translate)
-   ("C-c e c" . aggron/translate-comment-copy-command)
-   ("C-c e h" . toggle-company-english-helper)
-   ("C-c e e" . insert-translated-name-insert-original-translation)
-   ("C-c e v" . insert-translated-name-insert-with-camel)
-   ("C-c e u" . insert-translated-name-insert-with-underline)
-   ("C-c e r" . insert-translated-name-replace)
-   )
+   ("C-c y" . gt-do-translate))
   )
 
-;; 有道词典
-;; (use-package youdao-dictionary
-;;   :ensure t
-;;   :bind
-;;   (:map global-map
-;; 		;; 会自动隐藏. 但是对于查看长文档翻译时候,不太方便
-;; 	;; ("C-c y" . youdao-dictionary-search-at-point-tooltip)
-;; 	;; 不会移动隐藏.但是有操作会隐藏
-;; 	("C-c y" . youdao-dictionary-search-at-point+))
-;;   :config
-;;   ;; Enable Cache
-;;   (setq url-automatic-caching t)
-;;   ;; Integrate with popwin-el (https://github.com/m2ym/popwin-el)
-;;   ;; (push "*Youdao Dictionary*" popwin:special-display-config)
 
-;;   ;; Set file path for saving search history
-;;   (setq youdao-dictionary-search-history-file "~/.emacs.d/.youdao")
-
-;;   ;; Enable Chinese word segmentation support (支持中文分词)
-;;   ;; (setq youdao-dictionary-use-chinese-word-segmentation t)
-;;   )
 #+end_src
 ** 书签
 #+begin_src emacs-lisp
@@ -1539,8 +1570,15 @@
   :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
   :ensure t
   :config
-  ;; (add-hook 'prog-mode-hook 'copilot-mode)
+  (setq copilot-max-char -1)
+  (setq copilot-indent-offset-warning-disable t)
+  (add-hook 'prog-mode-hook 'copilot-mode)
+  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+  (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+  (add-to-list 'copilot-major-mode-alist '("go" . "go"))
+  (add-to-list 'copilot-major-mode-alist '("protobuf" . "protobuf"))
   )
+
 #+end_src
 
 * 文件格式
@@ -2248,10 +2286,13 @@ Lisp function does not specify a special indentation."
 
 (defun kl-go-format-code ()
   (interactive)
-  (if (and (buffer-file-name) (string-match "^.*kunlun.*.go$" (buffer-file-name)))
+  (if (and (buffer-file-name)
+		   (string-match "^.*kunlun.*.go$" (buffer-file-name)))
 	  (kl-organize-imports)
 	(lsp-organize-imports)
-	(lsp-format-buffer)))
+	(lsp-format-buffer))
+  (remhash (buffer-file-name) czy-save--prog-buffers) ;; 移除记录
+  )
 
 ;; (defun kl-go-install-save-hooks ()
 ;;   (add-hook 'before-save-hook #'kl-go-format-code t t))
@@ -2264,14 +2305,12 @@ Lisp function does not specify a special indentation."
 ;;   (add-to-list `flycheck-checkers '))
 
 
+;; 记录修改的go文件,只有修改了才格式化,要不然kl-organize-imports会主动修改文件
 (defun string-hash-czy-save-ignore-case (a)
   (sxhash-equal (upcase a)))
 
 (define-hash-table-test 'czy-save-ignore-case
   'string-equal-ignore-case 'string-hash-czy-save-ignore-case)
-
-(defvar czy-save--last-buffer (current-buffer)
-  "last save buffer")
 
 (defvar czy-save--prog-buffers (make-hash-table :test 'czy-save-ignore-case)
   "buffers modify by user, wait format")
@@ -2284,49 +2323,61 @@ Lisp function does not specify a special indentation."
 	(setf (gethash (buffer-file-name (current-buffer)) czy-save--prog-buffers) t)
 	))
 
-;;(add-hook 'before-change-functions 'czy-save--buffer-change)
 (add-hook 'after-change-functions 'czy-save--buffer-change)
-(add-hook 'auto-save-x-hook '(lambda ()
-							   (czy-save--buffer-change 0 0 0)))
 
-;; (defun go-install-save-hooks ()
-;;   (add-hook 'before-save-hook #'czy-save--buffer-change t t))
+;; ;;(add-hook 'before-change-functions 'czy-save--buffer-change)
+;;(add-hook 'after-change-functions 'czy-save--buffer-change)
+;; ;; (add-hook 'auto-save-x-hook '(lambda ()
+;; ;; 							   (czy-save--buffer-change 0 0 0)))
 
-;; copy from flycheck and modify
-(defun czy-save-handle-buffer-switch ()
-  "auto save buffer when switch buffer"
-  (unless (or (equal czy-save--last-buffer (window-buffer))
-			  (minibufferp))
-	;; last buffer 
-	(when (buffer-file-name czy-save--last-buffer)
-	  (ignore-errors
-		(with-current-buffer czy-save--last-buffer
-		  (save-excursion 
-			(if (gethash (buffer-file-name) czy-save--prog-buffers) ;;(derived-mode-p 'go-mode)
-				(progn (kl-go-format-code)
-					   (message "auto format code... %s" (buffer-file-name))
-					   (if (buffer-modified-p)
-						   (basic-save-buffer czy-save--last-buffer))
-					   (remhash (buffer-file-name) czy-save--prog-buffers))
-			  (if (buffer-modified-p czy-save--last-buffer)
-				  (basic-save-buffer czy-save--last-buffer)))))))
-	(setq czy-save--last-buffer (window-buffer))
-	;; new buffer
-	;; (when (buffer-file-name czy-save--last-buffer)
-	;;   (ignore-errors
-	;; 	(with-current-buffer czy-save--last-buffer
-	;; 	  (save-excursion 
-	;; 		(if (derived-mode-p 'go-mode)
-	;; 			(progn (kl-go-format-code)
-	;; 				   (if (buffer-modified-p)
-	;; 					   (basic-save-buffer czy-save--last-buffer)))
-	;; 		  (if (buffer-modified-p czy-save--last-buffer)
-	;; 			  (basic-save-buffer czy-save--last-buffer)))))))
-	))
+;; ;; (defun go-install-save-hooks ()
+;; ;;   (add-hook 'before-save-hook #'czy-save--buffer-change t t))
+
+;; ;; copy from flycheck and modify
+;; (defun czy-save-handle-buffer-switch ()
+;;   "auto save buffer when switch buffer"
+;;   (unless (or (equal czy-save--last-buffer (window-buffer))
+;; 			  (minibufferp))
+;; 	;; last buffer 
+;; 	(when (and
+;; 		   (buffer-file-name czy-save--last-buffer)
+;; 		   (verify-visited-file-modtime czy-save--last-buffer)) ;; 忽略磁盘已经更改的文件, 磁盘文件已修改,会revert,再去格式化会导致文件异常(格式化的是buffer内容).
+;; 	  (ignore-errors
+;; 		(with-current-buffer czy-save--last-buffer
+;; 		  (save-excursion 
+;; 			(if (gethash (buffer-file-name) czy-save--prog-buffers) ;;(derived-mode-p 'go-mode)
+;; 				(progn (kl-go-format-code)
+;; 					   (message "auto format code... %s" (buffer-file-name))
+;; 					   (if (buffer-modified-p)
+;; 						   (basic-save-buffer czy-save--last-buffer))
+;; 					   (remhash (buffer-file-name) czy-save--prog-buffers))
+;; 			  (if (buffer-modified-p czy-save--last-buffer)
+;; 				  (basic-save-buffer czy-save--last-buffer)))))))
+;; 	(setq czy-save--last-buffer (window-buffer))
+;; 	;; new buffer
+;; 	;; (when (buffer-file-name czy-save--last-buffer)
+;; 	;;   (ignore-errors
+;; 	;; 	(with-current-buffer czy-save--last-buffer
+;; 	;; 	  (save-excursion 
+;; 	;; 		(if (derived-mode-p 'go-mode)
+;; 	;; 			(progn (kl-go-format-code)
+;; 	;; 				   (if (buffer-modified-p)
+;; 	;; 					   (basic-save-buffer czy-save--last-buffer)))
+;; 	;; 		  (if (buffer-modified-p czy-save--last-buffer)
+;; 	;; 			  (basic-save-buffer czy-save--last-buffer)))))))
+;; 	))
 
 
-(add-hook 'buffer-list-update-hook 'czy-save-handle-buffer-switch)
+;; (add-hook 'buffer-list-update-hook 'czy-save-handle-buffer-switch)
 
+(defun kl-format-sink ()
+  (if (and (derived-mode-p 'go-mode) ;; 只有go模式生效
+		   (gethash (buffer-file-name) czy-save--prog-buffers)) ;; 必须修改过文件
+	  (progn
+		(kl-go-format-code) ;; 格式化代码,移除记录
+		)))
+
+(add-hook 'x-save-format-hook 'kl-format-sink)
 
 ;; go语言支持
 (use-package go-mode
@@ -2741,11 +2792,11 @@ https://github.com/cweill/gotests
 ** org 外部交互
 #+begin_src emacs-lisp
 ;; org 协议. 和外部交互
-(require 'org-protocol)
-;; 启动服务器. 外部调用访问(浏览器等)
-(require 'server)
-(or (server-running-p)
-    (server-start))
+;; (require 'org-protocol)
+;; ;; 启动服务器. 外部调用访问(浏览器等)
+;; (require 'server)
+;; (or (server-running-p)
+;;     (server-start))
                                         ;(server-start)
 #+end_src
 ** org web tool
