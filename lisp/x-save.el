@@ -43,7 +43,7 @@ avoid delete current indent space when you programming."
   "auto save buffer when switch buffer"
   (unless (or (equal x-save--last-buffer (window-buffer))
 			  (minibufferp))
-	;; last buffer 
+	;; last buffer
 	(when (and
 		   (buffer-file-name x-save--last-buffer)
 		   (verify-visited-file-modtime x-save--last-buffer)) ;; 忽略磁盘已经更改的文件, 磁盘文件已修改,会revert,再去格式化会导致文件异常(格式化的是buffer内容).
@@ -73,7 +73,7 @@ avoid delete current indent space when you programming."
              ;; Buffer is modifiable?
              (buffer-modified-p)
 			 ;; ;; 忽略磁盘已经更改的文件, 定时器内会导致循环,然后卡死操作.
-			 (not (verify-visited-file-modtime))
+			 (verify-visited-file-modtime)
              ;; Yassnippet is not active?
              (or (not (boundp 'yas--active-snippets))
                  (not yas--active-snippets))
