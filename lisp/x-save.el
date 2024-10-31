@@ -61,10 +61,18 @@ avoid delete current indent space when you programming."
 	))
 
 
-;; 保存当前buffer, copy from auto-save.el
+;; 保存当前buffer, copy from auto-save.el 每秒钟定时执行
 (defun x-save-current-buffer ()
-  ;; (message "是否更改: %s 磁盘无变动:%s" (buffer-modified-p) (verify-visited-file-modtime))
-  ;; (message "%s" (buffer-file-name))
+  ;; 非当前buffer,buffer无修改,磁盘有修改的, 自动revert
+  (dolist (buf (buffer-list))
+	(when (and (buffer-file-name buf)
+			   (not (verify-visited-file-modtime buf))
+			   (not (buffer-modified-p buf))
+			   (not (equal (current-buffer) buf)))
+	  (ignore-errors
+		  (revert-buffer buf t t t))
+	  ))
+  ;; current buffer
   (ignore-errors
     (save-excursion
       (when (and

@@ -168,8 +168,8 @@
 ;; 隐藏滚动条
 (toggle-scroll-bar -1)
 
-;; 全局文件恢复 从 #..#文件恢复
-(global-auto-revert-mode t)
+;; ;; 全局文件恢复 从 #..#文件恢复
+;; (global-auto-revert-mode t)
 
 ;; ;; 启动后开启全屏
 ;; (toggle-frame-fullscreen)
@@ -516,7 +516,7 @@
   (cnfonts-enable)
   ;; ;; 不同的标题，使用的字体大小也不同
   ;; (setq cnfonts-use-face-font-rescale t)
-  
+
   )
 ;;)
 
@@ -577,7 +577,7 @@
               (lambda (&rest _)
                 (posframe-delete-all))))
   :config
-  ;; (with-no-warnings                     
+  ;; (with-no-warnings
   ;;   (defun my-posframe--prettify-frame (&rest _)
   ;;     (set-face-background 'fringe nil posframe--frame))
   ;;   (advice-add #'posframe--create-posframe :after #'my-posframe--prettify-frame)
@@ -1088,7 +1088,7 @@
 ;; 		 ;;(gts-kill-ring-render)
 ;; 		 ))
 
-;;   ;; ;; 用于代码注释翻译 去除注释token。 
+;;   ;; ;; 用于代码注释翻译 去除注释token。
 ;;   ;; (defun aggron/trim-string (text)
 ;;   ;; 	"trim newline"
 ;;   ;; 	;; (rx (or "//" "--" "/*" "*/" "^#" ";;"))
@@ -1114,10 +1114,10 @@
 ;;   ;; 	(gt-translator
 ;;   ;; 	 :picker (gts-noprompt-picker
 ;;   ;; 			  :texter (aggron/gts-code-comment-texter))
-;;   ;; 	 :engines (list 
+;;   ;; 	 :engines (list
 ;;   ;; 			   (gts-google-engine)
 ;;   ;; 			   (gts-bing-engine))
-;;   ;; 	 ;; render 
+;;   ;; 	 ;; render
 ;;   ;; 	 :render (gts-buffer-render)
 ;;   ;; 	 ))
 
@@ -1131,7 +1131,7 @@
 ;;   ;; 	(gt-translator
 ;;   ;; 	 :picker (gts-noprompt-picker
 ;;   ;; 			  :texter (aggron/gts-code-comment-texter))
-;;   ;; 	 :engines (list 
+;;   ;; 	 :engines (list
 ;;   ;; 			   (gts-bing-engine)
 ;;   ;; 			   (gts-google-engine))
 ;;   ;; 	 :render (gts-kill-ring-render)
@@ -1170,7 +1170,7 @@
 (use-package go-translate
   :ensure t
   :config
-  ;; 用于代码注释翻译 去除注释token。 
+  ;; 用于代码注释翻译 去除注释token。
   (defun aggron/trim-string (text)
 	"trim newline"
 	;; (rx (or "//" "--" "/*" "*/" "^#" ";;"))
@@ -1893,11 +1893,11 @@ Lisp function does not specify a special indentation."
 		(custom-set-variables '(clang-format-executable '"/opt/homebrew/Cellar/clang-format@11/11.1.0/bin/clang-format-11"))
 		(clang-format-region (point-min) (point-max) "{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4}")
 		(message "kunlun format"))
-	(progn 
+	(progn
 	  (custom-set-variables '(clang-format-executable '"clang-format"))
 	  (clang-format-buffer))
 	))
-	
+
   ;; (if (use-region-p)
   ;; 	  (clang-format-region (region-beginning) (region-end) "{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4, SpaceBeforeTrailingComments: 1}")
   ;; 	(clang-format-region (point-min) (point-max) "{BasedOnStyle: Google, AlignConsecutiveDeclarations: true,  AlignConsecutiveAssignments: true,  ColumnLimit: 0, IndentWidth: 4, SpaceBeforeTrailingComments: 1}") ) )
@@ -1962,7 +1962,7 @@ Lisp function does not specify a special indentation."
 	:config
 	(pdf-tools-install)
 	;; (setq pdf-view-dark-minor-mode t)
-	(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) 
+	(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
 	))
 #+end_src
 * 编程支持
@@ -2338,13 +2338,13 @@ Lisp function does not specify a special indentation."
 ;;   "auto save buffer when switch buffer"
 ;;   (unless (or (equal czy-save--last-buffer (window-buffer))
 ;; 			  (minibufferp))
-;; 	;; last buffer 
+;; 	;; last buffer
 ;; 	(when (and
 ;; 		   (buffer-file-name czy-save--last-buffer)
 ;; 		   (verify-visited-file-modtime czy-save--last-buffer)) ;; 忽略磁盘已经更改的文件, 磁盘文件已修改,会revert,再去格式化会导致文件异常(格式化的是buffer内容).
 ;; 	  (ignore-errors
 ;; 		(with-current-buffer czy-save--last-buffer
-;; 		  (save-excursion 
+;; 		  (save-excursion
 ;; 			(if (gethash (buffer-file-name) czy-save--prog-buffers) ;;(derived-mode-p 'go-mode)
 ;; 				(progn (kl-go-format-code)
 ;; 					   (message "auto format code... %s" (buffer-file-name))
@@ -2358,7 +2358,7 @@ Lisp function does not specify a special indentation."
 ;; 	;; (when (buffer-file-name czy-save--last-buffer)
 ;; 	;;   (ignore-errors
 ;; 	;; 	(with-current-buffer czy-save--last-buffer
-;; 	;; 	  (save-excursion 
+;; 	;; 	  (save-excursion
 ;; 	;; 		(if (derived-mode-p 'go-mode)
 ;; 	;; 			(progn (kl-go-format-code)
 ;; 	;; 				   (if (buffer-modified-p)
@@ -2427,7 +2427,7 @@ Lisp function does not specify a special indentation."
 									 :workspace (expand-file-name "~/walle/walle")
 									 :cwd (expand-file-name "~/walle/walle")))
 
-  
+
   )
 
 
@@ -2558,7 +2558,7 @@ https://github.com/cweill/gotests
   :init (setq-default c-basic-offset 4)
   :config
   ;; ubuntu
-  (if sys/linuxp 
+  (if sys/linuxp
 	  (setq lsp-clangd-binary-path "/usr/bin/clangd-12"))
   (use-package modern-cpp-font-lock
 	:ensure t
